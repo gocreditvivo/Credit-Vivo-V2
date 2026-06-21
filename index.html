@@ -3,261 +3,538 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Credit Vivo | Credit Repair You Can Track</title>
-    <meta
-      name="description"
-      content="Affordable credit repair with transparent tracking, specialist support, and attorney escalation available for eligible cases."
-    />
-    <link rel="stylesheet" href="styles.css" />
+    <title>Credit Vivo Customer Dashboard</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="icon" type="image/svg+xml" href="./assets/credit-vivo-logo.svg" />
   </head>
   <body>
-    <header class="site-header" aria-label="Site header">
-      <a class="brand" href="#top" aria-label="Credit Vivo home">
-        <span class="brand-mark">CV</span>
-        <span>Credit Vivo</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a href="#scan">Free Scan</a>
-        <a href="#plans">Plans</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-      <a class="header-cta" href="#scan">Start Scan</a>
-    </header>
-
-    <main id="top">
-      <section class="hero" aria-label="Credit Vivo introduction">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <p class="eyebrow">Affordable credit repair with transparent tracking</p>
-          <h1>Credit repair you can actually track.</h1>
-          <p class="hero-copy">
-            Start with a free Credit Health Scan. See what may be hurting your
-            credit, get matched to the right plan, and know what happens next.
-          </p>
-          <div class="hero-actions">
-            <a class="primary-button" href="#scan">
-              <span aria-hidden="true">→</span>
-              Start Free Credit Health Scan
-            </a>
-            <a class="secondary-button" href="#plans">View Plans</a>
-          </div>
-          <div class="hero-trust" aria-label="Trust points">
-            <span>No setup fee</span>
-            <span>Specialist support</span>
-            <span>Attorney escalation for eligible cases</span>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand-block">
+          <img class="brand-logo" src="./assets/credit-vivo-logo.svg" alt="Credit Vivo logo" />
+          <div>
+            <p class="brand-name">Credit Vivo</p>
+            <p class="brand-subtitle">Customer Portal</p>
           </div>
         </div>
-      </section>
 
-      <section class="section intro-band" aria-label="How Credit Vivo works">
-        <div class="section-inner three-column">
-          <div>
-            <p class="step-number">01</p>
-            <h2>Scan</h2>
-            <p>Tell us your goal and what may be hurting your credit.</p>
-          </div>
-          <div>
-            <p class="step-number">02</p>
-            <h2>Match</h2>
-            <p>Get routed to Core, Plus, or Attorney Tier based on your needs.</p>
-          </div>
-          <div>
-            <p class="step-number">03</p>
-            <h2>Track</h2>
-            <p>Follow disputes, bureau responses, and next steps in one place.</p>
-          </div>
+        <nav class="side-nav">
+          <button class="nav-item active" type="button" data-page="dashboard">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h8V3H3v10Zm0 8h8v-6H3v6Zm10 0h8V11h-8v10Zm0-18v6h8V3h-8Z" /></svg>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-item" type="button" data-page="learning">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H7a3 3 0 0 0-3 3V5.5Zm3- .5a1 1 0 0 0-1 1v12.2c.3-.1.7-.2 1-.2h11V5H7Zm2 3h7v2H9V8Zm0 4h7v2H9v-2Z" /></svg>
+            <span>Learning</span>
+          </button>
+          <button class="nav-item" type="button" data-page="faq">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14Zm-1-4h2v2h-2v-2Zm1-9a3 3 0 0 0-3 3h2a1 1 0 1 1 1 1c-1.1 0-2 .9-2 2v1h2v-1h.2a3 3 0 0 0-.2-6Z" /></svg>
+            <span>FAQs</span>
+          </button>
+          <button class="nav-item" type="button" data-page="updates">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v14H8l-4 4V4Zm2 2v11.2L7.2 16H18V6H6Zm3 3h6v2H9V9Zm0 4h8v2H9v-2Z" /></svg>
+            <span>Updates</span>
+          </button>
+          <button class="nav-item" type="button" data-page="upload">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 6.5 8.5l1.4 1.4 3.1-3.1V16h2V6.8l3.1 3.1 1.4-1.4L12 3ZM5 18v2h14v-2H5Z" /></svg>
+            <span>Upload Reports</span>
+          </button>
+          <button class="nav-item" type="button" data-page="payment">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v12H3V6Zm2 3h14V8H5v1Zm0 3v4h14v-4H5Zm2 2h5v1.5H7V14Z" /></svg>
+            <span>Plans &amp; Payment</span>
+          </button>
+          <button class="nav-item" type="button" data-page="disclosures">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6V3Zm2 2v14h8V7h-3V5H8Zm2 5h4v2h-4v-2Zm0 4h4v2h-4v-2Z" /></svg>
+            <span>Disclosures</span>
+          </button>
+          <button class="nav-item" type="button" data-page="findings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 0 0 15c1.8 0 3.5-.6 4.8-1.7l3.7 3.7 1.4-1.4-3.7-3.7A7.5 7.5 0 0 0 10.5 3Zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Z" /></svg>
+            <span>Findings</span>
+          </button>
+          <button class="nav-item" type="button" data-page="account">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4V4Zm2 2v12h12V6H6Zm2 2h8v2H8V8Zm0 4h8v2H8v-2Zm0 4h5v2H8v-2Z" /></svg>
+            <span>Account Detail</span>
+          </button>
+          <button class="nav-item" type="button" data-page="vault">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7l2 2h7v12H4V5Zm2 4v8h12V9H6Z" /></svg>
+            <span>Document Vault</span>
+          </button>
+          <button class="nav-item" type="button" data-page="disputes">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5V4Zm2 2v12h10V6H7Zm2 2h6v2H9V8Zm0 4h6v2H9v-2Zm0 4h4v2H9v-2Z" /></svg>
+            <span>Dispute Center</span>
+          </button>
+        </nav>
+
+        <div class="support-box">
+          <p class="label">Plan</p>
+          <strong>Credit Vivo Advanced</strong>
+          <span>Forensic review stays internal and is available only on top-tier service.</span>
         </div>
-      </section>
+      </aside>
 
-      <section class="section" id="scan" aria-label="Free Credit Health Scan">
-        <div class="section-inner split">
-          <div class="scan-copy">
-            <p class="eyebrow">Free Credit Health Scan</p>
-            <h2>Find the right starting point.</h2>
-            <p>
-              Answer a few questions and Credit Vivo will show a recommended
-              path. This early version is built to test demand before connecting
-              the full customer dashboard.
-            </p>
-            <ul class="check-list">
-              <li>Goal-based recommendation</li>
-              <li>Plan match in under two minutes</li>
-              <li>Attorney Tier flag for eligible escalation signals</li>
-            </ul>
+      <div class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Demo account</p>
+            <h1 id="page-title">Dashboard</h1>
           </div>
-
-          <form class="scan-form" id="scanForm">
-            <label>
-              First name
-              <input name="firstName" autocomplete="given-name" required />
-            </label>
-            <label>
-              Email
-              <input name="email" type="email" autocomplete="email" required />
-            </label>
-            <label>
-              Mobile phone
-              <input name="phone" type="tel" autocomplete="tel" required />
-            </label>
-            <label>
-              What is your main goal?
-              <select name="goal" required>
-                <option value="">Select one</option>
-                <option>Buy a home</option>
-                <option>Buy a car</option>
-                <option>Rent an apartment</option>
-                <option>Qualify for credit cards</option>
-                <option>Remove collections</option>
-                <option>General credit improvement</option>
-              </select>
-            </label>
-            <label>
-              What is hurting your credit most?
-              <select name="issue" required>
-                <option value="">Select one</option>
-                <option>Collections</option>
-                <option>Late payments</option>
-                <option>Charge-offs</option>
-                <option>Bankruptcy</option>
-                <option>Repossession</option>
-                <option>Identity theft</option>
-                <option>Not sure</option>
-              </select>
-            </label>
-            <label>
-              How soon do you need progress?
-              <select name="timeline" required>
-                <option value="">Select one</option>
-                <option>Within 90 days</option>
-                <option>3 to 6 months</option>
-                <option>No rush</option>
-              </select>
-            </label>
-            <label class="consent">
-              <input name="consent" type="checkbox" required />
-              <span>I agree to be contacted by Credit Vivo about my scan.</span>
-            </label>
-            <button class="primary-button form-button" type="submit">
-              <span aria-hidden="true">✓</span>
-              See My Recommendation
+          <div class="top-actions">
+            <button class="icon-button" type="button" title="Notifications" aria-label="Notifications" data-page-link="updates">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.4-2h-4.8a2.5 2.5 0 0 0 2.4 2ZM18 16v-5a6 6 0 0 0-5-5.9V3h-2v2.1A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2Z" /></svg>
             </button>
-            <p class="form-note">
-              This scan is not a credit repair guarantee and does not create an
-              attorney-client relationship.
-            </p>
-          </form>
-        </div>
-      </section>
-
-      <section class="section result-section" id="result" hidden>
-        <div class="section-inner">
-          <div class="result-panel">
-            <p class="eyebrow">Recommended Path</p>
-            <h2 id="resultTitle">Credit Vivo Plus</h2>
-            <p id="resultText"></p>
-            <div class="result-actions">
-              <a class="primary-button" id="emailLead" href="#">Email My Scan</a>
-              <a class="secondary-button" href="#plans">Compare Plans</a>
+            <div class="user-pill">
+              <span class="avatar">TD</span>
+              <div>
+                <strong>Demo User</strong>
+                <span>Member</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </header>
 
-      <section class="section muted" id="plans" aria-label="Credit Vivo plans">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">Simple Plan Preview</p>
-            <h2>Start affordable. Escalate when needed.</h2>
-          </div>
-          <div class="plan-grid">
-            <article class="plan-card">
-              <h3>Core</h3>
-              <p class="price">Low-cost starter</p>
-              <p>Best for basic bureau disputes and clear monthly tracking.</p>
-              <ul>
-                <li>Bureau dispute support</li>
-                <li>Specialist review</li>
-                <li>Progress updates</li>
-              </ul>
-            </article>
-            <article class="plan-card featured">
-              <h3>Plus</h3>
-              <p class="price">Most common fit</p>
-              <p>Best for multiple negative items, collections, or creditor issues.</p>
-              <ul>
-                <li>Bureau and creditor review</li>
-                <li>Debt validation and goodwill paths</li>
-                <li>Priority support</li>
-              </ul>
-            </article>
-            <article class="plan-card">
-              <h3>Attorney Tier</h3>
-              <p class="price">Eligible cases</p>
-              <p>Best for serious inaccuracies, identity theft, or escalation signals.</p>
-              <ul>
-                <li>Attorney review eligibility</li>
-                <li>Partner counsel escalation</li>
-                <li>Law firm letters when appropriate</li>
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
+        <main>
+          <section class="page active" id="dashboard-page" aria-labelledby="dashboard-heading">
+            <div class="dashboard-grid">
+              <section class="health-card" aria-labelledby="dashboard-heading">
+                <div>
+                  <p class="eyebrow">Credit health</p>
+                  <h2 id="dashboard-heading">Credit Health Score</h2>
+                  <p class="muted">Based on report findings, dispute progress, utilization, and document readiness.</p>
+                </div>
+                <div class="score-ring" aria-label="Credit health score 641">
+                  <span>641</span>
+                  <small>Fair</small>
+                </div>
+              </section>
 
-      <section class="section" aria-label="Tracking features">
-        <div class="section-inner dashboard-preview">
-          <div>
-            <p class="eyebrow">Built Around Updates</p>
-            <h2>Customers should never have to guess.</h2>
-            <p>
-              Credit Vivo is designed around status updates: items identified,
-              disputes prepared, disputes sent, bureau response windows, outcomes,
-              and next steps.
-            </p>
-          </div>
-          <div class="status-stack" aria-label="Example dashboard statuses">
-            <div><span>Report received</span><strong>Complete</strong></div>
-            <div><span>Items identified</span><strong>8 found</strong></div>
-            <div><span>Dispute round</span><strong>Preparing</strong></div>
-            <div><span>Bureau response</span><strong>Pending</strong></div>
-          </div>
-        </div>
-      </section>
+              <section class="metric-card">
+                <span class="metric-icon amber"></span>
+                <p>Negative Accounts</p>
+                <strong>9</strong>
+                <small>5 high priority</small>
+              </section>
+              <section class="metric-card">
+                <span class="metric-icon red"></span>
+                <p>Potential Issues</p>
+                <strong>14</strong>
+                <small>3 bureau mismatches</small>
+              </section>
+              <section class="metric-card">
+                <span class="metric-icon teal"></span>
+                <p>Active Disputes</p>
+                <strong>5</strong>
+                <small>2 waiting for response</small>
+              </section>
+            </div>
 
-      <section class="section muted" id="faq" aria-label="Frequently asked questions">
-        <div class="section-inner faq">
-          <div class="section-heading">
-            <p class="eyebrow">FAQ</p>
-            <h2>Clear answers before signup.</h2>
-          </div>
-          <details>
-            <summary>Does Credit Vivo guarantee removals?</summary>
-            <p>No. Credit repair results are not guaranteed. Credit Vivo focuses on reviewing inaccurate, unverifiable, outdated, or questionable items and keeping the process transparent.</p>
-          </details>
-          <details>
-            <summary>Is Credit Vivo a law firm?</summary>
-            <p>No. Attorney escalation may be available for eligible cases through partner consumer-rights attorneys. Attorney involvement depends on review, eligibility, and the law firm's process.</p>
-          </details>
-          <details>
-            <summary>What happens after the free scan?</summary>
-            <p>You receive a recommended path: Core, Plus, or Attorney Tier. A specialist can then help confirm the right next step.</p>
-          </details>
-        </div>
-      </section>
-    </main>
+            <div class="two-column">
+              <section class="panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Priority review</p>
+                    <h2>Negative Accounts</h2>
+                  </div>
+                  <button class="text-button" type="button" data-page-link="findings">View all</button>
+                </div>
+                <div id="negative-list" class="account-list"></div>
+              </section>
 
-    <footer class="site-footer">
-      <div>
-        <strong>Credit Vivo</strong>
-        <p>Affordable credit repair with transparent tracking.</p>
+              <section class="panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Today</p>
+                    <h2>Recent Activity</h2>
+                  </div>
+                </div>
+                <div class="activity-list">
+                  <div class="activity-item">
+                    <span class="activity-dot teal"></span>
+                    <div>
+                      <strong>Equifax report scanned</strong>
+                      <p>11 accounts reviewed for accuracy and bureau differences.</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <span class="activity-dot amber"></span>
+                    <div>
+                      <strong>Sample collection marked priority</strong>
+                      <p>Possible duplicate original-creditor balance needs ownership verification.</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <span class="activity-dot blue"></span>
+                    <div>
+                      <strong>License/entity workbox added</strong>
+                      <p>Collectors and debt buyers queued for state authority checks.</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Consumer view</p>
+                  <h2>Potential Issues</h2>
+                </div>
+              </div>
+              <div id="issue-strip" class="issue-strip"></div>
+            </section>
+          </section>
+
+          <section class="page" id="learning-page" aria-labelledby="learning-heading">
+            <section class="panel learning-hero">
+              <div>
+                <p class="eyebrow">Learning center</p>
+                <h2 id="learning-heading">Understand your credit before you act.</h2>
+                <p class="muted">Simple lessons on reports, scores, disputes, documents, and healthy credit habits. No raw scanner logs, no legal promises, and no confusing bureau codes.</p>
+              </div>
+              <div class="learning-scorecard" aria-label="Learning checklist">
+                <div>
+                  <strong>5</strong>
+                  <span>minute lessons</span>
+                </div>
+                <div>
+                  <strong>8</strong>
+                  <span>core topics</span>
+                </div>
+                <div>
+                  <strong>0</strong>
+                  <span>guarantees</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Credit basics</p>
+                  <h2>Learning Modules</h2>
+                </div>
+              </div>
+              <div id="learning-grid" class="learning-grid"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Process</p>
+                  <h2>How a Clean Dispute Flow Works</h2>
+                </div>
+              </div>
+              <div class="learning-steps">
+                <article>
+                  <span>1</span>
+                  <h3>Review reports</h3>
+                  <p>Upload or connect reports and confirm your identity, addresses, and account list.</p>
+                </article>
+                <article>
+                  <span>2</span>
+                  <h3>Find possible errors</h3>
+                  <p>Credit Vivo turns backend analysis into plain-language findings and document requests.</p>
+                </article>
+                <article>
+                  <span>3</span>
+                  <h3>Approve disputes</h3>
+                  <p>Disputes are sent only after authorization and customer review of the issue being challenged.</p>
+                </article>
+                <article>
+                  <span>4</span>
+                  <h3>Track responses</h3>
+                  <p>Responses, letters, updates, and next steps stay organized in the customer portal.</p>
+                </article>
+              </div>
+            </section>
+          </section>
+
+          <section class="page" id="faq-page" aria-labelledby="faq-heading">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Customer questions</p>
+                  <h2 id="faq-heading">Frequently Asked Questions</h2>
+                </div>
+                <a class="text-button" href="./faq.html">Open public FAQ</a>
+              </div>
+              <div class="payment-notice">
+                <strong>Plain answers, no promises</strong>
+                <p>These FAQs explain how Credit Vivo works and what customers should expect. Final billing, cancellation, and attorney-service wording should be reviewed before launch.</p>
+              </div>
+              <div id="faq-list" class="faq-list"></div>
+            </section>
+          </section>
+
+          <section class="page" id="updates-page" aria-labelledby="updates-heading">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Secure portal</p>
+                  <h2 id="updates-heading">Portal Updates</h2>
+                </div>
+                <span class="badge good">3 unread</span>
+              </div>
+              <div class="payment-notice">
+                <strong>Portal first</strong>
+                <p>Customers see full updates after login. Email and text alerts only say that an update is ready, so sensitive credit details stay inside the secure portal.</p>
+              </div>
+              <div id="portal-updates-list" class="portal-updates-list"></div>
+            </section>
+
+            <section class="panel notification-layout">
+              <div>
+                <p class="eyebrow">Message preferences</p>
+                <h2>Text, Email, and Portal Alerts</h2>
+                <p class="muted">Customers can choose how they want to be notified. Service alerts, marketing, review requests, and SMS consent should be stored separately in production.</p>
+              </div>
+              <div id="preference-grid" class="preference-grid"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Outbound examples</p>
+                  <h2>Safe Message Templates</h2>
+                </div>
+              </div>
+              <div id="message-preview-grid" class="message-preview-grid"></div>
+            </section>
+          </section>
+
+          <section class="page" id="upload-page" aria-labelledby="upload-heading">
+            <section class="panel upload-layout">
+              <div>
+                <p class="eyebrow">Secure intake</p>
+                <h2 id="upload-heading">Connect or Upload Credit Reports</h2>
+                <p class="muted">Customers can authorize a soft credit-report pull or upload PDF reports from each bureau. Demo files are not sent anywhere in this MVP.</p>
+                <div class="bureau-selector" role="group" aria-label="Bureau selector">
+                  <button class="segment active" type="button" data-bureau="Experian">Experian</button>
+                  <button class="segment" type="button" data-bureau="Equifax">Equifax</button>
+                  <button class="segment" type="button" data-bureau="TransUnion">TransUnion</button>
+                </div>
+              </div>
+              <label class="dropzone" id="dropzone">
+                <input id="file-input" type="file" accept="application/pdf" multiple />
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 6.5 8.5l1.4 1.4 3.1-3.1V15h2V6.8l3.1 3.1 1.4-1.4L12 3ZM5 18v2h14v-2H5Z" /></svg>
+                <strong>Drop PDF reports here</strong>
+                <span>or choose files from your computer</span>
+              </label>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Credit pull authorization</p>
+                  <h2>Pull My Credit</h2>
+                </div>
+              </div>
+              <div class="authorization-box">
+                <div>
+                  <h3>Soft-pull report connection</h3>
+                  <p class="muted">Before launch, connect this to the selected credit-report provider. Customers must authorize the pull and accept privacy/disclosure terms before any report is requested.</p>
+                </div>
+                <label class="check-row">
+                  <input type="checkbox" />
+                  <span>I authorize Credit Vivo and its service provider to access my credit-report data for credit analysis and dispute support.</span>
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" />
+                  <span>I have reviewed the Terms, Privacy Policy, FCRA/CROA disclosures, and cancellation rights.</span>
+                </label>
+                <button class="primary-button" type="button">Authorize credit pull</button>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Uploads</p>
+                  <h2>Upload Status</h2>
+                </div>
+              </div>
+              <div id="upload-status" class="status-list"></div>
+            </section>
+          </section>
+
+          <section class="page" id="payment-page" aria-labelledby="payment-heading">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Choose service</p>
+                  <h2 id="payment-heading">Plans &amp; Payment</h2>
+                </div>
+              </div>
+              <div class="payment-notice">
+                <strong>Compliance-first checkout</strong>
+                <p>Before payment, customers should receive service terms, privacy notices, FCRA/CROA disclosures, cancellation rights, and credit-pull authorization. If CROA applies, do not charge before covered credit repair services are fully performed.</p>
+              </div>
+              <div id="plan-grid" class="plan-grid"></div>
+            </section>
+          </section>
+
+          <section class="page" id="disclosures-page" aria-labelledby="disclosures-heading">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Required before launch</p>
+                  <h2 id="disclosures-heading">Disclosure Center</h2>
+                </div>
+                <a class="text-button" href="./disclosures.html">Open full disclosures</a>
+              </div>
+              <div class="payment-notice">
+                <strong>Attorney review required</strong>
+                <p>These disclosures are loaded as launch drafts. Final wording should be reviewed by counsel before accepting payment, pulling credit reports, or submitting disputes.</p>
+              </div>
+              <div id="disclosure-list" class="disclosure-grid"></div>
+            </section>
+          </section>
+
+          <section class="page" id="findings-page" aria-labelledby="findings-heading">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Analysis</p>
+                  <h2 id="findings-heading">Findings</h2>
+                </div>
+                <div class="filter-tabs" role="tablist" aria-label="Finding filters">
+                  <button class="filter-tab active" type="button" data-filter="all">All</button>
+                  <button class="filter-tab" type="button" data-filter="collections">Collections</button>
+                  <button class="filter-tab" type="button" data-filter="chargeoffs">Charge-offs</button>
+                  <button class="filter-tab" type="button" data-filter="late">Late payments</button>
+                  <button class="filter-tab" type="button" data-filter="identity">Identity issues</button>
+                  <button class="filter-tab" type="button" data-filter="differences">Bureau differences</button>
+                </div>
+              </div>
+              <div id="findings-list" class="findings-list"></div>
+            </section>
+          </section>
+
+          <section class="page" id="account-page" aria-labelledby="account-heading">
+            <section class="panel">
+              <div class="panel-head detail-head">
+                <div>
+                  <p class="eyebrow">Account review</p>
+                  <h2 id="account-heading">Account Detail</h2>
+                </div>
+                <label class="select-label">
+                  <span>Account</span>
+                  <select id="account-select"></select>
+                </label>
+              </div>
+              <div id="account-detail"></div>
+            </section>
+          </section>
+
+          <section class="page" id="vault-page" aria-labelledby="vault-heading">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Documents</p>
+                  <h2 id="vault-heading">Document Vault</h2>
+                </div>
+                <button class="primary-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 6.5 8.5l1.4 1.4 3.1-3.1V16h2V6.8l3.1 3.1 1.4-1.4L12 3ZM5 18v2h14v-2H5Z" /></svg>
+                  Add document
+                </button>
+              </div>
+              <div id="vault-grid" class="vault-grid"></div>
+            </section>
+          </section>
+
+          <section class="page" id="disputes-page" aria-labelledby="disputes-heading">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Case workflow</p>
+                  <h2 id="disputes-heading">Dispute Center</h2>
+                </div>
+                <button class="primary-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z" /></svg>
+                  New dispute
+                </button>
+              </div>
+              <div class="dispute-columns" id="dispute-columns"></div>
+            </section>
+          </section>
+        </main>
+
+        <footer class="site-footer" aria-label="Credit Vivo compliance footer">
+          <div class="footer-brand">
+            <div class="brand-block footer-brand-block">
+              <img class="brand-logo" src="./assets/credit-vivo-logo.svg" alt="Credit Vivo logo" />
+              <div>
+                <p class="brand-name">Credit Vivo</p>
+                <p class="brand-subtitle">Credit analysis and dispute support</p>
+              </div>
+            </div>
+            <address>
+              <strong>Credit Vivo, LLC</strong>
+              <span>Demo mailing address: 123 Main Street, Suite 100, Wilmington, DE 19801</span>
+              <a href="mailto:support@creditvivo.com">support@creditvivo.com</a>
+              <a href="https://creditvivo.com">creditvivo.com</a>
+            </address>
+          </div>
+
+          <div class="footer-links">
+            <section>
+              <h2>Credit Programs</h2>
+              <a href="./packages.html">Packages</a>
+              <a href="#learning" data-page-link="learning">Learning Center</a>
+              <a href="./faq.html">FAQ</a>
+            </section>
+            <section>
+              <h2>Legal</h2>
+              <a href="./terms.html">Terms &amp; Conditions</a>
+              <a href="./privacy.html">Privacy Policy</a>
+              <a href="./disclosures.html">Disclosures</a>
+              <a href="./glba-privacy-notice.html">GLBA Privacy Notice</a>
+              <a href="./california-privacy-rights.html">Your California Privacy Rights</a>
+              <a href="./privacy-requests.html">Privacy Requests</a>
+            </section>
+          </div>
+
+          <p class="footer-note">Credit Vivo does not guarantee score increases, approvals, or deletion of accurate, current, and verifiable information. Consumers may dispute information directly with credit bureaus and furnishers for free.</p>
+          <p class="copyright">&copy; 2026 Credit Vivo, LLC. All rights reserved.</p>
+        </footer>
       </div>
-      <p class="legal">
-        Credit Vivo does not promise specific credit score increases or guaranteed
-        item removals. Attorney services, if available, require separate review
-        and may require a separate attorney-client engagement.
-      </p>
-    </footer>
+    </div>
 
-    <script src="script.js"></script>
+    <section class="chatbot" id="chatbot" aria-label="Credit Vivo chat assistant">
+      <button class="chat-launcher" type="button" data-chat-toggle aria-label="Open chat assistant">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v13H8.4L4 21.4V4Zm2 2v10.6L7.6 15H18V6H6Zm3 3h6v2H9V9Zm0 4h8v2H9v-2Z" /></svg>
+        <span>Chat</span>
+      </button>
+
+      <aside class="chat-panel" aria-labelledby="chat-title">
+        <header class="chat-header">
+          <div class="chat-agent">
+            <img class="brand-logo" src="./assets/credit-vivo-logo.svg" alt="Credit Vivo logo" />
+            <div>
+              <h2 id="chat-title">Vivo Assistant</h2>
+              <p>Portal help and next steps</p>
+            </div>
+          </div>
+          <button class="icon-button" type="button" data-chat-close aria-label="Close chat">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z" /></svg>
+          </button>
+        </header>
+
+        <div class="chat-disclaimer">
+          <strong>Secure portal help</strong>
+          <span>No legal advice, no score guarantees, and no raw backend scanner details.</span>
+        </div>
+
+        <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+        <div class="chat-quick-replies" id="chat-quick-replies"></div>
+
+        <form class="chat-form" id="chat-form">
+          <label class="sr-only" for="chat-input">Message</label>
+          <input id="chat-input" type="text" autocomplete="off" placeholder="Ask about uploads, disputes, updates..." />
+          <button class="primary-button" type="submit">Send</button>
+        </form>
+      </aside>
+    </section>
+
+    <script src="./app.js"></script>
   </body>
 </html>
