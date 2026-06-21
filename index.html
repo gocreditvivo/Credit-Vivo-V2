@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Credit Vivo | Credit Repair You Can Track</title>
+    <meta
+      name="description"
+      content="Affordable credit repair with transparent tracking, specialist support, and attorney escalation available for eligible cases."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Site header">
+      <a class="brand" href="#top" aria-label="Credit Vivo home">
+        <span class="brand-mark">CV</span>
+        <span>Credit Vivo</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#scan">Free Scan</a>
+        <a href="#plans">Plans</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="header-cta" href="#scan">Start Scan</a>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-label="Credit Vivo introduction">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Affordable credit repair with transparent tracking</p>
+          <h1>Credit repair you can actually track.</h1>
+          <p class="hero-copy">
+            Start with a free Credit Health Scan. See what may be hurting your
+            credit, get matched to the right plan, and know what happens next.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#scan">
+              <span aria-hidden="true">→</span>
+              Start Free Credit Health Scan
+            </a>
+            <a class="secondary-button" href="#plans">View Plans</a>
+          </div>
+          <div class="hero-trust" aria-label="Trust points">
+            <span>No setup fee</span>
+            <span>Specialist support</span>
+            <span>Attorney escalation for eligible cases</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section intro-band" aria-label="How Credit Vivo works">
+        <div class="section-inner three-column">
+          <div>
+            <p class="step-number">01</p>
+            <h2>Scan</h2>
+            <p>Tell us your goal and what may be hurting your credit.</p>
+          </div>
+          <div>
+            <p class="step-number">02</p>
+            <h2>Match</h2>
+            <p>Get routed to Core, Plus, or Attorney Tier based on your needs.</p>
+          </div>
+          <div>
+            <p class="step-number">03</p>
+            <h2>Track</h2>
+            <p>Follow disputes, bureau responses, and next steps in one place.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="scan" aria-label="Free Credit Health Scan">
+        <div class="section-inner split">
+          <div class="scan-copy">
+            <p class="eyebrow">Free Credit Health Scan</p>
+            <h2>Find the right starting point.</h2>
+            <p>
+              Answer a few questions and Credit Vivo will show a recommended
+              path. This early version is built to test demand before connecting
+              the full customer dashboard.
+            </p>
+            <ul class="check-list">
+              <li>Goal-based recommendation</li>
+              <li>Plan match in under two minutes</li>
+              <li>Attorney Tier flag for eligible escalation signals</li>
+            </ul>
+          </div>
+
+          <form class="scan-form" id="scanForm">
+            <label>
+              First name
+              <input name="firstName" autocomplete="given-name" required />
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              Mobile phone
+              <input name="phone" type="tel" autocomplete="tel" required />
+            </label>
+            <label>
+              What is your main goal?
+              <select name="goal" required>
+                <option value="">Select one</option>
+                <option>Buy a home</option>
+                <option>Buy a car</option>
+                <option>Rent an apartment</option>
+                <option>Qualify for credit cards</option>
+                <option>Remove collections</option>
+                <option>General credit improvement</option>
+              </select>
+            </label>
+            <label>
+              What is hurting your credit most?
+              <select name="issue" required>
+                <option value="">Select one</option>
+                <option>Collections</option>
+                <option>Late payments</option>
+                <option>Charge-offs</option>
+                <option>Bankruptcy</option>
+                <option>Repossession</option>
+                <option>Identity theft</option>
+                <option>Not sure</option>
+              </select>
+            </label>
+            <label>
+              How soon do you need progress?
+              <select name="timeline" required>
+                <option value="">Select one</option>
+                <option>Within 90 days</option>
+                <option>3 to 6 months</option>
+                <option>No rush</option>
+              </select>
+            </label>
+            <label class="consent">
+              <input name="consent" type="checkbox" required />
+              <span>I agree to be contacted by Credit Vivo about my scan.</span>
+            </label>
+            <button class="primary-button form-button" type="submit">
+              <span aria-hidden="true">✓</span>
+              See My Recommendation
+            </button>
+            <p class="form-note">
+              This scan is not a credit repair guarantee and does not create an
+              attorney-client relationship.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section result-section" id="result" hidden>
+        <div class="section-inner">
+          <div class="result-panel">
+            <p class="eyebrow">Recommended Path</p>
+            <h2 id="resultTitle">Credit Vivo Plus</h2>
+            <p id="resultText"></p>
+            <div class="result-actions">
+              <a class="primary-button" id="emailLead" href="#">Email My Scan</a>
+              <a class="secondary-button" href="#plans">Compare Plans</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section muted" id="plans" aria-label="Credit Vivo plans">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Simple Plan Preview</p>
+            <h2>Start affordable. Escalate when needed.</h2>
+          </div>
+          <div class="plan-grid">
+            <article class="plan-card">
+              <h3>Core</h3>
+              <p class="price">Low-cost starter</p>
+              <p>Best for basic bureau disputes and clear monthly tracking.</p>
+              <ul>
+                <li>Bureau dispute support</li>
+                <li>Specialist review</li>
+                <li>Progress updates</li>
+              </ul>
+            </article>
+            <article class="plan-card featured">
+              <h3>Plus</h3>
+              <p class="price">Most common fit</p>
+              <p>Best for multiple negative items, collections, or creditor issues.</p>
+              <ul>
+                <li>Bureau and creditor review</li>
+                <li>Debt validation and goodwill paths</li>
+                <li>Priority support</li>
+              </ul>
+            </article>
+            <article class="plan-card">
+              <h3>Attorney Tier</h3>
+              <p class="price">Eligible cases</p>
+              <p>Best for serious inaccuracies, identity theft, or escalation signals.</p>
+              <ul>
+                <li>Attorney review eligibility</li>
+                <li>Partner counsel escalation</li>
+                <li>Law firm letters when appropriate</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-label="Tracking features">
+        <div class="section-inner dashboard-preview">
+          <div>
+            <p class="eyebrow">Built Around Updates</p>
+            <h2>Customers should never have to guess.</h2>
+            <p>
+              Credit Vivo is designed around status updates: items identified,
+              disputes prepared, disputes sent, bureau response windows, outcomes,
+              and next steps.
+            </p>
+          </div>
+          <div class="status-stack" aria-label="Example dashboard statuses">
+            <div><span>Report received</span><strong>Complete</strong></div>
+            <div><span>Items identified</span><strong>8 found</strong></div>
+            <div><span>Dispute round</span><strong>Preparing</strong></div>
+            <div><span>Bureau response</span><strong>Pending</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section muted" id="faq" aria-label="Frequently asked questions">
+        <div class="section-inner faq">
+          <div class="section-heading">
+            <p class="eyebrow">FAQ</p>
+            <h2>Clear answers before signup.</h2>
+          </div>
+          <details>
+            <summary>Does Credit Vivo guarantee removals?</summary>
+            <p>No. Credit repair results are not guaranteed. Credit Vivo focuses on reviewing inaccurate, unverifiable, outdated, or questionable items and keeping the process transparent.</p>
+          </details>
+          <details>
+            <summary>Is Credit Vivo a law firm?</summary>
+            <p>No. Attorney escalation may be available for eligible cases through partner consumer-rights attorneys. Attorney involvement depends on review, eligibility, and the law firm's process.</p>
+          </details>
+          <details>
+            <summary>What happens after the free scan?</summary>
+            <p>You receive a recommended path: Core, Plus, or Attorney Tier. A specialist can then help confirm the right next step.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Credit Vivo</strong>
+        <p>Affordable credit repair with transparent tracking.</p>
+      </div>
+      <p class="legal">
+        Credit Vivo does not promise specific credit score increases or guaranteed
+        item removals. Attorney services, if available, require separate review
+        and may require a separate attorney-client engagement.
+      </p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
