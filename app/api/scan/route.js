@@ -10,8 +10,8 @@ function cleanText(value, fallback = "") {
 
 export async function POST(request) {
   let reportName = "sample-3-bureau-report.pdf";
-  let consumerName = "Demo Customer";
-  let consumerEmail = "demo.customer@example.com";
+  let consumerName = "Test Customer";
+  let consumerEmail = "test.customer@example.com";
   let bureau = "3-bureau report";
   let notes = "";
   let communication = { portal: true, email: true, text: false };
@@ -22,7 +22,7 @@ export async function POST(request) {
     if (report && typeof report === "object" && "name" in report && report.name) {
       if ("size" in report && report.size > MAX_UPLOAD_BYTES) {
         return Response.json(
-          { status: "error", message: "Demo upload is limited to 12 MB." },
+          { status: "error", message: "Launch preview upload is limited to 12 MB." },
           { status: 413 }
         );
       }
@@ -41,7 +41,7 @@ export async function POST(request) {
       text: text === null ? false : text === "true",
     };
   } catch {
-    // Allow a bare POST to still return a demo case.
+    // Allow a bare POST to still return a preview case.
   }
 
   const demoCase = createDemoCase({
@@ -55,8 +55,8 @@ export async function POST(request) {
   });
 
   return Response.json({
-    status: "simulated",
-    message: "Simulated Credit Vivo scan completed. No real bureau, text, email, or mail action was performed.",
+    status: "preview",
+    message: "Credit Vivo portal preview case created. No real bureau, text, email, or mail action was performed.",
     case: demoCase,
   });
 }

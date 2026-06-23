@@ -52,13 +52,13 @@ export const demoUpdates = [
   },
   {
     time: 'Today 9:14 AM',
-    channel: 'Email simulation',
+    channel: 'Email preview',
     title: 'Review summary ready',
-    body: 'A customer-friendly summary is ready in your portal. No real email was sent in demo mode.',
+    body: 'A customer-friendly summary is ready in your portal. Email delivery is disabled until launch setup is complete.',
   },
   {
     time: 'Tomorrow',
-    channel: 'Text simulation',
+    channel: 'Text preview',
     title: 'Follow-up reminder queued',
     body: 'Reminder prepared: upload ID and proof of address if you want identity cleanup included.',
   },
@@ -67,7 +67,7 @@ export const demoUpdates = [
 export const demoFollowUps = [
   { day: 'Day 0', item: 'Upload received', status: 'Complete' },
   { day: 'Day 1', item: 'Manual quality check', status: 'Queued' },
-  { day: 'Day 3', item: 'Draft dispute package', status: 'Ready in demo' },
+  { day: 'Day 3', item: 'Draft dispute package', status: 'Preview ready' },
   { day: 'Day 15', item: 'Check delivery / certified mail status', status: 'Scheduled' },
   { day: 'Day 35', item: 'Check bureau response window', status: 'Scheduled' },
   { day: 'Day 45', item: 'Escalation review if no meaningful response', status: 'Scheduled' },
@@ -77,8 +77,8 @@ export const demoDocuments = [
   { name: 'Credit report upload', type: 'Credit report', status: 'Received' },
   { name: 'Government ID', type: 'Identity document', status: 'Needed' },
   { name: 'Utility bill or bank statement', type: 'Proof of address', status: 'Needed' },
-  { name: 'Bureau dispute drafts', type: 'Letter package', status: 'Drafted in demo' },
-  { name: 'Furnisher validation letters', type: 'Letter package', status: 'Drafted in demo' },
+  { name: 'Bureau dispute drafts', type: 'Letter package', status: 'Preview ready' },
+  { name: 'Furnisher validation letters', type: 'Letter package', status: 'Preview ready' },
   { name: 'Bureau responses', type: 'Response tracking', status: 'Waiting' },
 ];
 
@@ -140,7 +140,7 @@ export const demoMonthlyStatements = [
   },
 ];
 
-const DEFAULT_EMAIL = 'demo.customer@example.com';
+const DEFAULT_EMAIL = 'test.customer@example.com';
 
 function cleanEmail(value) {
   return String(value || '').trim().toLowerCase() || DEFAULT_EMAIL;
@@ -173,7 +173,7 @@ function buildUpdates(caseInfo) {
       time: 'Today 9:14 AM',
       channel: 'Email preview',
       title: 'Review summary ready',
-      body: `A plain-English summary is ready for ${caseInfo.consumerEmail}. No real email was sent in demo mode.`,
+      body: `A plain-English summary is ready for ${caseInfo.consumerEmail}. Email delivery is disabled until launch setup is complete.`,
     },
     {
       time: 'Tomorrow',
@@ -208,7 +208,7 @@ function buildMessagePreviews(caseInfo) {
       channel: 'Text preview',
       to: caseInfo.consumerEmail,
       subject: 'Upload reminder',
-      body: 'Credit Vivo: Please upload your ID and proof of address when you have a moment. Replying is disabled in this demo.',
+      body: 'Credit Vivo: Please upload your ID and proof of address when you have a moment. Text replies will be available after launch setup is complete.',
       status: caseInfo.communication.text ? 'Preview ready' : 'Text disabled',
     },
     {
@@ -233,7 +233,7 @@ function buildMessagePreviews(caseInfo) {
 export function createDemoCase(overrides = {}) {
   const now = new Date();
   const consumerEmail = cleanEmail(overrides.consumerEmail);
-  const consumerName = String(overrides.consumerName || 'Demo Customer').trim() || 'Demo Customer';
+  const consumerName = String(overrides.consumerName || 'Test Customer').trim() || 'Test Customer';
   const communication = overrides.communication || {
     portal: true,
     email: true,

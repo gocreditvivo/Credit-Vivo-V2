@@ -12,7 +12,7 @@ const steps = [
   'Secure upload received',
   'Report type identified',
   'Customer-friendly findings prepared',
-  'Dispute package drafted',
+  'Dispute plan prepared',
   'Follow-up schedule created',
 ];
 
@@ -44,12 +44,13 @@ const button = {
 };
 
 export default function ScanSimulationClient() {
-  const [consumerName, setConsumerName] = useState('Demo Customer');
+  const [consumerName, setConsumerName] = useState('Test Customer');
   const [consumerEmail, setConsumerEmail] = useState('');
   const [file, setFile] = useState(null);
+  const [bureauFiles, setBureauFiles] = useState({ equifax: null, experian: null, transunion: null });
   const [bureau, setBureau] = useState('3-bureau report');
   const [notes, setNotes] = useState('');
-  const [channels, setChannels] = useState({ portal: true, email: true, text: false });
+  const [channels, setChannels] = useState({ portal: true, email: false, text: false });
   const [acknowledged, setAcknowledged] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
   const [status, setStatus] = useState('');
@@ -76,7 +77,7 @@ export default function ScanSimulationClient() {
     event.preventDefault();
     setBusy(true);
     setCaseData(null);
-    setStatus('Starting simulated upload...');
+    setStatus('Starting secure upload preview...');
     setCurrentStep(0);
     logEvent('scan_started', {
       area: 'Upload Reports',
@@ -106,6 +107,9 @@ export default function ScanSimulationClient() {
     try {
       const form = new FormData();
       if (file) form.append('report', file);
+      Object.entries(bureauFiles).forEach(([key, value]) => {
+        if (value) form.append(key, value);
+      });
       form.append('consumerName', consumerName);
       form.append('consumerEmail', consumerEmail);
       form.append('bureau', bureau);
@@ -119,7 +123,7 @@ export default function ScanSimulationClient() {
       const data = await response.json();
       saveDemoCase(data.case);
       setCaseData(data.case);
-      setStatus('Simulation complete. Portal case created.');
+      setStatus('Portal case created.');
       logEvent('case_created', {
         area: 'Upload Reports',
         caseId: data.case.caseId,
@@ -132,7 +136,7 @@ export default function ScanSimulationClient() {
         channels: data.case.communication,
       });
     } catch (error) {
-      setStatus('Simulation failed. Please try again.');
+      setStatus('Upload preview failed. Please try again.');
       logEvent('scan_failed', {
         area: 'Upload Reports',
         consumerName,
@@ -155,16 +159,15 @@ export default function ScanSimulationClient() {
           <Link href="/monthly">Monthly</Link>
           <Link href="/vault">Vault</Link>
           <Link href="/disputes">Disputes</Link>
-          <Link href="/events">Events</Link>
         </div>
       </nav>
 
       <section style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.05fr) minmax(320px,.95fr)', gap: 22, alignItems: 'start' }}>
         <div>
-          <p style={{ display: 'inline-block', background: '#dcfce7', color: '#047857', padding: '7px 11px', borderRadius: 999, fontWeight: 900 }}>Realistic demo mode</p>
-          <h1 style={{ fontSize: 42, lineHeight: 1.08, margin: '16px 0 10px' }}>Upload a report and simulate the customer journey.</h1>
+          <p className="cv-status-chip ready">Customer upload flow ready</p>
+          <h1 style={{ fontSize: 42, lineHeight: 1.08, margin: '16px 0 10px' }}>Upload reports and start a Credit Vivo review.</h1>
           <p style={{ color: '#475569', fontSize: 17, lineHeight: 1.65, maxWidth: 760 }}>
-            This demo acts like a real portal: manual upload intake, scan status, portal updates, email/text follow-up previews, findings, vault items, and dispute tracking. It does not send real texts or mail disputes.
+            Test the customer path with one 3-bureau report or three separate bureau reports. Portal status and findings are active in this preview; outside delivery features are clearly marked until vendors are connected.
           </p>
 
           <form onSubmit={runSimulation} style={{ ...card, marginTop: 22, display: 'grid', gap: 18 }}>
@@ -193,7 +196,7 @@ export default function ScanSimulationClient() {
             </div>
 
             <label style={{ display: 'grid', gap: 8, fontWeight: 800 }}>
-              Credit report file
+              Single 3-bureau report
               <input
                 type="file"
                 accept=".pdf,.png,.jpg,.jpeg"
@@ -213,9 +216,33 @@ export default function ScanSimulationClient() {
                 }}
                 style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: 12, background: '#eef9ff' }}
               />
-              <span style={{ color: '#64748b', fontWeight: 500 }}>{file ? `Selected: ${file.name}` : 'No file selected. Demo will use a sample 3-bureau case if blank.'}</span>
+              <span style={{ color: '#64748b', fontWeight: 500 }}>{file ? `Selected: ${file.name}` : 'Optional if you upload the three bureaus separately below.'}</span>
               <span style={{ color: '#b45309', fontWeight: 700 }}>Do not upload a full Social Security number, ID, or sensitive document unless the secure production portal specifically asks for it.</span>
             </label>
+
+            <div style={{ display: 'grid', gap: 10 }}>
+              <strong>Or upload three separate bureau reports</strong>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 12 }}>
+                {[
+                  ['equifax', 'Equifax'],
+                  ['experian', 'Experian'],
+                  ['transunion', 'TransUnion'],
+                ].map(([key, label]) => (
+                  <label key={key} style={{ display: 'grid', gap: 8, fontWeight: 800, border: '1px solid #dbeafe', borderRadius: 8, padding: 12, background: '#f8fafc' }}>
+                    {label}
+                    <input
+                      type="file"
+                      accept=".pdf,.png,.jpg,.jpeg"
+                      onChange={(event) => {
+                        const selected = event.target.files?.[0] || null;
+                        setBureauFiles((value) => ({ ...value, [key]: selected }));
+                      }}
+                    />
+                    <span style={{ color: '#64748b', fontSize: 13 }}>{bureauFiles[key]?.name || 'No file selected'}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
             <label style={{ display: 'grid', gap: 8, fontWeight: 800 }}>
               Report source
@@ -240,16 +267,17 @@ export default function ScanSimulationClient() {
             </label>
 
             <div style={{ display: 'grid', gap: 10 }}>
-              <strong>Update preferences for demo</strong>
+              <strong>Update preferences</strong>
               {[
-                ['portal', 'Portal updates'],
-                ['email', 'Email update preview'],
-                ['text', 'Text message reminder preview'],
-              ].map(([key, label]) => (
-                <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#334155' }}>
+                ['portal', 'Portal updates', true],
+                ['email', 'Email delivery', false],
+                ['text', 'Text message delivery', false],
+              ].map(([key, label, ready]) => (
+                <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 10, color: ready ? '#334155' : '#64748b' }}>
                   <input
                     type="checkbox"
                     checked={channels[key]}
+                    disabled={!ready}
                     onChange={(event) => {
                       const nextValue = event.target.checked;
                       setChannels((value) => ({ ...value, [key]: nextValue }));
@@ -262,7 +290,7 @@ export default function ScanSimulationClient() {
                       });
                     }}
                   />
-                  {label}
+                  {label} {!ready && <span className="cv-status-chip soon">Coming soon</span>}
                 </label>
               ))}
             </div>
@@ -275,13 +303,13 @@ export default function ScanSimulationClient() {
                 onChange={(event) => setAcknowledged(event.target.checked)}
               />
               <span>
-                I understand this is a demo. Results vary, Credit Vivo does not guarantee deletions or score increases,
+                I understand this is a launch preview. Results vary, Credit Vivo does not guarantee deletions or score increases,
                 and I can dispute inaccurate credit report information directly at no cost.
               </span>
             </label>
 
             <button disabled={busy} style={{ ...button, opacity: busy ? .7 : 1 }} type="submit">
-              {busy ? 'Running simulation...' : 'Upload and simulate scan'}
+              {busy ? 'Creating portal case...' : 'Upload and create portal case'}
             </button>
           </form>
         </div>
@@ -318,9 +346,9 @@ export default function ScanSimulationClient() {
           )}
 
           <div style={{ ...card, background: '#fffbeb' }}>
-            <h2 style={{ marginTop: 0 }}>Manual Upload Reality Check</h2>
+            <h2 style={{ marginTop: 0 }}>Launch Status</h2>
             <p style={{ color: '#92400e', lineHeight: 1.55 }}>
-              In production, reports and IDs need encrypted storage, real login, audit logs, and consent. This simulation shows the customer flow only.
+              Portal preview is active. Real email/SMS sending, payment checkout, certified mail, and encrypted production vault storage remain disabled until vendors are connected.
             </p>
           </div>
         </aside>

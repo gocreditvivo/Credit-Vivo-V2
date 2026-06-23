@@ -73,10 +73,10 @@ export default function PortalDashboardClient() {
   }
 
   const metrics = [
-    ['Credit Health Score', `${caseData.healthScore}/100`, 'Demo estimate based on issue count and account mix.'],
+    ['Credit Health Score', `${caseData.healthScore}/100`, 'Preview estimate based on issue count and account mix.'],
     ['Negative Accounts', caseData.negativeAccounts, 'Items to review before disputes.'],
     ['Potential Issues', caseData.potentialIssues, 'Customer-friendly possible errors.'],
-    ['Active Disputes', caseData.activeDisputes, 'Drafts ready for review in demo mode.'],
+    ['Active Disputes', caseData.activeDisputes, 'Drafts ready for portal review. Mailing remains disabled until vendor setup.'],
   ];
   const scoreProgress = caseData.scoreProgress?.length ? caseData.scoreProgress : demoCase.scoreProgress;
   const monthlyValue = caseData.monthlyValue?.length ? caseData.monthlyValue : demoCase.monthlyValue;
@@ -98,12 +98,11 @@ export default function PortalDashboardClient() {
           <Link href="/monthly">Monthly</Link>
           <Link href="/vault">Vault</Link>
           <Link href="/disputes">Disputes</Link>
-          <Link href="/events">Events</Link>
         </div>
       </nav>
 
       <section style={{ marginBottom: 24 }}>
-        <p style={{ display: 'inline-block', background: '#dcfce7', color: '#047857', padding: '7px 11px', borderRadius: 999, fontWeight: 900 }}>Customer portal simulation</p>
+        <p style={{ display: 'inline-block', background: '#dcfce7', color: '#047857', padding: '7px 11px', borderRadius: 999, fontWeight: 900 }}>Customer portal preview</p>
         <h1 style={{ fontSize: 42, margin: '14px 0 8px' }}>Welcome back, {caseData.consumerName}.</h1>
         <p style={{ color: '#475569', fontSize: 17 }}>Case {caseData.caseId} for {caseData.consumerEmail} is in {caseData.status.toLowerCase()} from {caseData.source}.</p>
       </section>
@@ -125,7 +124,7 @@ export default function PortalDashboardClient() {
             <p style={{ color: '#475569', margin: 0, lineHeight: 1.55 }}>Track score movement and the work completed each month. Score movement can vary by bureau and scoring model.</p>
           </div>
           <div style={{ background: totalScoreChange >= 0 ? '#dcfce7' : '#fee2e2', color: totalScoreChange >= 0 ? '#166534' : '#991b1b', borderRadius: 8, padding: '12px 14px', fontWeight: 900 }}>
-            {totalScoreChange >= 0 ? '+' : ''}{totalScoreChange} points demo trend
+            {totalScoreChange >= 0 ? '+' : ''}{totalScoreChange} point preview trend
           </div>
         </div>
 
@@ -150,7 +149,7 @@ export default function PortalDashboardClient() {
         </div>
 
         <p style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: 12, color: '#92400e', margin: '16px 0 0', lineHeight: 1.55 }}>
-          Demo note: Credit Vivo should never promise a monthly score increase. The portal should show actual score updates when available plus completed work, response tracking, and credit-building actions.
+          Launch note: Credit Vivo should never promise a monthly score increase. The portal should show actual score updates when available plus completed work, response tracking, and credit-building actions.
         </p>
       </section>
 
@@ -184,7 +183,7 @@ export default function PortalDashboardClient() {
 
         <aside style={{ display: 'grid', gap: 18 }}>
           <div style={card}>
-            <h2 style={{ marginTop: 0 }}>Demo Consumers</h2>
+            <h2 style={{ marginTop: 0 }}>Test Consumers</h2>
             <div style={{ display: 'grid', gap: 10 }}>
               {cases.map((item) => (
                 <button
@@ -204,7 +203,7 @@ export default function PortalDashboardClient() {
                 </button>
               ))}
             </div>
-            <Link href="/scan" style={{ display: 'inline-block', marginTop: 12, color: '#0369a1', fontWeight: 900 }}>Add another demo email</Link>
+            <Link href="/scan" style={{ display: 'inline-block', marginTop: 12, color: '#0369a1', fontWeight: 900 }}>Add another test consumer</Link>
           </div>
 
           <div style={card}>

@@ -11,8 +11,8 @@ export default function FAQPage() {
     ["Can I dispute credit report errors myself?", "Yes. You can dispute inaccurate or incomplete information directly with credit bureaus and furnishers at no cost."],
     ["Do accurate negative accounts come off?", "Not just because they are negative. Accurate and verifiable information may remain for the legal reporting period."],
     ["Does the monthly fee include certified mail?", "Not automatically. Postage, certified mail, printing, report access, credit monitoring, identity verification, and attorney review should be listed separately unless your plan says they are included."],
-    ["Are texts and emails sent in this demo?", "No. The demo shows queued portal, email, and text style updates without sending real messages."],
-    ["Can I upload reports manually?", "Yes. The simulation supports manual report upload and manual staff review status."],
+    ["Are texts and emails sent in this preview?", "No. The launch preview shows queued portal, email, and text style updates without sending real messages."],
+    ["Can I upload reports manually?", "Yes. The launch preview supports manual report upload and manual staff review status."],
     ["Do customers see forensic scanner logs?", "No. Customers see simple explanations. Backend scanner details stay internal."],
     ["Is this legal advice?", "No. Attorney backup and escalation need a compliant attorney relationship before legal advice is provided."],
   ];

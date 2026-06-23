@@ -4,7 +4,7 @@ import DisputePageLogger from "../../components/DisputePageLogger";
 
 export const metadata = {
   title: "Dispute Center",
-  description: "Credit Vivo staged dispute workflow simulation.",
+  description: "Credit Vivo staged dispute workflow launch preview.",
 };
 
 const shell = {
@@ -43,7 +43,7 @@ const rounds = [
     name: "Round 1",
     title: "Strongest first",
     timing: "Day 3-7",
-    status: "Ready in demo",
+    status: "Preview ready",
     customerView: "Start with the clearest possible errors, not every issue at once.",
     backendRule: "Send only high-confidence, high-impact disputes such as duplicate debt, wrong balance, wrong status, mixed-file identity, or missing original creditor on collections.",
   },
@@ -130,7 +130,6 @@ export default function DisputesPage() {
           <Link href="/monthly">Monthly</Link>
           <Link href="/vault">Vault</Link>
           <Link href="/scan">Upload</Link>
-          <Link href="/events">Events</Link>
         </div>
       </nav>
 
@@ -191,7 +190,7 @@ export default function DisputesPage() {
       </section>
 
       <section style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: 18, marginTop: 18 }}>
-        <strong>Simulation note:</strong> No letters are mailed, no CFPB/state complaint is filed, and no attorney communication is sent in this demo. Production disputes need customer authorization, supporting documents, delivery tracking, response review, and compliance review.
+        <strong>Launch status:</strong> Portal dispute planning is available. Mailing, CFPB/state complaints, and attorney communication stay disabled until customer authorization, supporting documents, delivery tracking, response review, and compliance review are connected.
       </section>
     </main>
   );

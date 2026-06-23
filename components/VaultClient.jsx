@@ -39,7 +39,7 @@ export default function VaultClient() {
 
   function addManualDocument(event) {
     event.preventDefault();
-    const next = { name: manualName || 'Manual upload', type: 'Customer upload', status: 'Received in demo' };
+    const next = { name: manualName || 'Manual upload', type: 'Customer upload', status: 'Received' };
     const updated = [...documents, next];
     setDocuments(updated);
     const nextCase = { ...caseData, documents: updated };
@@ -68,12 +68,11 @@ export default function VaultClient() {
           <Link href="/monthly">Monthly</Link>
           <Link href="/scan">Upload</Link>
           <Link href="/disputes">Disputes</Link>
-          <Link href="/events">Events</Link>
         </div>
       </nav>
 
       <h1 style={{ fontSize: 42, marginBottom: 8 }}>Document Vault</h1>
-      <p style={{ color: '#475569', maxWidth: 760 }}>Simulated secure vault for reports, ID, utility bills, dispute letters, and bureau responses.</p>
+      <p style={{ color: '#475569', maxWidth: 760 }}>Preview of the document vault for reports, ID, utility bills, dispute letters, and bureau responses.</p>
 
       <section style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(280px,.65fr)', gap: 18, alignItems: 'start', marginTop: 24 }}>
         <div style={card}>
@@ -89,17 +88,19 @@ export default function VaultClient() {
         </div>
 
         <aside style={card}>
-          <h2 style={{ marginTop: 0 }}>Manual Upload Simulation</h2>
-          <form onSubmit={addManualDocument} style={{ display: 'grid', gap: 12 }}>
+          <h2 style={{ marginTop: 0 }}>Manual Upload</h2>
+          <span className="cv-status-chip soon">Coming soon</span>
+          <form onSubmit={addManualDocument} style={{ display: 'grid', gap: 12, marginTop: 12 }} className="cv-feature-muted">
             <input
               value={manualName}
               onChange={(event) => setManualName(event.target.value)}
               placeholder="Example: Utility bill June 2026"
+              disabled
               style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: 12 }}
             />
-            <button style={{ border: 0, borderRadius: 8, padding: '12px 16px', fontWeight: 900, background: 'linear-gradient(135deg, #0f766e, #12b981)', color: 'white', boxShadow: '0 14px 28px rgba(18,185,129,.24)' }}>Add to vault</button>
+            <button disabled className="cv-muted-action">Disabled until encrypted storage is connected</button>
           </form>
-          <p style={{ color: '#64748b', lineHeight: 1.55 }}>In production this needs encrypted storage, file virus scanning, access logs, and retention rules.</p>
+          <p style={{ color: '#64748b', lineHeight: 1.55 }}>This stays greyed out until encrypted storage, file virus scanning, access logs, and retention rules are connected.</p>
         </aside>
       </section>
     </main>

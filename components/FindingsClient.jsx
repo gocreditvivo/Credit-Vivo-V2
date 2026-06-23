@@ -46,7 +46,6 @@ export default function FindingsClient() {
           <Link href="/monthly">Monthly</Link>
           <Link href="/vault">Vault</Link>
           <Link href="/disputes">Disputes</Link>
-          <Link href="/events">Events</Link>
         </div>
       </nav>
 

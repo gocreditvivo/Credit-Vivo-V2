@@ -4,23 +4,22 @@ const navLinks = [
   ["Free Scan", "/scan"],
   ["Dashboard", "/dashboard"],
   ["Findings", "/findings"],
-  ["Messages", "/messages"],
   ["Monthly", "/monthly"],
   ["Pricing", "/pricing"],
   ["Login", "/login"],
 ];
 
 const steps = [
-  ["Upload", "Add a credit report or start with a guided demo upload."],
+  ["Upload", "Add a credit report or start with a guided launch-preview upload."],
   ["Understand", "See simple findings in plain English, without backend scanner noise."],
   ["Act", "Move through Prep, Round 1, response tracking, and the next best step."],
   ["Grow", "Track monthly updates, documents, messages, and credit-building guidance."],
 ];
 
 const signals = [
-  ["Simple portal", "Customers always know what is happening next."],
-  ["Friendly updates", "Portal, email, and text workflows are designed for calm follow-up."],
-  ["Staged rounds", "We do not rush every possible issue at once."],
+  ["Simple portal", "Ready", "Customers always know what is happening next."],
+  ["Friendly updates", "Preview", "Portal updates are ready. Email and text delivery connect after vendor setup."],
+  ["Staged rounds", "Ready", "We do not rush every possible issue at once."],
 ];
 
 export default function HomePage() {
@@ -49,13 +48,13 @@ export default function HomePage() {
       >
         <div style={{ maxWidth: 650 }}>
           <p style={{ display: "inline-block", background: "#dcfce7", color: "#047857", padding: "8px 12px", borderRadius: 999, fontWeight: 900 }}>
-            Credit guidance that feels human
+            Launch preview ready
           </p>
           <h1 style={{ fontSize: 58, lineHeight: 1.02, margin: "18px 0", maxWidth: 620, letterSpacing: 0 }}>
             Credit Vivo
           </h1>
           <p style={{ fontSize: 19, color: "#334155", maxWidth: 610, lineHeight: 1.65 }}>
-            A friendly credit report portal that helps customers upload reports, understand possible issues, follow dispute rounds, and see monthly progress.
+            A friendly credit report portal that helps customers upload reports, understand possible issues, follow dispute rounds, and see monthly progress. Unconnected features are clearly marked before launch.
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
             <a href="/scan" className="cv-primary-link">Start Free Credit Scan</a>
@@ -66,9 +65,12 @@ export default function HomePage() {
 
       <section style={{ padding: "34px 7% 72px", display: "grid", gap: 24 }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 16 }}>
-          {signals.map(([title, copy]) => (
+          {signals.map(([title, status, copy]) => (
             <div key={title} className="cv-card" style={{ padding: 22 }}>
-              <h2 style={{ margin: "0 0 8px", fontSize: 22 }}>{title}</h2>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+                <h2 style={{ margin: "0 0 8px", fontSize: 22 }}>{title}</h2>
+                <span className={`cv-status-chip ${status === "Ready" ? "ready" : "soon"}`}>{status}</span>
+              </div>
               <p style={{ margin: 0, color: "#557184", lineHeight: 1.55 }}>{copy}</p>
             </div>
           ))}

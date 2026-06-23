@@ -86,7 +86,7 @@ export default function EventLogClient() {
         <p style={{ display: 'inline-block', background: '#e0f2fe', color: '#0369a1', padding: '7px 11px', borderRadius: 999, fontWeight: 800 }}>Internal only</p>
         <h1 style={{ fontSize: 42, margin: '14px 0 8px' }}>Event Log</h1>
         <p style={{ color: '#475569', maxWidth: 820, lineHeight: 1.65 }}>
-          This demo audit trail logs portal workflow events in this browser only. Production needs server-side immutable audit logs, user IDs, IP/session metadata, retention rules, and encrypted storage.
+          This launch-preview audit trail logs portal workflow events in this browser only. Production needs server-side immutable audit logs, user IDs, IP/session metadata, retention rules, and encrypted storage.
         </p>
       </section>
 
@@ -100,7 +100,7 @@ export default function EventLogClient() {
           />
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <button type="button" onClick={downloadEvents} style={button}>Export JSON</button>
-            <button type="button" onClick={handleClear} style={{ ...button, background: '#991b1b' }}>Clear Demo Log</button>
+            <button type="button" onClick={handleClear} style={{ ...button, background: '#991b1b' }}>Clear Preview Log</button>
           </div>
         </div>
         <strong>{filtered.length} event{filtered.length === 1 ? '' : 's'} shown</strong>
@@ -110,7 +110,7 @@ export default function EventLogClient() {
         {filtered.length === 0 && (
           <div style={card}>
             <strong>No events yet.</strong>
-            <p style={{ color: '#64748b', marginBottom: 0 }}>Run a scan, open messages, switch demo consumers, or add a vault document to populate the log.</p>
+            <p style={{ color: '#64748b', marginBottom: 0 }}>Run an upload preview, open messages, switch test consumers, or add a vault document to populate the log.</p>
           </div>
         )}
         {filtered.map((event) => (

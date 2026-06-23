@@ -29,7 +29,7 @@ export default function DisclosurePage() {
             <p>{body}</p>
           </div>
         ))}
-        <p><strong>Demo status:</strong> this local preview does not send real disputes, mail letters, contact furnishers, send SMS/email, process payments, or provide legal advice.</p>
+        <p><strong>Launch preview status:</strong> this preview does not send real disputes, mail letters, contact furnishers, send SMS/email, process payments, or provide legal advice.</p>
       </section>
     </main>
   );

@@ -3,15 +3,15 @@ import BrandLogo from "../../components/BrandLogo";
 
 export const metadata = {
   title: "Pricing",
-  description: "Credit Vivo simulated pricing and service tiers.",
+  description: "Credit Vivo pricing and launch-ready service tiers.",
 };
 
 export default function PricingPage() {
   const plans = [
-    ["Free Scan", "$0", "Upload a report and preview possible issues.", "Best for seeing what the portal finds."],
-    ["Vivo Assist", "$49/mo", "Portal updates, simple findings, document vault, and dispute draft tracking.", "Lower-cost assisted workflow."],
-    ["Vivo Pro", "$79/mo", "Includes simulated bureau and furnisher package workflow plus follow-up schedule.", "Main credit repair style plan."],
-    ["Attorney Backup", "$129/mo", "Escalation review path for complex cases when available.", "Attorney involvement requires a separate compliant arrangement."],
+    ["Free Scan", "$0", "Upload a report and preview possible issues.", "Ready", "Best for seeing what the portal finds."],
+    ["Vivo Assist", "$49/mo", "Portal updates, simple findings, document vault, and dispute draft tracking.", "Ready", "Lower-cost assisted workflow."],
+    ["Vivo Pro", "$79/mo", "Bureau and furnisher package workflow plus follow-up schedule.", "Launch preview", "Mailing/payment vendors must be connected before billing."],
+    ["Attorney Backup", "$129/mo", "Escalation review path for complex cases when available.", "Coming soon", "Attorney involvement requires a separate compliant arrangement."],
   ];
 
   return (
@@ -25,19 +25,25 @@ export default function PricingPage() {
         </div>
       </nav>
       <h1 style={{ fontSize: 42, marginBottom: 8 }}>Pricing</h1>
-      <p style={{ color: "#475569", maxWidth: 760, lineHeight: 1.65 }}>Demo pricing structure designed to stay attractive while showing a realistic path from free scan to assisted dispute workflow.</p>
+      <p style={{ color: "#475569", maxWidth: 760, lineHeight: 1.65 }}>Simple launch pricing designed to stay attractive while showing a realistic path from free scan to assisted dispute workflow.</p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 18, marginTop: 24 }}>
-        {plans.map(([name, price, body, note]) => (
-          <div key={name} style={{ background: "rgba(255,255,255,.94)", padding: 24, borderRadius: 8, border: "1px solid #cfeee0", boxShadow: "0 18px 42px rgba(16,32,51,.09)" }}>
+        {plans.map(([name, price, body, status, note]) => (
+          <div key={name} className={status === "Coming soon" ? "cv-feature-muted" : ""} style={{ background: "rgba(255,255,255,.94)", padding: 24, borderRadius: 8, border: "1px solid #cfeee0", boxShadow: "0 18px 42px rgba(16,32,51,.09)" }}>
+            <span className={`cv-status-chip ${status === "Ready" ? "ready" : "soon"}`}>{status}</span>
             <h2 style={{ marginTop: 0 }}>{name}</h2>
             <strong style={{ display: "block", fontSize: 30, marginBottom: 12 }}>{price}</strong>
             <p style={{ color: "#334155", lineHeight: 1.55 }}>{body}</p>
             <p style={{ color: "#64748b", fontSize: 14 }}>{note}</p>
+            {status === "Coming soon" ? (
+              <span className="cv-muted-action">Not open yet</span>
+            ) : (
+              <Link href="/scan" className="cv-primary-link">Start</Link>
+            )}
           </div>
         ))}
       </div>
       <section style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: 18, marginTop: 18 }}>
-        Demo only: no payment processor is connected, and no fee is charged from this local site. Results vary and are not guaranteed. Certified mail, postage, credit monitoring, identity verification, report access, attorney review, and third-party costs are separate unless a written plan says they are included.
+        Payment checkout is not connected yet. No fee is charged from this preview. Results vary and are not guaranteed. Certified mail, postage, credit monitoring, identity verification, report access, attorney review, and third-party costs are separate unless a written plan says they are included.
       </section>
     </main>
   );

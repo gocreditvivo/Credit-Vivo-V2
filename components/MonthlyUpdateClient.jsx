@@ -73,7 +73,6 @@ export default function MonthlyUpdateClient() {
           <Link href="/findings">Findings</Link>
           <Link href="/vault">Vault</Link>
           <Link href="/disputes">Disputes</Link>
-          <Link href="/events">Events</Link>
         </div>
       </nav>
 
@@ -88,7 +87,7 @@ export default function MonthlyUpdateClient() {
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 16, marginBottom: 18 }}>
         {[
           ['Latest score', latest.scoreEnd, `${latest.month} update`],
-          ['Total trend', `${totalChange >= 0 ? '+' : ''}${totalChange}`, 'Demo point movement'],
+          ['Total trend', `${totalChange >= 0 ? '+' : ''}${totalChange}`, 'Preview point movement'],
           ['Active plan', 'Round review', 'Evidence-backed next step'],
           ['Customer tasks', latest.customerNeeds.length, 'Items we need from you'],
         ].map(([label, value, note]) => (

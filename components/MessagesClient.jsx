@@ -90,15 +90,14 @@ export default function MessagesClient() {
           <Link href="/monthly">Monthly</Link>
           <Link href="/vault">Vault</Link>
           <Link href="/disputes">Disputes</Link>
-          <Link href="/events">Events</Link>
         </div>
       </nav>
 
       <section style={{ marginBottom: 24 }}>
-        <p style={{ display: 'inline-block', background: '#dcfce7', color: '#047857', padding: '7px 11px', borderRadius: 999, fontWeight: 900 }}>Preview only</p>
+        <p className="cv-status-chip ready">Portal updates ready</p>
         <h1 style={{ fontSize: 42, margin: '14px 0 8px' }}>Customer message flow</h1>
         <p style={{ color: '#475569', fontSize: 17, maxWidth: 800, lineHeight: 1.65 }}>
-          Simulate the updates a consumer would receive after upload. These are not sent yet; they are previews for portal, email, and text workflows.
+          Portal messages are available for testing. Email and text delivery are shown as launch-ready previews and remain disabled until vendors and consent controls are connected.
         </p>
       </section>
 
@@ -157,7 +156,7 @@ export default function MessagesClient() {
 
         <aside style={{ display: 'grid', gap: 18 }}>
           <div style={card}>
-            <h2 style={{ marginTop: 0 }}>Demo Consumers</h2>
+            <h2 style={{ marginTop: 0 }}>Test Consumers</h2>
             <div style={{ display: 'grid', gap: 10 }}>
               {cases.map((item) => (
                 <button
@@ -180,8 +179,9 @@ export default function MessagesClient() {
             <Link href="/scan" style={{ display: 'inline-block', marginTop: 12, color: '#0369a1', fontWeight: 900 }}>Create another test consumer</Link>
           </div>
 
-          <div style={{ ...card, background: '#fffbeb', borderColor: '#fde68a' }}>
-            <h2 style={{ marginTop: 0 }}>Production Later</h2>
+          <div className="cv-feature-muted" style={{ ...card, background: '#fffbeb', borderColor: '#fde68a' }}>
+            <h2 style={{ marginTop: 0 }}>External Sending</h2>
+            <span className="cv-status-chip soon">Coming soon</span>
             <p style={{ color: '#92400e', lineHeight: 1.55 }}>
               Real sending will need consent records, unsubscribe controls, delivery logs, and a provider like SendGrid, Mailgun, Postmark, Twilio, or another compliant vendor.
             </p>

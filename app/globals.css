@@ -132,6 +132,50 @@ textarea {
   border: 1px solid #bce8d4;
 }
 
+.cv-muted-action,
+.cv-disabled-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 900;
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  text-decoration: none;
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+
+.cv-status-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 7px 11px;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.cv-status-chip.ready {
+  color: #047857;
+  background: #dcfce7;
+}
+
+.cv-status-chip.soon {
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+.cv-feature-muted {
+  filter: grayscale(0.2);
+  opacity: 0.72;
+  background: #f8fafc !important;
+  border-color: #d8e0ea !important;
+}
+
 .cv-nav {
   background: rgba(255, 255, 255, 0.88);
   border-bottom: 1px solid rgba(188, 232, 212, 0.9);

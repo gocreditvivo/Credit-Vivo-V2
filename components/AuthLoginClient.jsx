@@ -36,13 +36,13 @@ export default function AuthLoginClient({ mode = 'login' }) {
     };
   }, [isSignup]);
 
-  function handleDemoSubmit(event) {
+  function handlePreviewSubmit(event) {
     event.preventDefault();
-    setStatus('Demo login accepted. In production this connects to secure authentication, encrypted sessions, and customer consent records.');
+    setStatus('Launch preview login accepted. Secure authentication, encrypted sessions, and customer consent records are connected before public launch.');
   }
 
   function handleSocial(provider) {
-    setStatus(`${provider} sign-in is simulated. No account data was sent.`);
+    setStatus(`${provider} sign-in is not connected yet. No account data was sent.`);
   }
 
   return (
@@ -60,7 +60,7 @@ export default function AuthLoginClient({ mode = 'login' }) {
           <p>{copy.subtitle}</p>
         </div>
 
-        <form className={styles.form} onSubmit={handleDemoSubmit}>
+        <form className={styles.form} onSubmit={handlePreviewSubmit}>
           <label className={styles.label} htmlFor="email">Email</label>
           <div className={styles.inputWrap}>
             <span className={styles.inputIcon} aria-hidden="true">@</span>

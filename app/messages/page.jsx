@@ -2,7 +2,7 @@ import MessagesClient from "../../components/MessagesClient";
 
 export const metadata = {
   title: "Messages",
-  description: "Credit Vivo portal, email, and text message simulation.",
+  description: "Credit Vivo portal, email, and text message launch preview.",
 };
 
 export default function MessagesPage() {
