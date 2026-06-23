@@ -49,10 +49,11 @@ textarea {
 .cv-brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
   color: var(--cv-ink);
   font-weight: 900;
   text-decoration: none;
+  min-width: max-content;
 }
 
 .cv-brand:hover {
@@ -60,34 +61,64 @@ textarea {
 }
 
 .cv-brand-mark {
-  width: 38px;
-  height: 38px;
+  width: 48px;
+  height: 42px;
   display: grid;
   place-items: center;
-  border-radius: 12px;
-  color: white;
-  background: linear-gradient(135deg, #12b981 0%, #0ea5a4 48%, #2563eb 100%);
-  box-shadow: 0 12px 26px rgba(18, 185, 129, 0.28);
-  font-weight: 950;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 75% 24%, rgba(251, 191, 36, 0.32), transparent 24%),
+    linear-gradient(135deg, #ecfdf5 0%, #dff8ee 44%, #eef9ff 100%);
+  border: 1px solid rgba(18, 185, 129, 0.28);
+  box-shadow: 0 12px 26px rgba(18, 185, 129, 0.22);
   position: relative;
   overflow: hidden;
 }
 
-.cv-brand-mark::after {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 999px 999px 999px 2px;
-  background: rgba(255, 255, 255, 0.35);
-  right: 4px;
-  top: 5px;
-  transform: rotate(-22deg);
+.cv-brand-bird {
+  width: 39px;
+  height: 30px;
+  display: block;
+  overflow: visible;
+}
+
+.cv-bird-wing {
+  fill: url("#cv-bird-gradient");
+}
+
+.cv-bird-wing-left {
+  fill: #0ea5a4;
+}
+
+.cv-bird-wing-right {
+  fill: #12b981;
+}
+
+.cv-bird-body {
+  fill: #2563eb;
+  opacity: 0.94;
+}
+
+.cv-bird-sun {
+  fill: #fbbf24;
+}
+
+.cv-brand-wordmark {
+  display: grid;
+  gap: 1px;
+  line-height: 1.05;
 }
 
 .cv-brand-text {
-  font-size: 1.18rem;
+  font-size: 1.2rem;
   letter-spacing: 0;
+}
+
+.cv-brand-tagline {
+  color: #0f766e;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 .cv-page {
@@ -216,7 +247,25 @@ textarea {
 }
 
 @media (max-width: 760px) {
+  .cv-brand {
+    gap: 8px;
+  }
+
+  .cv-brand-mark {
+    width: 42px;
+    height: 38px;
+  }
+
+  .cv-brand-bird {
+    width: 34px;
+    height: 27px;
+  }
+
   .cv-brand-text {
     font-size: 1.05rem;
+  }
+
+  .cv-brand-tagline {
+    display: none;
   }
 }
