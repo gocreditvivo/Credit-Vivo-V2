@@ -52,14 +52,14 @@ export default function Dashboard() {
             },
             {
               num: 2,
-              title: 'Review selected collections',
+              title: 'Review selected report items',
               desc: 'We organize items that may need more review.',
               to: '/findings',
             },
             {
               num: 3,
-              title: 'Lower one balance if possible',
-              desc: 'One score opportunity is ready.',
+              title: 'Review balance habits',
+              desc: 'One educational action item is ready.',
               to: '#',
             },
           ].map((step) => (

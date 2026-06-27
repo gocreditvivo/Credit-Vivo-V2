@@ -17,14 +17,14 @@ const liveFeatures = [
     description: 'Shows the customer a plain-English preview of possible reporting issues, missing fields, and next steps.',
   },
   {
-    eyebrow: 'Disputes',
-    title: 'Dispute workflow shell',
-    description: 'A clean structure for bureau disputes, furnisher validation letters, document evidence, and progress tracking.',
+    eyebrow: 'Self-directed review',
+    title: 'Review workflow shell',
+    description: 'A clean structure for consumer-reviewed bureau notes, furnisher questions, document evidence, and progress tracking.',
   },
   {
     eyebrow: 'Dashboard',
     title: 'Client progress dashboard',
-    description: 'A production-style dashboard layout for accounts, actions, timelines, and upcoming dispute milestones.',
+    description: 'A production-style dashboard layout for accounts, consumer-reviewed actions, timelines, and upcoming review milestones.',
   },
 ];
 
@@ -39,7 +39,7 @@ const futureFeatures = [
   },
   {
     title: 'Payment plans and subscriptions',
-    description: 'Connect Stripe or another processor for free scan, monthly dispute plans, and attorney escalation add-ons.',
+    description: 'Connect Stripe or another processor for free scan, educational software plans, and optional attorney escalation add-ons.',
   },
   {
     title: 'Attorney escalation portal',
@@ -47,7 +47,7 @@ const futureFeatures = [
   },
   {
     title: 'CFPB and state complaint package',
-    description: 'Prepare an evidence-backed complaint packet when a dispute response appears incomplete or unreasonable.',
+    description: 'Organize an evidence-backed complaint packet when a consumer believes a response appears incomplete or unreasonable.',
   },
   {
     title: 'Credit monitoring and alerts',
@@ -62,10 +62,10 @@ export default function HomePage() {
 
       <section className="hero-section">
         <div className="hero-copy">
-          <div className="hero-kicker">AI-powered credit improvement platform</div>
-          <h1>Find credit report problems. Start disputes. Track progress in one clean dashboard.</h1>
+          <div className="hero-kicker">Educational credit report review platform</div>
+          <h1>Find possible report issues. Organize next steps. Track progress in one clean dashboard.</h1>
           <p>
-            Credit Vivo gives consumers a simple way to upload a credit report, review negative accounts, understand possible errors in plain English, and organize the next dispute step.
+            Credit Vivo gives consumers a simple way to upload a credit report, review accounts, understand possible inaccuracies in plain English, and organize self-directed next steps.
           </p>
           <div className="hero-actions">
             <Link href="/scan" className="btn btn-primary btn-large">Start Free Credit Scan</Link>
@@ -95,7 +95,7 @@ export default function HomePage() {
               <div className="timeline-item done">Upload Report</div>
               <div className="timeline-item done">AI Findings</div>
               <div className="timeline-item">Negative Accounts</div>
-              <div className="timeline-item muted">Start Dispute</div>
+              <div className="timeline-item muted">Review Options</div>
               <div className="timeline-item muted">Track Progress</div>
             </div>
             <Link href="/scan" className="btn btn-primary full-width">Upload My Report</Link>
@@ -112,9 +112,9 @@ export default function HomePage() {
         <div className="steps-grid">
           <StepCard number="1" title="Upload Report" description="Customer uploads a PDF or image of their credit report." />
           <StepCard number="2" title="AI Findings" description="Credit Vivo explains possible issues in plain English." />
-          <StepCard number="3" title="Review Negatives" description="Customer reviews collections, charge-offs, and late payments." />
-          <StepCard number="4" title="Start Dispute" description="The app organizes bureau and furnisher dispute actions." />
-          <StepCard number="5" title="Track Progress" description="Customer sees what was sent, what is pending, and what changed." />
+          <StepCard number="3" title="Review Accounts" description="Customer reviews collections, charge-offs, and late payments." />
+          <StepCard number="4" title="Choose Next Steps" description="The app organizes bureau and furnisher review options for the consumer." />
+          <StepCard number="5" title="Track Progress" description="Customer sees what was reviewed, what is pending, and what changed." />
         </div>
       </section>
 
@@ -155,7 +155,7 @@ export default function HomePage() {
           <span className="section-label">Compliance-first language</span>
           <h2>Clean wording for customers, investors, and future legal review.</h2>
           <p>
-            The page avoids making guaranteed credit score promises. It focuses on report review, organization, dispute preparation, and customer education.
+            The page avoids making guaranteed credit score promises. It focuses on report review, organization, self-directed next steps, and customer education.
           </p>
         </div>
         <div className="checklist-card">
@@ -163,7 +163,7 @@ export default function HomePage() {
           <ul>
             <li>Free scan entry point</li>
             <li>Plain-English AI findings preview</li>
-            <li>Dispute workflow page</li>
+            <li>Review workflow page</li>
             <li>Dashboard demo</li>
             <li>Pricing section</li>
             <li>Gray coming-soon feature cards</li>
@@ -173,7 +173,7 @@ export default function HomePage() {
 
       <section className="cta-band">
         <h2>Ready to test the Credit Vivo customer flow?</h2>
-        <p>Start with the scan page, then review the dashboard and dispute center.</p>
+        <p>Start with the scan page, then review the dashboard and self-directed review center.</p>
         <div className="hero-actions center-actions">
           <Link href="/scan" className="btn btn-primary btn-large">Start Free Scan</Link>
           <Link href="/pricing" className="btn btn-secondary btn-large">View Pricing</Link>

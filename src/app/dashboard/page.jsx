@@ -8,7 +8,7 @@ const tasks = [
   ['Report uploaded', 'Complete', 'success'],
   ['AI findings reviewed', 'Ready', 'success'],
   ['Negative accounts confirmed', 'Needs review', 'medium'],
-  ['Dispute packet prepared', 'Next step', 'high'],
+  ['Review packet organized', 'Next step', 'high'],
   ['Bureau response tracking', 'Coming soon', 'default'],
 ];
 
@@ -25,7 +25,7 @@ export default function DashboardPage() {
         <div>
           <span className="section-label">Customer dashboard</span>
           <h1>One clean place to see credit review progress.</h1>
-          <p>Use this dashboard as the production-style customer home after upload, AI review, and dispute preparation.</p>
+          <p>Use this dashboard as the production-style customer home after upload, report review, and self-directed next-step organization.</p>
         </div>
         <Link href="/scan" className="btn btn-primary">Upload New Report</Link>
       </section>
@@ -42,9 +42,9 @@ export default function DashboardPage() {
           <small>Need customer review</small>
         </article>
         <article className="metric-card">
-          <span>Disputes</span>
+          <span>Review Queue</span>
           <strong>0</strong>
-          <small>Ready to prepare</small>
+          <small>Ready for review</small>
         </article>
         <article className="metric-card muted-card">
           <span>Credit Monitoring</span>
@@ -75,8 +75,8 @@ export default function DashboardPage() {
         <aside className="panel-card">
           <span className="section-label">Next best action</span>
           <h2>Review negative accounts</h2>
-          <p>Before sending disputes, the customer should confirm the accounts and check that raw report information matches the AI findings.</p>
-          <Link href="/disputes" className="btn btn-primary full-width">Open Dispute Center</Link>
+          <p>Before taking any action, the customer should confirm the accounts and check that raw report information matches the findings.</p>
+          <Link href="/disputes" className="btn btn-primary full-width">Open Review Center</Link>
         </aside>
       </section>
 
@@ -91,7 +91,7 @@ export default function DashboardPage() {
         <div className="feature-grid three-col">
           <article className="feature-card muted-card"><h3>Secure document vault</h3><p>Store reports, IDs, letters, and evidence securely.</p><ComingSoonButton /></article>
           <article className="feature-card muted-card"><h3>Score and alert monitoring</h3><p>Track credit profile changes over time.</p><ComingSoonButton /></article>
-          <article className="feature-card muted-card"><h3>Attorney review requests</h3><p>Escalate unanswered or unreasonable dispute results.</p><ComingSoonButton /></article>
+          <article className="feature-card muted-card"><h3>Attorney review requests</h3><p>Request review for eligible unanswered or unreasonable response results.</p><ComingSoonButton /></article>
         </div>
       </section>
       <Footer />

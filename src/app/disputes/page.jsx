@@ -6,13 +6,13 @@ import ComingSoonButton from '../../components/ComingSoonButton';
 
 const disputeRows = [
   ['Collection account', 'Possible missing original creditor', 'Review evidence', 'medium'],
-  ['Charge-off tradeline', 'Possible status/date mismatch', 'Prepare bureau dispute', 'high'],
+  ['Charge-off tradeline', 'Possible status/date mismatch', 'Prepare review note', 'high'],
   ['Late payment account', 'Needs bureau side-by-side check', 'Customer review', 'medium'],
 ];
 
 export const metadata = {
   title: 'Dispute Center | Credit Vivo',
-  description: 'Prepare and track dispute workflows with Credit Vivo.',
+  description: 'Prepare and track self-directed review workflows with Credit Vivo.',
 };
 
 export default function DisputesPage() {
@@ -21,9 +21,9 @@ export default function DisputesPage() {
       <Header />
       <section className="page-hero compact-hero">
         <div>
-          <span className="section-label">Dispute center</span>
-          <h1>Prepare disputes without overwhelming the customer.</h1>
-          <p>Credit Vivo keeps the process simple: review the issue, collect evidence, choose dispute type, and track the response.</p>
+          <span className="section-label">Review center</span>
+          <h1>Organize review steps without overwhelming the customer.</h1>
+          <p>Credit Vivo keeps the process simple: review the issue, collect evidence, choose a self-directed next step, and track the response.</p>
         </div>
         <Link href="/scan" className="btn btn-primary">Run Scan First</Link>
       </section>
@@ -32,8 +32,8 @@ export default function DisputesPage() {
         <div className="feature-grid three-col">
           <article className="feature-card">
             <span className="eyebrow">Step 1</span>
-            <h3>Bureau dispute</h3>
-            <p>Prepare clear dispute language for Experian, Equifax, and TransUnion based on specific report issues.</p>
+            <h3>Bureau review note</h3>
+            <p>Organize clear consumer-reviewed language for Experian, Equifax, and TransUnion based on specific report issues.</p>
             <Link href="/scan" className="btn btn-secondary">Start From Scan</Link>
           </article>
           <article className="feature-card">
@@ -89,8 +89,8 @@ export default function DisputesPage() {
         <div className="split-section no-pad">
           <div>
             <span className="section-label">Future automation</span>
-            <h2>Letter generation and certified mail tracking are placeholders for now.</h2>
-            <p>These are shown as coming soon so the site looks professional while we connect the real dispute engine later.</p>
+            <h2>Letter drafting and certified mail tracking are placeholders for now.</h2>
+            <p>These are shown as coming soon so the site looks professional while compliant review, authorization, and mail workflows are connected later.</p>
           </div>
           <div className="button-stack">
             <ComingSoonButton>Generate Bureau Letter</ComingSoonButton>

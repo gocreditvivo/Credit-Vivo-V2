@@ -12,7 +12,7 @@ const navLinks = [
 const steps = [
   ["Upload", "Add a credit report or start with a guided launch-preview upload."],
   ["Understand", "See simple findings in plain English, without backend scanner noise."],
-  ["Act", "Move through Prep, Round 1, response tracking, and the next best step."],
+  ["Review", "Move through preparation, response tracking, and the next best self-directed step."],
   ["Grow", "Track monthly updates, documents, messages, and credit-building guidance."],
 ];
 
@@ -54,7 +54,7 @@ export default function HomePage() {
             Credit Vivo
           </h1>
           <p style={{ fontSize: 19, color: "#334155", maxWidth: 610, lineHeight: 1.65 }}>
-            A friendly credit report portal that helps customers upload reports, understand possible issues, follow dispute rounds, and see monthly progress. Unconnected features are clearly marked before launch.
+            A friendly credit report portal that helps customers upload reports, understand possible issues, organize self-directed review steps, and see monthly progress. Unconnected features are clearly marked before launch.
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
             <a href="/scan" className="cv-primary-link">Start Free Credit Scan</a>

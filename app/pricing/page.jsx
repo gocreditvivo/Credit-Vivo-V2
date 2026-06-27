@@ -9,8 +9,8 @@ export const metadata = {
 export default function PricingPage() {
   const plans = [
     ["Free Scan", "$0", "Upload a report and preview possible issues.", "Ready", "Best for seeing what the portal finds."],
-    ["Vivo Assist", "$49/mo", "Portal updates, simple findings, document vault, and dispute draft tracking.", "Ready", "Lower-cost assisted workflow."],
-    ["Vivo Pro", "$79/mo", "Bureau and furnisher package workflow plus follow-up schedule.", "Launch preview", "Mailing/payment vendors must be connected before billing."],
+    ["Vivo Assist", "$49/mo", "Portal updates, simple findings, document vault, and self-directed draft tracking.", "Ready", "Lower-cost software workflow."],
+    ["Vivo Pro", "$79/mo", "Bureau and furnisher review workflow plus follow-up schedule.", "Launch preview", "Mailing/payment vendors must be connected before billing."],
     ["Attorney Backup", "$129/mo", "Escalation review path for complex cases when available.", "Coming soon", "Attorney involvement requires a separate compliant arrangement."],
   ];
 
@@ -25,7 +25,7 @@ export default function PricingPage() {
         </div>
       </nav>
       <h1 style={{ fontSize: 42, marginBottom: 8 }}>Pricing</h1>
-      <p style={{ color: "#475569", maxWidth: 760, lineHeight: 1.65 }}>Simple launch pricing designed to stay attractive while showing a realistic path from free scan to assisted dispute workflow.</p>
+      <p style={{ color: "#475569", maxWidth: 760, lineHeight: 1.65 }}>Simple launch pricing designed to stay attractive while showing a realistic path from free scan to self-directed review workflow.</p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 18, marginTop: 24 }}>
         {plans.map(([name, price, body, status, note]) => (
           <div key={name} className={status === "Coming soon" ? "cv-feature-muted" : ""} style={{ background: "rgba(255,255,255,.94)", padding: 24, borderRadius: 8, border: "1px solid #cfeee0", boxShadow: "0 18px 42px rgba(16,32,51,.09)" }}>

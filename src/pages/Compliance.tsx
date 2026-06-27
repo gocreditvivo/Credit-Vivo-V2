@@ -14,7 +14,7 @@ export default function Compliance() {
             Clear, honest credit guidance.
           </h1>
           <p className="text-[15px] text-navy-500">
-            Credit Vivo is built to guide customers without false promises.
+            Credit Vivo is built as educational software for self-directed consumers, without false promises.
           </p>
         </div>
       </section>
@@ -25,8 +25,8 @@ export default function Compliance() {
           <div className="grid md:grid-cols-3 gap-5">
             {[
               { icon: CheckCircle, title: 'No guarantees', desc: 'We do not guarantee score increases, removals, approvals, or outcomes.' },
-              { icon: FileText, title: 'Review before action', desc: 'Customers should review and approve important actions before anything is sent.' },
-              { icon: Scale, title: 'Legal support separate', desc: 'Credit Vivo is not a law firm. Optional legal support, if offered, is separate.' },
+              { icon: FileText, title: 'Consumer control', desc: 'Credit Vivo does not send disputes, letters, or complaints automatically. Users review and decide their own next steps.' },
+              { icon: Scale, title: 'Not a CSO or law firm', desc: 'Credit Vivo is not a credit repair organization, credit services organization, or law firm.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
                 <div className="w-9 h-9 bg-sky-100 rounded-lg flex items-center justify-center mb-3">
@@ -46,7 +46,7 @@ export default function Compliance() {
           <div className="bg-white rounded-xl p-6 border border-navy-100/60">
             <h3 className="text-sm font-bold text-navy-900 mb-3">Important notice</h3>
             <p className="text-sm text-navy-500 leading-relaxed">
-              Credit Vivo helps users understand, organize, review, and track credit improvement steps. Scanner output is draft review data only and should be checked before use. Accurate, current, and verifiable information may remain on a credit report. Any legal, identity protection, mail, or credit-building partner services should be optional, separate, and clearly explained before purchase.
+              Credit Vivo helps users understand, organize, review, and track credit information. Scanner output is draft review data only and should be checked before use. You may dispute inaccurate information directly with credit bureaus and furnishers at no cost. Accurate, current, and verifiable information may remain on a credit report. Any legal, identity protection, mail, or credit-building partner services should be optional, separate, and clearly explained before purchase.
             </p>
           </div>
         </div>

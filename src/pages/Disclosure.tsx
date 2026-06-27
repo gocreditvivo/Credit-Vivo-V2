@@ -1,7 +1,11 @@
 const disclosures = [
   {
     title: 'Your free dispute rights',
-    body: 'You have the right to dispute inaccurate or incomplete information directly with Experian, Equifax, TransUnion, furnishers, and consumer reporting agencies at no cost.',
+    body: 'You have the right to dispute inaccurate or incomplete information directly with Experian, Equifax, TransUnion, furnishers, and consumer reporting agencies at no cost. Credit Vivo is not required for you to exercise those rights.',
+  },
+  {
+    title: 'Platform classification',
+    body: 'Credit Vivo is an educational software platform and self-directed tool. Credit Vivo is not a credit repair agency, credit repair organization, credit services organization, or law firm, and does not perform credit repair services on your behalf.',
   },
   {
     title: 'No promise of deletion',
@@ -56,8 +60,8 @@ export default function Disclosure() {
           <div className="bg-navy-50/50 rounded-xl p-6 border border-navy-100/60">
             <p className="text-sm text-navy-500 leading-relaxed mb-6">
               <strong className="text-navy-800">Important consumer notice:</strong> Credit
-              Vivo is not a credit bureau, lender, government agency, law firm, or credit
-              score company.
+              Vivo is not a credit bureau, lender, government agency, law firm, credit
+              repair organization, credit services organization, or credit score company.
             </p>
 
             <div className="space-y-5">

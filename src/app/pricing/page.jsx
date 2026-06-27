@@ -23,7 +23,7 @@ export default function PricingPage() {
           <span className="eyebrow">Free</span>
           <h2>Credit Scan</h2>
           <div className="price">$0</div>
-          <p>Best for a customer who wants to see what Credit Vivo may find before starting a dispute plan.</p>
+          <p>Best for a customer who wants to see what Credit Vivo may organize before deciding on next steps.</p>
           <ul>
             <li>Upload report</li>
             <li>AI findings preview</li>
@@ -35,12 +35,12 @@ export default function PricingPage() {
 
         <article className="price-card featured-price">
           <span className="eyebrow">Most Useful</span>
-          <h2>Dispute Plus</h2>
+          <h2>Review Plus</h2>
           <div className="price">$29<span>/mo</span></div>
-          <p>For customers who want organized dispute preparation and progress tracking.</p>
+          <p>For customers who want organized review notes, document checklists, and progress tracking.</p>
           <ul>
-            <li>Bureau dispute workflow</li>
-            <li>Furnisher validation workflow</li>
+            <li>Bureau review workflow</li>
+            <li>Furnisher question workflow</li>
             <li>Document checklist</li>
             <li>Progress dashboard</li>
           </ul>
@@ -80,7 +80,7 @@ export default function PricingPage() {
         <div className="panel-card wide-card">
           <span className="section-label">Important</span>
           <h2>No guaranteed score promises.</h2>
-          <p>Credit Vivo should avoid promising score increases or guaranteed deletions. The safer positioning is: review, organize, educate, prepare disputes, and track progress.</p>
+          <p>Credit Vivo should avoid promising score increases or guaranteed deletions. The safer positioning is: review, organize, educate, support self-directed choices, and track progress.</p>
         </div>
       </section>
       <Footer />

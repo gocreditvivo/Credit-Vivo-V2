@@ -1,7 +1,15 @@
 const terms = [
   {
     title: 'Service',
-    body: 'Credit Vivo provides a portal for credit report upload, customer-friendly findings, document organization, review workflow tracking, and educational guidance. Scanner rules are internal and are not shown as legal conclusions to customers.',
+    body: 'Credit Vivo provides an educational software portal for credit report upload, customer-friendly findings, document organization, self-directed review workflow tracking, and educational guidance. Scanner rules are internal and are not shown as legal conclusions to customers.',
+  },
+  {
+    title: 'Platform classification',
+    body: 'Credit Vivo is not a credit repair agency, credit repair organization, credit services organization, or law firm. Credit Vivo does not provide legal advice or perform credit repair services on your behalf. The platform helps users organize their own information and make their own decisions.',
+  },
+  {
+    title: 'Your free dispute rights',
+    body: 'You have the right to dispute inaccurate or incomplete information directly with credit bureaus and furnishers at no cost. Credit Vivo is not required for you to exercise those rights.',
   },
   {
     title: 'No guaranteed result',
@@ -13,7 +21,7 @@ const terms = [
   },
   {
     title: 'Payments and third-party costs',
-    body: 'Credit Vivo is not accepting paid credit services during beta. If paid plans, certified mail, credit monitoring, identity verification, attorney review, third-party report access, or legal costs are introduced later, they should be explained in writing before purchase.',
+    body: 'Credit Vivo is not accepting paid credit services during beta. If paid plans, certified mail, credit monitoring, identity verification, attorney review, third-party report access, or legal costs are introduced later, they must be explained in writing before purchase. Credit Vivo will not charge advance fees for credit repair services before legally permitted.',
   },
   {
     title: 'Electronic communications',
@@ -25,7 +33,7 @@ const terms = [
   },
   {
     title: 'Cancellation',
-    body: 'If paid services are introduced later, service agreements should include cancellation rights required by federal and state law. Credit Vivo should not charge for credit repair services before legally permitted under the applicable agreement.',
+    body: 'If paid services are introduced later, service agreements should include cancellation rights required by federal and state law, including any applicable 3-business-day right to cancel without penalty. Credit Vivo should not charge for credit repair services before legally permitted under the applicable agreement.',
   },
 ];
 

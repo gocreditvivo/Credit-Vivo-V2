@@ -23,7 +23,7 @@ export default function WhyCreditVivo() {
             Credit guidance that makes sense.
           </h1>
           <p className="text-[15px] text-navy-500 max-w-xl mx-auto leading-relaxed">
-            Credit Vivo is built for real people who want clarity, not jargon. We help you understand, organize, and improve your credit step by step.
+            Credit Vivo is built for real people who want clarity, not jargon. We help you understand credit information, organize report details, and make more informed self-directed choices step by step.
           </p>
         </div>
       </section>
@@ -35,7 +35,7 @@ export default function WhyCreditVivo() {
             <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">Consumer-first difference</p>
             <h2 className="text-2xl font-bold text-navy-900">Built for clarity before claims</h2>
             <p className="text-sm text-navy-500 max-w-2xl mx-auto mt-3">
-              Many credit services lead with aggressive repair language. Credit Vivo leads with education, review, prioritization, and customer approval.
+              Many credit services lead with aggressive repair language. Credit Vivo leads with education, review, prioritization, and customer control.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export default function WhyCreditVivo() {
               {
                 icon: Target,
                 title: 'Prioritized steps',
-                desc: 'We don\'t dispute everything at once. We help you focus on what matters most right now.',
+                desc: 'We do not send disputes for you or encourage blanket disputes. We help you review what may matter most right now.',
               },
               {
                 icon: BookOpen,
@@ -82,7 +82,7 @@ export default function WhyCreditVivo() {
               {
                 icon: Users,
                 title: 'You stay in control',
-                desc: 'You review and approve actions before they\'re taken. Nothing happens without your knowledge.',
+                desc: 'You review choices before taking action. Nothing is sent, mailed, or submitted automatically.',
               },
               {
                 icon: ShieldCheck,
@@ -92,7 +92,7 @@ export default function WhyCreditVivo() {
               {
                 icon: Clock,
                 title: 'Ongoing tracking',
-                desc: 'Know what was sent, what\'s pending, what changed, and what to focus on next.',
+                desc: 'Know what you reviewed, what is pending, what changed, and what to focus on next.',
               },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">

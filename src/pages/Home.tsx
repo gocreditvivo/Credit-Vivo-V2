@@ -25,7 +25,7 @@ function HeroCard() {
       <div className="space-y-2.5">
         {[
           { label: 'Profile reviewed', done: true },
-          { label: 'Score opportunities found', done: true },
+          { label: 'Education items found', done: true },
           { label: 'Monthly plan created', done: false },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2.5 py-2 px-3 bg-navy-50/60 rounded-lg">
@@ -66,7 +66,7 @@ export default function Home() {
 
               <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
                 <strong className="text-navy-700">You take control. We clear the path.</strong>{' '}
-                Credit Vivo helps you understand your credit, build better habits, review possible errors, and follow a simple monthly plan without promising impossible shortcuts.
+                Credit Vivo helps you understand your credit, organize report information, review possible inaccuracies, and follow a simple monthly plan without promising impossible shortcuts.
               </p>
 
               <div className="flex flex-wrap gap-3 mb-8">
@@ -123,8 +123,8 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { title: 'Understand', desc: 'Know what may be holding you back.' },
-              { title: 'Build', desc: 'Focus on habits that may help over time.' },
-              { title: 'Review', desc: 'Check possible errors before any action.' },
+              { title: 'Build', desc: 'Learn habits that may help over time.' },
+              { title: 'Review', desc: 'Check possible inaccuracies before any action.' },
               { title: 'Track', desc: 'Know what was done and what happens next.' },
             ].map((g) => (
               <div key={g.title} className="bg-white/5 border border-white/10 rounded-xl p-5 text-left">
@@ -174,7 +174,7 @@ export default function Home() {
           <div className="text-center mb-12">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">What we help with</p>
             <h2 className="text-2xl sm:text-[28px] font-bold text-navy-900">
-              Build, clean up, track, and learn.
+              Build, review, track, and learn.
             </h2>
           </div>
 
@@ -188,8 +188,8 @@ export default function Home() {
               },
               {
                 icon: Sparkles,
-                title: 'Clean up possible errors',
-                desc: 'Review personal information, collections, bureau differences, and account details that may need attention before action is prepared.',
+                title: 'Review possible inaccuracies',
+                desc: 'Review personal information, collections, bureau differences, and account details that may need attention before any self-directed next step.',
                 color: 'bg-sky-100 text-sky-600',
               },
               {

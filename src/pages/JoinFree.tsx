@@ -28,8 +28,8 @@ export default function JoinFree() {
               <div>
                 <label className="block text-xs font-semibold text-navy-700 mb-1.5">Your main goal</label>
                 <select className="w-full bg-white border border-navy-200 rounded-lg px-3 py-2.5 text-sm text-navy-800 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all">
-                  <option>Improve my score</option>
-                  <option>Clean up possible errors</option>
+                  <option>Understand my score factors</option>
+                  <option>Review possible report inaccuracies</option>
                   <option>Buy a car</option>
                   <option>Buy a home</option>
                   <option>Understand my credit</option>

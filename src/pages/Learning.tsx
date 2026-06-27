@@ -6,10 +6,10 @@ const lessons = [
   { cat: 'Beginner', title: 'Why payment history matters', desc: 'Late payments can hurt because lenders want to know if you pay on time.' },
   { cat: 'Beginner', title: 'Why balances matter', desc: 'High credit card balances can hurt your score profile even if you pay every month.' },
   { cat: 'Beginner', title: 'When should I pay my card?', desc: 'Paying before the statement date may help a lower balance report.' },
-  { cat: 'Clean-Up', title: 'What is a credit report error?', desc: 'An error may be information that is wrong, incomplete, outdated, duplicated, or not yours.' },
-  { cat: 'Clean-Up', title: 'What is a collection?', desc: 'A collection means a debt may have been sent or sold to a collector. It should be reviewed carefully.' },
-  { cat: 'Clean-Up', title: 'What is collection validation?', desc: 'It means asking selected collectors to confirm important debt details before bigger actions.' },
-  { cat: 'Clean-Up', title: 'Why not dispute everything at once?', desc: 'A step-by-step plan can avoid confusion, unnecessary cost, and weak actions.' },
+  { cat: 'Report Review', title: 'What is a credit report error?', desc: 'An error may be information that is wrong, incomplete, outdated, duplicated, or not yours.' },
+  { cat: 'Report Review', title: 'What is a collection?', desc: 'A collection means a debt may have been sent or sold to a collector. It should be reviewed carefully.' },
+  { cat: 'Report Review', title: 'What is collection validation?', desc: 'It means a consumer may ask selected collectors to confirm important debt details before deciding next steps.' },
+  { cat: 'Report Review', title: 'Why not dispute everything at once?', desc: 'A step-by-step review can avoid confusion, unnecessary cost, and weak or unsupported actions.' },
   { cat: 'Progress', title: 'What does verified mean?', desc: 'Verified means the item stayed after review. It does not always mean follow-up is impossible.' },
   { cat: 'Progress', title: 'Why track everything?', desc: 'Tracking helps you know what was sent, what is pending, and what to do next.' },
   { cat: 'Goals', title: 'Before buying a car', desc: 'Lower balances, avoid unnecessary applications, and review your report before applying.' },
@@ -18,7 +18,7 @@ const lessons = [
 
 const catColors: Record<string, string> = {
   Beginner: 'text-sky-600',
-  'Clean-Up': 'text-mint-600',
+  'Report Review': 'text-mint-600',
   Progress: 'text-navy-600',
   Goals: 'text-amber-600',
 };

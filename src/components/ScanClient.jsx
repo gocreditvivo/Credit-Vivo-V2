@@ -10,7 +10,7 @@ const demoFindings = [
     severity: 'high',
     title: 'Possible bureau reporting mismatch',
     account: 'Collection / charge-off account',
-    detail: 'One bureau may show different balance, status, or date information than another bureau. This should be reviewed side by side before dispute preparation.',
+    detail: 'One bureau may show different balance, status, or date information than another bureau. This should be reviewed side by side before any self-directed next step.',
   },
   {
     severity: 'medium',
@@ -28,7 +28,7 @@ const demoFindings = [
     severity: 'low',
     title: 'Identity section cleanup opportunity',
     account: 'Personal information',
-    detail: 'Old addresses, aliases, or duplicate phone numbers can be organized before sending disputes so the customer profile stays clean.',
+    detail: 'Old addresses, aliases, or duplicate phone numbers can be organized so the customer profile is easier to review.',
   },
 ];
 
@@ -83,7 +83,7 @@ export default function ScanClient() {
           <li>Negative accounts, collections, charge-offs, and late payments</li>
           <li>Balance, status, date, creditor, and classification mismatches</li>
           <li>Missing original creditor or incomplete furnisher details</li>
-          <li>Plain-English dispute preparation notes</li>
+          <li>Plain-English review notes</li>
         </ul>
       </aside>
 
@@ -113,10 +113,10 @@ export default function ScanClient() {
           <div className="next-step-card">
             <div>
               <h3>Recommended next step</h3>
-              <p>Review negative accounts, confirm the raw report details, then prepare bureau disputes or furnisher validation requests.</p>
+              <p>Review negative accounts, confirm the raw report details, then decide whether any bureau or furnisher follow-up makes sense.</p>
             </div>
             <div className="button-row right-actions">
-              <Link href="/disputes" className="btn btn-primary">Start Dispute Flow</Link>
+              <Link href="/disputes" className="btn btn-primary">Open Review Flow</Link>
               <Link href="/dashboard" className="btn btn-secondary">View Dashboard</Link>
             </div>
           </div>
