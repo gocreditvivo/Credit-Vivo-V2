@@ -25,7 +25,7 @@ export default function Compliance() {
           <div className="grid md:grid-cols-3 gap-5">
             {[
               { icon: CheckCircle, title: 'No guarantees', desc: 'We do not guarantee score increases, removals, approvals, or outcomes.' },
-              { icon: FileText, title: 'Customer review', desc: 'Customers should review and approve important actions before anything is sent.' },
+              { icon: FileText, title: 'Review before action', desc: 'Customers should review and approve important actions before anything is sent.' },
               { icon: Scale, title: 'Legal support separate', desc: 'Credit Vivo is not a law firm. Optional legal support, if offered, is separate.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
@@ -46,7 +46,7 @@ export default function Compliance() {
           <div className="bg-white rounded-xl p-6 border border-navy-100/60">
             <h3 className="text-sm font-bold text-navy-900 mb-3">Important notice</h3>
             <p className="text-sm text-navy-500 leading-relaxed">
-              Credit Vivo helps users understand, organize, review, and track credit improvement steps. Accurate, current, and verifiable information may remain on a credit report. Any legal, identity protection, mail, or credit-building partner services should be optional, separate, and clearly explained before purchase.
+              Credit Vivo helps users understand, organize, review, and track credit improvement steps. Scanner output is draft review data only and should be checked before use. Accurate, current, and verifiable information may remain on a credit report. Any legal, identity protection, mail, or credit-building partner services should be optional, separate, and clearly explained before purchase.
             </p>
           </div>
         </div>

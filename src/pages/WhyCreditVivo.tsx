@@ -28,6 +28,32 @@ export default function WhyCreditVivo() {
         </div>
       </section>
 
+      {/* Comparison */}
+      <section className="py-14 bg-sky-50/40">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">Consumer-first difference</p>
+            <h2 className="text-2xl font-bold text-navy-900">Built for clarity before claims</h2>
+            <p className="text-sm text-navy-500 max-w-2xl mx-auto mt-3">
+              Many credit services lead with aggressive repair language. Credit Vivo leads with education, review, prioritization, and customer approval.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              { title: 'No pressure funnel', desc: 'Start with a free Check-In and a plain explanation of what may matter.' },
+              { title: 'No automatic sending', desc: 'Parser results are draft review data. Important actions should be reviewed first.' },
+              { title: 'No outcome promises', desc: 'Accurate, current, and verifiable information may remain on a credit report.' },
+            ].map((item) => (
+              <div key={item.title} className="bg-white rounded-xl p-5 border border-navy-100/60">
+                <h3 className="text-sm font-bold text-navy-900 mb-1">{item.title}</h3>
+                <p className="text-xs text-navy-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Principles */}
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

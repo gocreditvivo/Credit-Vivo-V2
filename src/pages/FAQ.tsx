@@ -6,6 +6,8 @@ const faqs = [
   { q: 'What does "You take control. We clear the path." mean?', a: 'It means you stay in charge of your credit journey. Credit Vivo helps organize the steps, explain what matters, and guide you through the process.' },
   { q: 'Does Credit Vivo guarantee score increases?', a: 'No. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes.' },
   { q: 'What is a Credit Check-In?', a: 'It is your free starting point. Credit Vivo reviews your credit profile and gives you a simple roadmap.' },
+  { q: 'Will Credit Vivo send disputes automatically?', a: 'No. Credit Vivo should not send disputes or letters automatically. Review data and next steps should be checked and approved before anything is sent.' },
+  { q: 'What does the scanner do?', a: 'The scanner organizes uploaded report information into draft review data. It helps identify possible review points, but it is not a final legal or credit decision.' },
   { q: 'Why not dispute everything at once?', a: 'Disputing everything at once can be confusing, expensive, and not always the smartest first step. Credit Vivo helps prioritize actions.' },
   { q: 'Online disputes or letters?', a: 'Online can be useful for simple issues. Detailed issues may need custom letters, evidence, and tracking.' },
   { q: 'What is collection validation?', a: 'Collection validation means asking selected collectors to confirm important details about a debt, such as the original creditor, balance, ownership, and authority to collect.' },
@@ -14,6 +16,7 @@ const faqs = [
   { q: 'How does Credit Vivo help me build credit?', a: 'Credit Vivo helps you understand score-building habits like paying on time, lowering card balances, avoiding unnecessary applications, and tracking due dates.' },
   { q: 'Is Credit Vivo only for disputes?', a: 'No. Credit Vivo is built around credit guidance, education, score opportunities, clean-up support, and tracking.' },
   { q: 'Is Credit Vivo a law firm?', a: 'No. Credit Vivo is not a law firm and does not provide legal advice. Optional legal support may be available separately.' },
+  { q: 'How is Credit Vivo different from credit repair companies?', a: 'Credit Vivo is positioned as a guided credit improvement platform: education, review-first workflows, tracking, and customer control before aggressive action.' },
   { q: 'Can I cancel?', a: 'Yes. Credit Vivo provides clear membership terms and a clear cancellation process.' },
 ];
 

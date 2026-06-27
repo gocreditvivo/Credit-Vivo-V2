@@ -5,12 +5,12 @@ const plans = [
   {
     name: 'Credit Check-In',
     badge: 'Free',
-    desc: 'For a simple starting point.',
+    desc: 'For clarity before commitment.',
     price: '$0',
     cta: 'Join Free',
     ctaClass: 'btn-primary',
     to: '/join',
-    features: ['Basic roadmap', 'Learning Center', 'Score basics', 'No hard pull to start'],
+    features: ['Free Check-In', 'Learning Center', 'Score basics', 'No hard pull to start'],
   },
   {
     name: 'Vivo Plus',
@@ -21,7 +21,7 @@ const plans = [
     ctaClass: 'btn-mint',
     to: '/dashboard',
     featured: true,
-    features: ['Monthly action plan', 'Clean-up progress', 'Score opportunities', 'Action tracker', 'Updates and reminders'],
+    features: ['Monthly action plan', 'Review-first clean-up support', 'Score opportunities', 'Action tracker', 'Updates and reminders'],
   },
   {
     name: 'Vivo Max',
@@ -49,7 +49,7 @@ export default function Pricing() {
             Your credit, your way.
           </h1>
           <p className="text-[15px] text-navy-500 max-w-md mx-auto">
-            Start free. Upgrade when you want monthly guidance, tracking, and support.
+            Start free. Upgrade only when you want monthly guidance, tracking, and support.
           </p>
         </div>
       </section>
@@ -107,7 +107,7 @@ export default function Pricing() {
           </div>
 
           <p className="text-center text-[11px] text-navy-400 mt-8 max-w-lg mx-auto">
-            Pricing is placeholder and should be reviewed before accepting payments. Credit Vivo does not guarantee score increases or removals.
+            Prices are shown for planning and should be confirmed before checkout. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes.
           </p>
         </div>
       </section>
@@ -117,8 +117,8 @@ export default function Pricing() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              { title: 'Free gives clarity', desc: 'The free Credit Check-In gives customers a simple starting point and helps them understand where to focus.' },
-              { title: 'Monthly plans give guidance', desc: 'Paid plans are built around monthly progress: score opportunities, clean-up steps, tracking, learning, and updates.' },
+              { title: 'Free gives clarity', desc: 'The free Credit Check-In gives customers a simple starting point and helps them understand where to focus before paying.' },
+              { title: 'Monthly plans give guidance', desc: 'Paid plans are built around progress: score opportunities, review-first clean-up steps, tracking, learning, and updates.' },
               { title: 'Extra costs are optional', desc: 'If a customer chooses optional mailing, legal, identity, or credit-building partner services, those should be clearly explained before approval.' },
             ].map((card) => (
               <div key={card.title} className="bg-white rounded-xl p-5 border border-navy-100/60">

@@ -54,7 +54,8 @@ export default function FreeScan() {
       <h1 className="text-xl font-bold text-navy-900 mb-2">Free Credit Check-In</h1>
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
         Upload one or more credit report PDFs. Credit Vivo will organize review items into
-        customer-friendly categories before any action is prepared.
+        customer-friendly categories before any action is prepared. Scanner output is draft
+        review data only and should be checked before use.
       </p>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5">
@@ -149,7 +150,7 @@ export default function FreeScan() {
             {[
               'Credit Vivo extracts report text.',
               'Review items are grouped by bureau.',
-              'Possible review points are organized.',
+              'Possible review points are organized as draft review data.',
               'Nothing is sent without approval.',
             ].map((step, index) => (
               <div key={step} className="flex gap-3">

@@ -60,7 +60,7 @@ export default function JoinFree() {
               </Link>
 
               <p className="text-[11px] text-navy-400 text-center leading-relaxed mt-3">
-                Demo form only. In production, this step creates the customer's account, starts the Credit Check-In, and then moves them into the member flow.
+                This preview does not create an account yet. Continue to the Credit Check-In flow to review the next step.
               </p>
             </div>
           </div>

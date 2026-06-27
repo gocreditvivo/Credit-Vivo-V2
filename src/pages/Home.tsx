@@ -56,7 +56,7 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 bg-mint-50 border border-mint-200 text-mint-700 text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5">
                 <span className="w-1.5 h-1.5 bg-mint-500 rounded-full" />
-                Free Credit Check-In — No hard pull to start
+                Free Credit Check-In - No hard pull to start
               </div>
 
               <h1 className="text-3xl sm:text-[40px] font-bold text-navy-900 leading-tight mb-4">
@@ -66,7 +66,7 @@ export default function Home() {
 
               <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
                 <strong className="text-navy-700">You take control. We clear the path.</strong>{' '}
-                Credit Vivo helps you understand your credit, build better habits, review possible errors, and follow a simple monthly plan.
+                Credit Vivo helps you understand your credit, build better habits, review possible errors, and follow a simple monthly plan without promising impossible shortcuts.
               </p>
 
               <div className="flex flex-wrap gap-3 mb-8">
@@ -80,7 +80,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                {['No hard pull to start', 'Plain-English roadmap', 'Track progress monthly'].map((t) => (
+                {['No hard pull to start', 'Review before action', 'Track progress monthly'].map((t) => (
                   <span key={t} className="flex items-center gap-1.5 text-[12px] text-navy-500">
                     <CheckCircle size={13} className="text-mint-500" />
                     {t}
@@ -100,7 +100,7 @@ export default function Home() {
       <section className="py-8 border-y border-navy-100/60 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['Build Credit', 'Clean Up', 'Track Progress', 'Learn Credit', 'Join Free'].map((item) => (
+            {['Free Check-In', 'Review First', 'No Guarantees', 'Plain English', 'Join Free'].map((item) => (
               <div key={item} className="text-center py-2">
                 <span className="text-xs font-semibold text-navy-600">{item}</span>
               </div>
@@ -117,14 +117,14 @@ export default function Home() {
             Your future starts with a clearer plan.
           </h2>
           <p className="text-sm text-navy-300 max-w-lg mx-auto mb-10">
-            Most people do not need more credit jargon. They need a simple path, reminders, and guidance that makes sense.
+            Most people do not need more credit jargon or pressure. They need a simple path, reminders, and guidance that makes sense.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { title: 'Understand', desc: 'Know what may be holding you back.' },
               { title: 'Build', desc: 'Focus on habits that may help over time.' },
-              { title: 'Clean up', desc: 'Review possible errors in a smarter order.' },
+              { title: 'Review', desc: 'Check possible errors before any action.' },
               { title: 'Track', desc: 'Know what was done and what happens next.' },
             ].map((g) => (
               <div key={g.title} className="bg-white/5 border border-white/10 rounded-xl p-5 text-left">
@@ -150,7 +150,7 @@ export default function Home() {
             {[
               { num: '01', title: 'Join free', desc: 'Start your Credit Check-In with no hard pull to begin.', icon: Shield },
               { num: '02', title: 'Get your roadmap', desc: 'Credit Vivo organizes your profile and explains what matters.', icon: Compass },
-              { num: '03', title: 'Follow your plan', desc: 'Each month, focus on a few helpful steps.', icon: Calendar },
+              { num: '03', title: 'Review next steps', desc: 'You see important actions before anything moves forward.', icon: Calendar },
               { num: '04', title: 'Track progress', desc: 'Stay updated on actions, responses, and next steps.', icon: BarChart3 },
             ].map(({ num, title, desc, icon: Icon }) => (
               <div key={num} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
@@ -189,7 +189,7 @@ export default function Home() {
               {
                 icon: Sparkles,
                 title: 'Clean up possible errors',
-                desc: 'Review personal information, collections, bureau differences, and account details that may need attention.',
+                desc: 'Review personal information, collections, bureau differences, and account details that may need attention before action is prepared.',
                 color: 'bg-sky-100 text-sky-600',
               },
               {
