@@ -15,7 +15,8 @@ import {
 
 function HeroCard() {
   return (
-    <div className="animate-float-slow rounded-lg border border-white/70 bg-white/92 p-4 shadow-xl shadow-navy-900/10 backdrop-blur-md">
+    <div className="animate-float-slow overflow-hidden rounded-lg border border-white/70 bg-white/92 p-4 shadow-xl shadow-navy-900/10 backdrop-blur-md">
+      <div className="-mx-4 -mt-4 mb-4 h-1.5 aurora-rail" />
       <div className="mb-4 flex items-center justify-between">
         <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400">Credit Check-In</p>
         <span className="rounded-full bg-mint-50 px-2.5 py-1 text-[10px] font-bold text-mint-700">Draft review</span>
@@ -58,18 +59,19 @@ export default function Home() {
         className="relative min-h-[620px] overflow-hidden bg-navy-950"
         style={{
           backgroundImage:
-            "linear-gradient(90deg, rgba(5, 20, 38, 0.86) 0%, rgba(8, 30, 52, 0.72) 42%, rgba(8, 30, 52, 0.12) 72%), url('/brand/credit-vivo-hero.png')",
+            "linear-gradient(90deg, rgba(5, 20, 38, 0.88) 0%, rgba(8, 30, 52, 0.72) 40%, rgba(34, 197, 94, 0.18) 72%), url('/brand/credit-vivo-hero.png')",
           backgroundPosition: 'center right',
           backgroundSize: 'cover',
         }}
       >
         <div className="motion-wash absolute inset-0 opacity-80" aria-hidden="true" />
         <div className="soft-grid absolute inset-0 opacity-25" aria-hidden="true" />
+        <div className="absolute inset-x-0 bottom-0 h-1.5 aurora-rail" aria-hidden="true" />
         <div className="mx-auto flex min-h-[620px] max-w-6xl items-center px-4 py-16 sm:px-6 lg:px-8">
           <div className="relative z-10 max-w-2xl animate-fade-up">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mint-300/30 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-mint-100 backdrop-blur-md">
               <span className="h-1.5 w-1.5 rounded-full bg-mint-300" />
-              Free Credit Check-In - no hard pull
+              Free Credit Check-In - visual beta
             </div>
 
             <h1 className="mb-5 max-w-xl text-4xl font-bold leading-tight text-white sm:text-5xl">
@@ -93,11 +95,25 @@ export default function Home() {
 
             <div className="grid max-w-xl grid-cols-2 gap-2 sm:grid-cols-4">
               {trustItems.map(({ icon: Icon, label }) => (
-                <div key={label} className="rounded-lg border border-white/15 bg-white/10 p-3 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1 hover:bg-white/15">
+                <div key={label} className="glass-lift rounded-lg p-3">
                   <Icon size={15} className="mb-2 text-mint-200" />
                   <p className="text-[11px] font-semibold leading-snug text-white/90">{label}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="absolute left-1/2 top-28 z-10 hidden w-56 -translate-x-4 lg:block">
+            <div className="glass-lift rounded-lg p-3 text-white">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-lime-200">Live organization</p>
+              <div className="mt-3 space-y-2">
+                {['Identity', 'Open accounts', 'Bureau differences'].map((item) => (
+                  <div key={item} className="flex items-center justify-between rounded-md bg-white/10 px-3 py-2">
+                    <span className="text-[11px] font-semibold">{item}</span>
+                    <span className="h-2 w-2 rounded-full bg-lime-300" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -126,10 +142,10 @@ export default function Home() {
       </section>
 
       {/* Product preview */}
-      <section className="bg-gradient-to-b from-white to-sky-50/40 py-16">
+      <section className="spotlight-panel py-16">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
           <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-600">Product experience</p>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-700">Product experience</p>
             <h2 className="mb-3 text-2xl font-bold text-navy-900 sm:text-3xl">
               A credit roadmap that feels calm, not confusing.
             </h2>
@@ -138,7 +154,8 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-navy-100 bg-white p-4 shadow-xl shadow-navy-100/70">
+          <div className="overflow-hidden rounded-lg border border-white/80 bg-white/90 p-4 shadow-2xl shadow-navy-200/70 backdrop-blur">
+            <div className="-mx-4 -mt-4 mb-4 h-1.5 aurora-rail" />
             <div className="mb-4 flex items-center justify-between border-b border-navy-100 pb-3">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400">Dashboard preview</p>
@@ -153,7 +170,7 @@ export default function Home() {
                 ['12', 'items organized'],
                 ['0', 'hard pulls'],
               ].map(([value, label]) => (
-                <div key={label} className="rounded-lg bg-navy-50/70 p-4">
+                <div key={label} className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-navy-100/80">
                   <p className="text-2xl font-bold text-navy-900">{value}</p>
                   <p className="text-[11px] text-navy-400">{label}</p>
                 </div>
@@ -229,6 +246,48 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Lively comparison */}
+      <section className="bg-navy-50/60 py-14">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-700">Built for clarity</p>
+              <h2 className="text-2xl font-bold text-navy-900 sm:text-3xl">See the report from three angles.</h2>
+            </div>
+            <p className="max-w-sm text-sm leading-relaxed text-navy-500">
+              A livelier interface can show bureau comparison, user review, and learning context without rushing the consumer.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              ['Bureau view', 'Compare details across reports', 'bg-sky-500'],
+              ['User review', 'Keep every next step self-directed', 'bg-mint-500'],
+              ['Learning layer', 'Explain what each item may mean', 'bg-[#ff7a59]'],
+            ].map(([title, copy, color], index) => (
+              <div key={title} className="group overflow-hidden rounded-lg border border-white bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-navy-100/80">
+                <div className={`h-2 ${color}`} />
+                <div className="p-5">
+                  <div className="mb-5 flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-navy-400">Angle 0{index + 1}</span>
+                    <span className={`h-8 w-8 rounded-lg ${color} opacity-85 transition-transform duration-300 group-hover:rotate-6`} />
+                  </div>
+                  <h3 className="text-base font-bold text-navy-900">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-navy-500">{copy}</p>
+                  <div className="mt-5 space-y-2">
+                    {[68, 84, 54].map((width, lineIndex) => (
+                      <div key={lineIndex} className="h-2 rounded-full bg-navy-100">
+                        <div className={`h-2 rounded-full ${color}`} style={{ width: `${Math.max(28, width - index * 8)}%` }} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
