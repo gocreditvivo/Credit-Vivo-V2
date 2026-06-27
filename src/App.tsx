@@ -9,6 +9,9 @@ import Learning from './pages/Learning';
 import JoinFree from './pages/JoinFree';
 import Reviews from './pages/Reviews';
 import Compliance from './pages/Compliance';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Disclosure from './pages/Disclosure';
 import Dashboard from './pages/Dashboard';
 import FreeScan from './pages/FreeScan';
 import Findings from './pages/Findings';
@@ -28,6 +31,9 @@ export default function App() {
           <Route path="/join" element={<JoinFree />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/compliance" element={<Compliance />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/disclosure" element={<Disclosure />} />
         </Route>
 
         {/* Member pages */}

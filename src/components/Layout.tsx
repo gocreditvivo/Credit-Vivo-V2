@@ -160,8 +160,9 @@ function Footer() {
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Legal</h4>
             <div className="space-y-2">
               <Link to="/compliance" className="block text-xs text-navy-400 hover:text-white transition-colors">Compliance</Link>
-              <Link to="/compliance" className="block text-xs text-navy-400 hover:text-white transition-colors">Terms</Link>
-              <Link to="/compliance" className="block text-xs text-navy-400 hover:text-white transition-colors">Privacy</Link>
+              <Link to="/terms" className="block text-xs text-navy-400 hover:text-white transition-colors">Terms</Link>
+              <Link to="/privacy" className="block text-xs text-navy-400 hover:text-white transition-colors">Privacy</Link>
+              <Link to="/disclosure" className="block text-xs text-navy-400 hover:text-white transition-colors">Disclosure</Link>
             </div>
           </div>
         </div>
