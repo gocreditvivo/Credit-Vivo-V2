@@ -1,4 +1,4 @@
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -6,8 +6,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
+node_modules/
+dist/
 dist-ssr
 *.local
 
@@ -23,14 +23,18 @@ dist-ssr
 .env
 
 # Credit Vivo scanner backend artifacts
+.next/
+.vercel/output/
+*.pyc
+**pycache**/
+**/__pycache__/
+scanner_backend/**pycache**/
+scanner_backend/**/__pycache__/
+scanner_backend/tests/**pycache**/
+scanner_backend/tests/**/__pycache__/
 scanner_backend/uploads/
 scanner_backend/output/
 scanner_backend/logs/
 scanner_backend/.venv/
 scanner_backend/.env
-
-.next/
-scanner_backend/__pycache__/
-scanner_backend/tests/__pycache__/
 _backup_before_creditvivo_full_mvp/
-*.pyc
