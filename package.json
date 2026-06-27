@@ -1,7 +1,7 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "credit-vivo-site",
   "private": true,
-  "version": "0.0.0",
+  "version": "16.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
