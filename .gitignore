@@ -28,3 +28,9 @@ scanner_backend/output/
 scanner_backend/logs/
 scanner_backend/.venv/
 scanner_backend/.env
+
+.next/
+scanner_backend/__pycache__/
+scanner_backend/tests/__pycache__/
+_backup_before_creditvivo_full_mvp/
+*.pyc
