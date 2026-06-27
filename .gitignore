@@ -38,3 +38,4 @@ scanner_backend/logs/
 scanner_backend/.venv/
 scanner_backend/.env
 _backup_before_creditvivo_full_mvp/
+.vercel
