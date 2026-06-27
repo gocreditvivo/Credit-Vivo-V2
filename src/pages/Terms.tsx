@@ -13,7 +13,7 @@ const terms = [
   },
   {
     title: 'Payments and third-party costs',
-    body: 'Monthly fees do not automatically include certified mail, postage, credit monitoring, identity verification, attorney review, third-party report access, or legal costs unless a written plan says they are included.',
+    body: 'Credit Vivo is not accepting paid credit services during beta. If paid plans, certified mail, credit monitoring, identity verification, attorney review, third-party report access, or legal costs are introduced later, they should be explained in writing before purchase.',
   },
   {
     title: 'Electronic communications',
@@ -25,7 +25,7 @@ const terms = [
   },
   {
     title: 'Cancellation',
-    body: 'Paid service agreements should include cancellation rights required by federal and state law. Credit Vivo should not charge for credit repair services before legally permitted under the applicable agreement.',
+    body: 'If paid services are introduced later, service agreements should include cancellation rights required by federal and state law. Credit Vivo should not charge for credit repair services before legally permitted under the applicable agreement.',
   },
 ];
 
@@ -53,7 +53,7 @@ export default function Terms() {
             <p className="text-sm text-navy-500 leading-relaxed mb-6">
               <strong className="text-navy-800">Draft for launch review.</strong> These
               website and portal terms should be reviewed by a qualified attorney before
-              accepting paid customers.
+              paid services are introduced.
             </p>
 
             <div className="space-y-5">

@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 
 const navLinks = [
   { to: '/why', label: 'Why Credit Vivo' },
-  { to: '/pricing', label: 'Pricing' },
+  { to: '/pricing', label: 'Free Beta' },
   { to: '/faq', label: 'FAQ' },
   { to: '/learning', label: 'Learning' },
 ];
@@ -84,7 +84,7 @@ function BottomButtons({ exclude }: { exclude?: string }) {
   const allLinks = [
     { to: '/join', label: 'Join Free', primary: true },
     { to: '/why', label: 'Why Credit Vivo' },
-    { to: '/pricing', label: 'Pricing' },
+    { to: '/pricing', label: 'Free Beta' },
     { to: '/faq', label: 'FAQ' },
     { to: '/learning', label: 'Learning' },
   ];
@@ -133,7 +133,7 @@ function Footer() {
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Product</h4>
             <div className="space-y-2">
               <Link to="/join" className="block text-xs text-navy-400 hover:text-white transition-colors">Join Free</Link>
-              <Link to="/pricing" className="block text-xs text-navy-400 hover:text-white transition-colors">Pricing</Link>
+              <Link to="/pricing" className="block text-xs text-navy-400 hover:text-white transition-colors">Free Beta</Link>
               <Link to="/learning" className="block text-xs text-navy-400 hover:text-white transition-colors">Learning</Link>
             </div>
           </div>

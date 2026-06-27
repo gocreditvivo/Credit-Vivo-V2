@@ -55,7 +55,7 @@ export default function FreeScan() {
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
         Upload one or more credit report PDFs. Credit Vivo will organize review items into
         customer-friendly categories before any action is prepared. Scanner output is draft
-        review data only and should be checked before use.
+        review data only and should be checked before use. No payment is required during beta.
       </p>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5">

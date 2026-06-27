@@ -29,7 +29,7 @@ const disclosures = [
   },
   {
     title: 'Virginia-first launch',
-    body: 'Before paid launch, Credit Vivo should verify federal requirements and Virginia, Maryland, and DC business, credit services, bond or license, cancellation, advertising, and consumer protection rules.',
+    body: 'Before any paid launch, Credit Vivo should verify federal requirements and Virginia, Maryland, and DC business, credit services, bond or license, cancellation, advertising, and consumer protection rules.',
   },
 ];
 

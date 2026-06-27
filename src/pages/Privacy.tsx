@@ -1,7 +1,7 @@
 const sections = [
   {
     title: 'Information we collect',
-    body: 'Credit Vivo may collect your name, email, phone number, login details, communication preferences, uploaded credit reports, dispute documents, bureau or furnisher responses, payment status, and portal activity.',
+    body: 'Credit Vivo may collect your name, email, phone number, login details, communication preferences, uploaded credit reports, dispute documents, bureau or furnisher responses, beta participation details, and portal activity.',
   },
   {
     title: 'How we use information',
@@ -44,8 +44,8 @@ export default function Privacy() {
           <div className="bg-navy-50/50 rounded-xl p-6 border border-navy-100/60">
             <p className="text-sm text-navy-500 leading-relaxed mb-6">
               <strong className="text-navy-800">Draft for launch review.</strong> This notice
-              explains the privacy structure Credit Vivo should use before accepting paid
-              customers. Final language should be reviewed by a qualified attorney.
+              explains the privacy structure Credit Vivo should use during free beta and
+              before any paid services are introduced. Final language should be reviewed by a qualified attorney.
             </p>
 
             <div className="space-y-5">

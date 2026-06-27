@@ -9,13 +9,13 @@ export default function JoinFree() {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-mint-50 border border-mint-200 text-mint-700 text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5">
             <span className="w-1.5 h-1.5 bg-mint-500 rounded-full" />
-            Join Free
+            Free Beta
           </div>
           <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Start your free Credit Check-In.
+            Start your free beta Credit Check-In.
           </h1>
           <p className="text-[15px] text-navy-500 max-w-md mx-auto">
-            You take control. We clear the path. Tell us your goal and get a simple starting point. No hard pull to begin.
+            You take control. We clear the path. Tell us your goal and get a simple starting point. No hard pull. No payment.
           </p>
         </div>
       </section>
@@ -55,12 +55,12 @@ export default function JoinFree() {
               </div>
 
               <Link to="/scan" className="btn-primary w-full text-sm py-3 mt-2">
-                Join Free & Start
+                Join Free Beta
                 <ArrowRight size={15} />
               </Link>
 
               <p className="text-[11px] text-navy-400 text-center leading-relaxed mt-3">
-                This preview does not create an account yet. Continue to the Credit Check-In flow to review the next step.
+                This beta preview does not create an account yet or start a paid service. Continue to the Credit Check-In flow to review the next step.
               </p>
             </div>
           </div>
