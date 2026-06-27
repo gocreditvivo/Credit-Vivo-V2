@@ -3,9 +3,8 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 const navLinks = [
-  { to: '/why', label: 'Why Credit Vivo' },
-  { to: '/pricing', label: 'Free Beta' },
-  { to: '/faq', label: 'FAQ' },
+  { to: '/scan', label: 'Product' },
+  { to: '/why', label: 'Company' },
   { to: '/learning', label: 'Learning' },
 ];
 
@@ -14,25 +13,25 @@ function Nav() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-navy-100/60">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+    <header className="sticky top-0 z-50 border-b border-navy-100/60 bg-white/95 backdrop-blur-sm">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/logo.webp" alt="Credit Vivo" className="w-7 h-7" />
-            <span className="text-base font-bold text-navy-900">
+            <img src="/logo.webp" alt="Credit Vivo" className="h-8 w-8" />
+            <span className="text-xl font-bold tracking-tight text-navy-900">
               Credit <span className="text-mint-600">Vivo</span>
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden items-center gap-8 lg:flex">
             {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
-                className={`text-[13px] font-medium transition-colors ${
+                className={`text-sm font-medium transition-colors ${
                   location.pathname === to
                     ? 'text-navy-900'
-                    : 'text-navy-500 hover:text-navy-800'
+                    : 'text-navy-600 hover:text-mint-600'
                 }`}
               >
                 {label}
@@ -40,18 +39,19 @@ function Nav() {
             ))}
           </nav>
 
-          <div className="hidden lg:flex items-center gap-2">
-            <Link to="/dashboard" className="btn-soft text-xs py-2 px-4">
+          <div className="hidden items-center gap-3 lg:flex">
+            <Link to="/dashboard" className="rounded-lg bg-navy-50 px-5 py-2.5 text-sm font-semibold text-navy-700 transition-colors hover:bg-navy-100">
               Sign In
             </Link>
-            <Link to="/join" className="btn-primary text-xs py-2 px-4">
+            <Link to="/join" className="rounded-lg bg-navy-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-800">
               Join Free
             </Link>
           </div>
 
           <button
-            className="lg:hidden p-2 text-navy-700"
+            className="p-2 text-navy-700 lg:hidden"
             onClick={() => setOpen(!open)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
           >
             {open ? <X size={20} /> : <Menu size={20} />}
           </button>

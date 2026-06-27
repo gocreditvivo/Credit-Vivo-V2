@@ -50,12 +50,12 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-sky-50/50 to-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="bg-gradient-to-b from-sky-50/50 to-white py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <div className="inline-flex items-center gap-2 bg-mint-50 border border-mint-200 text-mint-700 text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5">
-                <span className="w-1.5 h-1.5 bg-mint-500 rounded-full" />
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mint-200 bg-mint-50 px-3 py-1.5 text-[11px] font-semibold text-mint-700">
+                <span className="h-1.5 w-1.5 rounded-full bg-mint-500" />
                 Free Credit Check-In - No hard pull to start
               </div>
 
@@ -69,7 +69,7 @@ export default function Home() {
                 Credit Vivo helps you understand your credit, organize report information, review possible inaccuracies, and follow a simple monthly plan without promising impossible shortcuts.
               </p>
 
-              <div className="flex flex-wrap gap-3 mb-8">
+              <div className="mb-8 flex flex-wrap gap-3">
                 <Link to="/join" className="btn-primary text-sm py-3 px-6">
                   Join Free
                   <ArrowRight size={15} />
@@ -98,7 +98,7 @@ export default function Home() {
 
       {/* Trust strip */}
       <section className="py-8 border-y border-navy-100/60 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {['Free Check-In', 'Review First', 'No Guarantees', 'Plain English', 'Join Free'].map((item) => (
               <div key={item} className="text-center py-2">
@@ -111,7 +111,7 @@ export default function Home() {
 
       {/* Vision section */}
       <section className="py-16 bg-navy-900">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="mx-auto max-w-7xl px-6 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-lime-300 mb-2">Credit made simple</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
             Your future starts with a clearer plan.
@@ -138,7 +138,7 @@ export default function Home() {
 
       {/* How it works */}
       <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">How it works</p>
             <h2 className="text-2xl sm:text-[28px] font-bold text-navy-900">
@@ -170,7 +170,7 @@ export default function Home() {
 
       {/* What we help with */}
       <section className="py-16 bg-sky-50/40">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">What we help with</p>
             <h2 className="text-2xl sm:text-[28px] font-bold text-navy-900">
@@ -213,7 +213,7 @@ export default function Home() {
 
       {/* Learning preview */}
       <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between mb-8">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">Learning Center</p>
@@ -228,7 +228,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { cat: 'Beginner', title: 'What affects your score?', desc: 'Payment history, balances, credit age, new applications, and account mix all matter.' },
-              { cat: 'Clean-Up', title: 'What is a collection?', desc: 'A collection means a debt may have been sent or sold to a collector.' },
+              { cat: 'Report Review', title: 'What is a collection?', desc: 'A collection means a debt may have been sent or sold to a collector.' },
               { cat: 'Goals', title: 'Before buying a home', desc: 'Start early, keep payments on time, lower balances, and avoid new debt.' },
             ].map((l) => (
               <div key={l.title} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
