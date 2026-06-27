@@ -58,30 +58,6 @@
       linear-gradient(90deg, rgba(16, 42, 67, 0.06) 1px, transparent 1px);
     background-size: 28px 28px;
   }
-
-  .aurora-rail {
-    background: linear-gradient(90deg, #22c55e, #0ea5e9, #d7ff58, #ff7a59, #22c55e);
-    background-size: 240% 100%;
-    animation: railFlow 10s linear infinite;
-  }
-
-  .glass-lift {
-    @apply border border-white/20 shadow-xl shadow-navy-950/20 backdrop-blur-md transition-all duration-300;
-    background: rgba(255, 255, 255, 0.12);
-  }
-
-  .glass-lift:hover {
-    transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.16);
-  }
-
-  .spotlight-panel {
-    background:
-      radial-gradient(circle at 18% 18%, rgba(215, 255, 88, 0.34), transparent 27%),
-      radial-gradient(circle at 82% 22%, rgba(255, 122, 89, 0.22), transparent 28%),
-      radial-gradient(circle at 58% 82%, rgba(14, 165, 233, 0.24), transparent 32%),
-      linear-gradient(135deg, #ffffff, #f0f9ff 54%, #f0fdf4);
-  }
 }
 
 @keyframes washShift {
@@ -99,15 +75,6 @@
   }
   60%, 100% {
     transform: translateX(120%);
-  }
-}
-
-@keyframes railFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 240% 50%;
   }
 }
 
