@@ -906,3 +906,195 @@ def write_outputs(result: ParseResult, out_dir: Path) -> None:
             writer = csv.DictWriter(f, fieldnames=list(issue_rows[0].keys()))
             writer.writeheader()
             writer.writerows(issue_rows)
+
+
+# Phase 3 draft-only integrations.
+# These classes intentionally do not send disputes, mail, or bank data by
+# themselves. They prepare review artifacts for an authenticated admin workflow.
+import hashlib
+import os
+import random
+import re
+from datetime import datetime, timezone
+from typing import Any, Optional
+
+import requests
+from sodapy import Socrata
+
+
+class OpenDataCrossMatcher:
+    """Cross-match collector names against public licensing data."""
+
+    def __init__(self, domain: str = "opendata.maryland.gov"):
+        self.domain = domain
+        self.app_token = os.getenv("SOCRATA_APP_TOKEN")
+        self.client = Socrata(self.domain, self.app_token or None)
+
+    @staticmethod
+    def _safe_collector_name(collector_name: str) -> str:
+        cleaned = re.sub(r"[^A-Za-z0-9 '&.,-]", "", collector_name or "").strip()
+        return cleaned[:120]
+
+    def verify_collector_license(self, collector_name: str, state_code: str = "MD") -> dict[str, Any]:
+        safe_name = self._safe_collector_name(collector_name)
+        safe_state = (state_code or "MD").upper()[:2]
+
+        if not safe_name:
+            return {
+                "found": False,
+                "status": "UNKNOWN",
+                "leverage_flag": None,
+                "review_note": "Collector name was empty or unsupported.",
+            }
+
+        try:
+            dataset_id = "gdzy-2fen"
+            escaped_name = safe_name.upper().replace("'", "''")
+            query = f"business_name like '%{escaped_name}%'"
+            results = self.client.get(dataset_id, where=query, limit=1)
+
+            if not results:
+                return {
+                    "found": False,
+                    "status": "UNKNOWN",
+                    "leverage_flag": None,
+                    "review_note": "No public licensing record matched this collector name.",
+                    "last_checked_at": datetime.now(timezone.utc).isoformat(),
+                }
+
+            record = results[0]
+            status = str(record.get("license_status", "UNKNOWN")).upper()
+            inactive_statuses = {"REVOKED", "EXPIRED", "SUSPENDED", "INACTIVE"}
+            leverage_flag: Optional[str] = None
+
+            if status in inactive_statuses:
+                leverage_flag = (
+                    f"Public open-data records may indicate {safe_name} has a {status} "
+                    f"license status in {safe_state}. Admin review should verify the "
+                    "source record before using this in a customer letter."
+                )
+
+            return {
+                "found": True,
+                "status": status,
+                "leverage_flag": leverage_flag,
+                "raw_evidence": record,
+                "last_checked_at": datetime.now(timezone.utc).isoformat(),
+            }
+        except Exception as exc:
+            return {
+                "found": False,
+                "status": "ERROR",
+                "leverage_flag": None,
+                "error": str(exc),
+                "last_checked_at": datetime.now(timezone.utc).isoformat(),
+            }
+
+
+class EOSCARBypassSpinner:
+    """Generate unique, draft-only dispute letter language for admin review."""
+
+    def __init__(self):
+        self.openers = [
+            "I am requesting an investigation of an item appearing on my {bureau} credit file.",
+            "Please review my {bureau} credit profile, including the tradeline reported by {creditor}.",
+            "I am asking for a reasonable reinvestigation of the {creditor} account on my {bureau} report.",
+        ]
+        self.closers = [
+            "Please complete a reasonable investigation and provide the results in writing.",
+            "Please verify the reporting with competent evidence or correct the information as required.",
+            "Please send the investigation results and any updated report after your review is complete.",
+        ]
+
+    @staticmethod
+    def _mask_account(account_num: str) -> str:
+        digits = re.sub(r"\D", "", account_num or "")
+        if len(digits) <= 4:
+            return "ending in " + (digits or "unknown")
+        return "ending in " + digits[-4:]
+
+    def generate_unique_letter(
+        self,
+        bureau: str,
+        creditor: str,
+        account_num: str,
+        violation_code: str,
+        open_data_leverage: str | None = None,
+    ) -> str:
+        safe_bureau = bureau or "the bureau"
+        safe_creditor = creditor or "the furnisher"
+        safe_violation = violation_code or "reporting accuracy review"
+        opener = random.choice(self.openers).format(
+            bureau=safe_bureau,
+            creditor=safe_creditor,
+            account_num=self._mask_account(account_num),
+        )
+        closer = random.choice(self.closers)
+        body = (
+            f"This draft concerns {safe_creditor}, account {self._mask_account(account_num)}. "
+            f"The item is being reviewed for {safe_violation}. I am not asking for any "
+            "accurate and verifiable information to be removed; I am asking that the "
+            "reporting be investigated, corrected, updated, or deleted only if it cannot "
+            "be verified under applicable law."
+        )
+
+        if open_data_leverage:
+            body += (
+                f"\n\nAdditional review note: {open_data_leverage} This public-data signal "
+                "must be verified by an admin before the language is sent."
+            )
+
+        return f"{opener}\n\n{body}\n\n{closer}\n\nDraft only - requires customer approval and admin review."
+
+
+class LitigationTracker:
+    """Prepare mail-tracking records without transmitting mail automatically."""
+
+    def __init__(self):
+        self.lob_api_key = os.getenv("LOB_API_KEY")
+        self.lob_base_url = os.getenv("LOB_BASE_URL", "https://api.lob.com/v1")
+
+    @staticmethod
+    def hash_tracking_number(tracking_number: str) -> str:
+        normalized = re.sub(r"\s+", "", tracking_number or "").upper()
+        if not normalized:
+            raise ValueError("tracking_number is required")
+        return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+    def build_mail_tracking_event(
+        self,
+        letter_id: str,
+        tracking_number: str,
+        delivery_status: str,
+        delivery_timestamp: str | None = None,
+    ) -> dict[str, Any]:
+        return {
+            "letter_id": letter_id,
+            "usps_tracking_hash": self.hash_tracking_number(tracking_number),
+            "delivery_status": (delivery_status or "UNKNOWN").upper(),
+            "delivery_timestamp": delivery_timestamp,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def fetch_lob_letter_status(self, lob_letter_id: str) -> dict[str, Any]:
+        if not self.lob_api_key:
+            return {
+                "ok": False,
+                "error": "LOB_API_KEY is not configured.",
+                "review_note": "Mail status lookup is disabled in local testing.",
+            }
+
+        response = requests.get(
+            f"{self.lob_base_url}/letters/{lob_letter_id}",
+            auth=(self.lob_api_key, ""),
+            timeout=15,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        return {
+            "ok": True,
+            "letter_id": payload.get("id"),
+            "mail_type": payload.get("mail_type"),
+            "expected_delivery_date": payload.get("expected_delivery_date"),
+            "tracking_events": payload.get("tracking_events", []),
+        }

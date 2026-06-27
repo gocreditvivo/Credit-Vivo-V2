@@ -8,12 +8,14 @@ import {
   Bell,
   Headphones,
   ArrowLeft,
+  Landmark,
 } from 'lucide-react';
 
 const sideLinks = [
   { to: '/dashboard', label: 'Roadmap', icon: Compass },
   { to: '/scan', label: 'Free Scan', icon: Search },
   { to: '/findings', label: 'Findings', icon: FileText },
+  { to: '/bank-link', label: 'Bank Link', icon: Landmark },
   { to: '#', label: 'Monthly Plan', icon: Calendar },
   { to: '#', label: 'Learning Center', icon: BookOpen },
   { to: '#', label: 'Updates', icon: Bell },
