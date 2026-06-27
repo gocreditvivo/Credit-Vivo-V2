@@ -8,89 +8,163 @@ import {
   Sparkles,
   Compass,
   Calendar,
+  FileSearch,
+  LockKeyhole,
+  ListChecks,
 } from 'lucide-react';
 
 function HeroCard() {
   return (
-    <div className="bg-white rounded-2xl shadow-lg shadow-navy-100/50 border border-navy-100/60 p-5 w-full max-w-sm">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <p className="text-[11px] font-medium text-navy-400 uppercase tracking-wider">Your Roadmap</p>
-          <p className="text-sm font-bold text-navy-900 mt-0.5">Credit Check-In</p>
-        </div>
-        <div className="w-9 h-9 bg-mint-50 rounded-lg flex items-center justify-center">
-          <TrendingUp size={16} className="text-mint-600" />
-        </div>
+    <div className="rounded-lg border border-white/70 bg-white/92 p-4 shadow-xl shadow-navy-900/10 backdrop-blur-md">
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400">Credit Check-In</p>
+        <span className="rounded-full bg-mint-50 px-2.5 py-1 text-[10px] font-bold text-mint-700">Draft review</span>
       </div>
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         {[
           { label: 'Profile reviewed', done: true },
           { label: 'Education items found', done: true },
           { label: 'Monthly plan created', done: false },
         ].map((item) => (
-          <div key={item.label} className="flex items-center gap-2.5 py-2 px-3 bg-navy-50/60 rounded-lg">
-            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${item.done ? 'bg-mint-500' : 'bg-navy-200'}`}>
+          <div key={item.label} className="flex items-center gap-2.5 rounded-lg bg-navy-50/80 px-3 py-2">
+            <div className={`flex h-5 w-5 items-center justify-center rounded-full ${item.done ? 'bg-mint-500' : 'bg-navy-200'}`}>
               {item.done && <CheckCircle size={12} className="text-white" />}
             </div>
-            <span className={`text-xs font-medium ${item.done ? 'text-navy-700' : 'text-navy-400'}`}>
+            <span className={`text-xs font-semibold ${item.done ? 'text-navy-700' : 'text-navy-400'}`}>
               {item.label}
             </span>
           </div>
         ))}
       </div>
-      <div className="mt-4 pt-3 border-t border-navy-100/60 flex items-center gap-2">
-        <div className="w-2 h-2 bg-mint-400 rounded-full animate-pulse" />
-        <span className="text-[11px] text-navy-500">3 steps this month</span>
-      </div>
     </div>
   );
 }
+
+const trustItems = [
+  { icon: Shield, label: 'No hard pull to start' },
+  { icon: LockKeyhole, label: 'No automatic letters' },
+  { icon: FileSearch, label: 'Review-first workflow' },
+  { icon: ListChecks, label: 'Self-directed next steps' },
+];
 
 export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-sky-50/50 to-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-mint-50 border border-mint-200 text-mint-700 text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5">
-                <span className="w-1.5 h-1.5 bg-mint-500 rounded-full" />
-                Free Credit Check-In - No hard pull to start
-              </div>
+      <section
+        className="relative min-h-[620px] overflow-hidden bg-navy-950"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, rgba(5, 20, 38, 0.86) 0%, rgba(8, 30, 52, 0.72) 42%, rgba(8, 30, 52, 0.12) 72%), url('/brand/credit-vivo-hero.png')",
+          backgroundPosition: 'center right',
+          backgroundSize: 'cover',
+        }}
+      >
+        <div className="mx-auto flex min-h-[620px] max-w-6xl items-center px-4 py-16 sm:px-6 lg:px-8">
+          <div className="max-w-2xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mint-300/30 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-mint-100 backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-mint-300" />
+              Free Credit Check-In - no hard pull
+            </div>
 
-              <h1 className="text-3xl sm:text-[40px] font-bold text-navy-900 leading-tight mb-4">
-                Stronger credit.{' '}
-                <span className="text-mint-600">Less stress.</span>
-              </h1>
+            <h1 className="mb-5 max-w-xl text-4xl font-bold leading-tight text-white sm:text-5xl">
+              Understand your report before you decide your next move.
+            </h1>
 
-              <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
-                <strong className="text-navy-700">You take control. We clear the path.</strong>{' '}
-                Credit Vivo helps you understand your credit, organize report information, review possible inaccuracies, and follow a simple monthly plan without promising impossible shortcuts.
-              </p>
+            <p className="mb-7 max-w-xl text-[15px] leading-relaxed text-sky-50/90">
+              <strong className="text-white">You take control. We clear the path.</strong>{' '}
+              Credit Vivo organizes report information, explains possible inaccuracies, and keeps every step review-first and self-directed.
+            </p>
 
-              <div className="flex flex-wrap gap-3 mb-8">
+            <div className="mb-8 flex flex-wrap gap-3">
                 <Link to="/join" className="btn-primary text-sm py-3 px-6">
                   Join Free
                   <ArrowRight size={15} />
                 </Link>
-                <Link to="/why" className="btn-outline text-sm py-3 px-6">
+                <Link to="/why" className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/18">
                   Why Credit Vivo
                 </Link>
               </div>
 
-              <div className="flex flex-wrap gap-4">
-                {['No hard pull to start', 'Review before action', 'Track progress monthly'].map((t) => (
-                  <span key={t} className="flex items-center gap-1.5 text-[12px] text-navy-500">
-                    <CheckCircle size={13} className="text-mint-500" />
-                    {t}
-                  </span>
-                ))}
+            <div className="grid max-w-xl grid-cols-2 gap-2 sm:grid-cols-4">
+              {trustItems.map(({ icon: Icon, label }) => (
+                <div key={label} className="rounded-lg border border-white/15 bg-white/10 p-3 backdrop-blur-md">
+                  <Icon size={15} className="mb-2 text-mint-200" />
+                  <p className="text-[11px] font-semibold leading-snug text-white/90">{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="absolute bottom-6 right-6 hidden w-80 lg:block">
+            <HeroCard />
+          </div>
+        </div>
+      </section>
+
+      {/* Product proof */}
+      <section className="border-b border-navy-100/70 bg-white py-8">
+        <div className="mx-auto grid max-w-6xl gap-4 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
+          {[
+            ['Free beta', 'No payment is required during the current test period.'],
+            ['Consumer control', 'Nothing is sent, mailed, or submitted automatically.'],
+            ['Plain English', 'Findings are organized into simple review categories.'],
+            ['Compliance-first', 'No guaranteed deletions, approvals, or score outcomes.'],
+          ].map(([title, copy]) => (
+            <div key={title} className="border-l border-navy-100 pl-4">
+              <p className="text-sm font-bold text-navy-900">{title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-navy-400">{copy}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Product preview */}
+      <section className="bg-gradient-to-b from-white to-sky-50/40 py-16">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-600">Product experience</p>
+            <h2 className="mb-3 text-2xl font-bold text-navy-900 sm:text-3xl">
+              A credit roadmap that feels calm, not confusing.
+            </h2>
+            <p className="max-w-md text-sm leading-relaxed text-navy-500">
+              Credit Vivo turns report uploads into organized review items, learning moments, and monthly next steps. The customer view stays simple while internal review can stay detailed.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-navy-100 bg-white p-4 shadow-xl shadow-navy-100/70">
+            <div className="mb-4 flex items-center justify-between border-b border-navy-100 pb-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400">Dashboard preview</p>
+                <p className="text-sm font-bold text-navy-900">Your Credit Roadmap</p>
               </div>
+              <span className="rounded-full bg-mint-50 px-3 py-1 text-[11px] font-bold text-mint-700">Review ready</span>
             </div>
 
-            <div className="hidden lg:flex justify-center">
-              <HeroCard />
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                ['3', 'steps this month'],
+                ['12', 'items organized'],
+                ['0', 'hard pulls'],
+              ].map(([value, label]) => (
+                <div key={label} className="rounded-lg bg-navy-50/70 p-4">
+                  <p className="text-2xl font-bold text-navy-900">{value}</p>
+                  <p className="text-[11px] text-navy-400">{label}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 space-y-2">
+              {[
+                ['Upload report', 'Complete'],
+                ['Review possible inaccuracies', 'Ready'],
+                ['Choose self-directed next step', 'Next'],
+              ].map(([task, status]) => (
+                <div key={task} className="flex items-center justify-between rounded-lg border border-navy-100 px-4 py-3">
+                  <span className="text-xs font-semibold text-navy-700">{task}</span>
+                  <span className="text-[11px] font-bold text-sky-700">{status}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -228,7 +302,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { cat: 'Beginner', title: 'What affects your score?', desc: 'Payment history, balances, credit age, new applications, and account mix all matter.' },
-              { cat: 'Clean-Up', title: 'What is a collection?', desc: 'A collection means a debt may have been sent or sold to a collector.' },
+              { cat: 'Report Review', title: 'What is a collection?', desc: 'A collection means a debt may have been sent or sold to a collector.' },
               { cat: 'Goals', title: 'Before buying a home', desc: 'Start early, keep payments on time, lower balances, and avoid new debt.' },
             ].map((l) => (
               <div key={l.title} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
