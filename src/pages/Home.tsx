@@ -36,21 +36,21 @@ const workflow = [
 
 function DashboardPreview() {
   return (
-    <div className="relative mx-auto max-w-xl">
-      <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-mint-200/70 via-sky-100 to-lime-200/60 blur-2xl" />
+    <div className="relative mx-auto max-w-lg">
+      <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-mint-200/60 via-sky-100 to-lime-200/50 blur-2xl" />
       <div className="relative overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-2xl shadow-navy-100/80">
-        <div className="flex items-center justify-between border-b border-navy-100 bg-navy-950 px-5 py-4 text-white">
+        <div className="flex items-center justify-between border-b border-navy-100 bg-navy-950 px-4 py-3.5 text-white">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-mint-200">Credit Vivo scanner</p>
-            <p className="mt-1 text-sm font-bold">Report review dashboard</p>
+            <p className="mt-1 text-[13px] font-bold">Report review dashboard</p>
           </div>
-          <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold text-lime-200">Free beta</span>
+          <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold text-lime-200">Free beta</span>
         </div>
 
-        <div className="grid gap-4 p-5 sm:grid-cols-[1fr_0.8fr]">
+        <div className="grid gap-3 p-4 sm:grid-cols-[1fr_0.82fr]">
           <div className="space-y-3">
-            <div className="rounded-xl border border-navy-100 bg-navy-50/70 p-4">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="rounded-xl border border-navy-100 bg-navy-50/70 p-3.5">
+              <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-bold text-navy-900">Three-bureau comparison</p>
                 <BarChart3 size={16} className="text-sky-600" />
               </div>
@@ -75,24 +75,24 @@ function DashboardPreview() {
                 ['3', 'bureaus'],
                 ['0', 'hard pulls'],
               ].map(([value, label]) => (
-                <div key={label} className="rounded-xl border border-navy-100 bg-white p-3 text-center">
-                  <p className="text-xl font-extrabold text-navy-900">{value}</p>
+                <div key={label} className="rounded-xl border border-navy-100 bg-white p-2.5 text-center">
+                  <p className="text-lg font-bold text-navy-900">{value}</p>
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-navy-400">{label}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-xl border border-navy-100 bg-white p-4">
+          <div className="rounded-xl border border-navy-100 bg-white p-3.5">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-navy-400">Review queue</p>
-            <div className="mt-4 space-y-3">
+            <div className="mt-3 space-y-2.5">
               {[
                 ['Identity details', 'Checked'],
                 ['Account history', 'Ready'],
                 ['Learning note', 'Open'],
               ].map(([item, status]) => (
-                <div key={item} className="flex items-center gap-3 rounded-lg bg-navy-50/80 p-3">
-                  <CheckCircle size={16} className="shrink-0 text-mint-500" />
+                <div key={item} className="flex items-center gap-2.5 rounded-lg bg-navy-50/80 p-2.5">
+                  <CheckCircle size={15} className="shrink-0 text-mint-500" />
                   <div className="min-w-0">
                     <p className="truncate text-xs font-bold text-navy-800">{item}</p>
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-sky-700">{status}</p>
@@ -115,36 +115,36 @@ export default function Home() {
         <div className="soft-grid absolute inset-0 opacity-70" aria-hidden="true" />
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-mint-400 via-sky-400 to-lime-300" aria-hidden="true" />
 
-        <div className="relative mx-auto grid min-h-[680px] max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
+        <div className="relative mx-auto grid min-h-[620px] max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
           <div className="animate-fade-up">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mint-200 bg-mint-50 px-3 py-1.5 text-[11px] font-bold text-mint-700">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-mint-200 bg-mint-50 px-3 py-1.5 text-[11px] font-bold text-mint-700">
               <span className="h-1.5 w-1.5 rounded-full bg-mint-500" />
               Free Credit Check-In - no hard pull to start
             </div>
 
-            <h1 className="mb-5 max-w-2xl text-4xl font-extrabold leading-tight text-navy-950 sm:text-5xl">
+            <h1 className="mb-4 max-w-2xl text-[30px] font-bold leading-tight text-navy-950 sm:text-[38px]">
               Understand your credit report without the pressure.
             </h1>
 
-            <p className="mb-7 max-w-xl text-[16px] leading-relaxed text-navy-500">
+            <p className="mb-6 max-w-xl text-[15px] leading-relaxed text-navy-500">
               <strong className="text-navy-800">Credit Vivo is a self-directed credit education platform.</strong>{' '}
               Upload a report, organize the details, compare bureau information, and review possible inaccuracies before choosing your own next step.
             </p>
 
-            <div className="mb-8 flex flex-wrap gap-3">
-              <Link to="/join" className="btn-primary px-6 py-3 text-sm">
+            <div className="mb-6 flex flex-wrap gap-3">
+              <Link to="/join" className="btn-primary px-5 py-2.5 text-sm">
                 Join Free
                 <ArrowRight size={15} />
               </Link>
-              <Link to="/scan" className="btn-outline px-6 py-3 text-sm">
+              <Link to="/scan" className="btn-outline px-5 py-2.5 text-sm">
                 Try Scanner
               </Link>
             </div>
 
             <div className="grid max-w-xl gap-3 sm:grid-cols-3">
               {trustItems.map(({ icon: Icon, label, copy }) => (
-                <div key={label} className="rounded-xl border border-navy-100 bg-white/80 p-4 shadow-sm backdrop-blur">
-                  <Icon size={17} className="mb-3 text-mint-600" />
+                <div key={label} className="rounded-xl border border-navy-100 bg-white/80 p-3.5 shadow-sm backdrop-blur">
+                  <Icon size={16} className="mb-2.5 text-mint-600" />
                   <p className="text-xs font-bold text-navy-900">{label}</p>
                   <p className="mt-1 text-[11px] leading-relaxed text-navy-500">{copy}</p>
                 </div>
@@ -174,11 +174,11 @@ export default function Home() {
       </section>
 
       {/* Workflow */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 max-w-2xl">
+          <div className="mb-8 max-w-2xl">
             <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-sky-700">How it works</p>
-            <h2 className="text-2xl font-extrabold text-navy-950 sm:text-3xl">
+            <h2 className="text-[22px] font-bold text-navy-950 sm:text-[26px]">
               A calmer way to review credit information.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-navy-500">
@@ -193,7 +193,7 @@ export default function Home() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-700 group-hover:bg-mint-100 group-hover:text-mint-700">
                     <Icon size={18} />
                   </div>
-                  <span className="text-lg font-extrabold text-navy-100">0{index + 1}</span>
+                  <span className="text-lg font-bold text-navy-100">0{index + 1}</span>
                 </div>
                 <h3 className="text-sm font-bold text-navy-950">{title}</h3>
                 <p className="mt-2 text-xs leading-relaxed text-navy-500">{copy}</p>
@@ -204,11 +204,11 @@ export default function Home() {
       </section>
 
       {/* Scanner spotlight */}
-      <section className="overflow-hidden bg-navy-950 py-16 text-white">
+      <section className="overflow-hidden bg-navy-950 py-14 text-white">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
           <div>
             <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-lime-300">Scanner beta</p>
-            <h2 className="text-2xl font-extrabold sm:text-3xl">
+            <h2 className="text-[22px] font-bold sm:text-[26px]">
               Manual report upload, organized for human review.
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-navy-200">
@@ -235,7 +235,7 @@ export default function Home() {
               <div className="mb-4 flex items-center justify-between border-b border-navy-100 pb-4">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-navy-400">Upload preview</p>
-                  <p className="text-sm font-extrabold">credit-report.pdf</p>
+                  <p className="text-sm font-bold">credit-report.pdf</p>
                 </div>
                 <ClipboardCheck size={20} className="text-mint-600" />
               </div>
@@ -255,11 +255,11 @@ export default function Home() {
       </section>
 
       {/* Differentiation */}
-      <section className="bg-gradient-to-b from-white to-sky-50/70 py-16">
+      <section className="bg-gradient-to-b from-white to-sky-50/70 py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center">
+          <div className="mb-8 text-center">
             <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-sky-700">Why Credit Vivo</p>
-            <h2 className="text-2xl font-extrabold text-navy-950 sm:text-3xl">
+            <h2 className="text-[22px] font-bold text-navy-950 sm:text-[26px]">
               Software first. Consumer controlled.
             </h2>
           </div>
@@ -286,7 +286,7 @@ export default function Home() {
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-mint-100 text-mint-700">
                   <Icon size={19} />
                 </div>
-                <h3 className="text-base font-extrabold text-navy-950">{title}</h3>
+                <h3 className="text-base font-bold text-navy-950">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-navy-500">{copy}</p>
               </div>
             ))}
@@ -295,12 +295,12 @@ export default function Home() {
       </section>
 
       {/* Learning preview */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
               <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-sky-700">Learning center</p>
-              <h2 className="text-2xl font-extrabold text-navy-950">Credit basics made simple.</h2>
+              <h2 className="text-[22px] font-bold text-navy-950">Credit basics made simple.</h2>
             </div>
             <Link to="/learning" className="btn-soft hidden text-xs sm:inline-flex">
               View lessons
@@ -316,7 +316,7 @@ export default function Home() {
             ].map(([cat, title, desc]) => (
               <div key={title} className="rounded-xl border border-navy-100 bg-navy-50/60 p-5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">{cat}</span>
-                <h3 className="mt-2 text-sm font-extrabold text-navy-950">{title}</h3>
+                <h3 className="mt-2 text-sm font-bold text-navy-950">{title}</h3>
                 <p className="mt-2 text-xs leading-relaxed text-navy-500">{desc}</p>
               </div>
             ))}
@@ -325,10 +325,10 @@ export default function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-navy-950 py-16 text-white">
+      <section className="bg-navy-950 py-14 text-white">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-lime-300">Free beta access</p>
-          <h2 className="text-2xl font-extrabold sm:text-3xl">Start with a clearer credit check-in.</h2>
+          <h2 className="text-[22px] font-bold sm:text-[26px]">Start with a clearer credit check-in.</h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-navy-300">
             Upload manually, review carefully, and learn what your credit report information may mean before choosing your next step.
           </p>
