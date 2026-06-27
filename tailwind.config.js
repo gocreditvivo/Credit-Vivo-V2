@@ -53,6 +53,9 @@ export default {
       animation: {
         'fade-up': 'fadeUp 0.5s ease-out forwards',
         'fade-in': 'fadeIn 0.4s ease-out forwards',
+        'float-slow': 'floatSlow 5.5s ease-in-out infinite',
+        'pulse-soft': 'pulseSoft 2.8s ease-in-out infinite',
+        'scan-line': 'scanLine 3.6s ease-in-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -62,6 +65,19 @@ export default {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        floatSlow: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        pulseSoft: {
+          '0%, 100%': { opacity: '0.62', transform: 'scaleX(0.94)' },
+          '50%': { opacity: '1', transform: 'scaleX(1)' },
+        },
+        scanLine: {
+          '0%': { transform: 'translateY(-110%)' },
+          '50%': { transform: 'translateY(110%)' },
+          '100%': { transform: 'translateY(110%)' },
         },
       },
     },

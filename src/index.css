@@ -28,4 +28,60 @@
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 border border-navy-200 hover:border-navy-300 text-navy-700 font-medium px-5 py-2.5 rounded-lg text-sm transition-all duration-200 hover:bg-navy-50;
   }
+
+  .motion-wash {
+    background:
+      linear-gradient(115deg, rgba(34, 197, 94, 0.28), transparent 28%),
+      linear-gradient(70deg, transparent 36%, rgba(14, 165, 233, 0.22) 48%, transparent 62%),
+      linear-gradient(145deg, rgba(215, 255, 88, 0.16), transparent 30%);
+    background-size: 180% 180%;
+    animation: washShift 12s ease-in-out infinite;
+  }
+
+  .image-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .image-sheen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.38) 48%, transparent 72%);
+    transform: translateX(-120%);
+    animation: sheenPass 5.5s ease-in-out infinite;
+  }
+
+  .soft-grid {
+    background-image:
+      linear-gradient(rgba(16, 42, 67, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(16, 42, 67, 0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}
+
+@keyframes washShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes sheenPass {
+  0%, 34% {
+    transform: translateX(-120%);
+  }
+  60%, 100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }

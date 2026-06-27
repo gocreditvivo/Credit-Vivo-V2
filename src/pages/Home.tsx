@@ -15,7 +15,7 @@ import {
 
 function HeroCard() {
   return (
-    <div className="rounded-lg border border-white/70 bg-white/92 p-4 shadow-xl shadow-navy-900/10 backdrop-blur-md">
+    <div className="animate-float-slow rounded-lg border border-white/70 bg-white/92 p-4 shadow-xl shadow-navy-900/10 backdrop-blur-md">
       <div className="mb-4 flex items-center justify-between">
         <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400">Credit Check-In</p>
         <span className="rounded-full bg-mint-50 px-2.5 py-1 text-[10px] font-bold text-mint-700">Draft review</span>
@@ -35,6 +35,9 @@ function HeroCard() {
             </span>
           </div>
         ))}
+      </div>
+      <div className="mt-4 overflow-hidden rounded-full bg-navy-100">
+        <div className="h-1.5 w-3/4 origin-left animate-pulse-soft rounded-full bg-gradient-to-r from-mint-400 via-sky-400 to-lime-300" />
       </div>
     </div>
   );
@@ -60,8 +63,10 @@ export default function Home() {
           backgroundSize: 'cover',
         }}
       >
+        <div className="motion-wash absolute inset-0 opacity-80" aria-hidden="true" />
+        <div className="soft-grid absolute inset-0 opacity-25" aria-hidden="true" />
         <div className="mx-auto flex min-h-[620px] max-w-6xl items-center px-4 py-16 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
+          <div className="relative z-10 max-w-2xl animate-fade-up">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mint-300/30 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-mint-100 backdrop-blur-md">
               <span className="h-1.5 w-1.5 rounded-full bg-mint-300" />
               Free Credit Check-In - no hard pull
@@ -88,7 +93,7 @@ export default function Home() {
 
             <div className="grid max-w-xl grid-cols-2 gap-2 sm:grid-cols-4">
               {trustItems.map(({ icon: Icon, label }) => (
-                <div key={label} className="rounded-lg border border-white/15 bg-white/10 p-3 backdrop-blur-md">
+                <div key={label} className="rounded-lg border border-white/15 bg-white/10 p-3 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1 hover:bg-white/15">
                   <Icon size={15} className="mb-2 text-mint-200" />
                   <p className="text-[11px] font-semibold leading-snug text-white/90">{label}</p>
                 </div>
@@ -96,7 +101,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="absolute bottom-6 right-6 hidden w-80 lg:block">
+          <div className="absolute bottom-6 right-6 z-10 hidden w-80 lg:block">
             <HeroCard />
           </div>
         </div>
@@ -106,12 +111,13 @@ export default function Home() {
       <section className="border-b border-navy-100/70 bg-white py-8">
         <div className="mx-auto grid max-w-6xl gap-4 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
           {[
-            ['Free beta', 'No payment is required during the current test period.'],
-            ['Consumer control', 'Nothing is sent, mailed, or submitted automatically.'],
-            ['Plain English', 'Findings are organized into simple review categories.'],
-            ['Compliance-first', 'No guaranteed deletions, approvals, or score outcomes.'],
-          ].map(([title, copy]) => (
+            ['Free beta', 'No payment is required during the current test period.', 'bg-gradient-to-r from-mint-400 to-sky-400'],
+            ['Consumer control', 'Nothing is sent, mailed, or submitted automatically.', 'bg-gradient-to-r from-sky-400 to-lime-300'],
+            ['Plain English', 'Findings are organized into simple review categories.', 'bg-gradient-to-r from-lime-300 to-mint-400'],
+            ['Compliance-first', 'No guaranteed deletions, approvals, or score outcomes.', 'bg-gradient-to-r from-navy-500 to-sky-500'],
+          ].map(([title, copy, accent]) => (
             <div key={title} className="border-l border-navy-100 pl-4">
+              <span className={`mb-3 block h-1.5 w-12 rounded-full ${accent}`} />
               <p className="text-sm font-bold text-navy-900">{title}</p>
               <p className="mt-1 text-xs leading-relaxed text-navy-400">{copy}</p>
             </div>
@@ -170,6 +176,63 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Visual workflow */}
+      <section className="overflow-hidden bg-white py-16">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
+          <div className="relative">
+            <div className="image-sheen h-[360px] rounded-lg border border-navy-100 bg-navy-900 shadow-2xl shadow-navy-200/70">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url('/brand/credit-vivo-hero.png')" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-navy-950/88 via-navy-900/38 to-sky-300/12" />
+              <div className="absolute left-6 top-6 rounded-lg border border-white/20 bg-white/12 px-4 py-3 text-white backdrop-blur-md">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-mint-100">Report upload</p>
+                <p className="mt-1 text-sm font-bold">Information organized for review</p>
+              </div>
+              <div className="absolute bottom-6 left-6 right-6 overflow-hidden rounded-lg border border-white/20 bg-white/90 p-4 shadow-xl">
+                <div className="absolute inset-x-0 top-0 h-16 animate-scan-line bg-gradient-to-b from-sky-300/0 via-sky-300/30 to-sky-300/0" />
+                <div className="relative grid gap-2 sm:grid-cols-3">
+                  {[
+                    ['Identity', 'Checked'],
+                    ['Accounts', 'Sorted'],
+                    ['Bureaus', 'Compared'],
+                  ].map(([label, status]) => (
+                    <div key={label} className="rounded-lg bg-navy-50/90 p-3">
+                      <p className="text-[11px] font-bold text-navy-900">{label}</p>
+                      <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-mint-700">{status}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-mint-600">More visual, still practical</p>
+            <h2 className="mb-3 text-2xl font-bold text-navy-900 sm:text-3xl">
+              Make every step feel easier to understand.
+            </h2>
+            <p className="mb-6 text-sm leading-relaxed text-navy-500">
+              The experience should feel alive, but never careless. Credit Vivo can use motion to show organization, progress, and review without making risky promises.
+            </p>
+
+            <div className="grid gap-3">
+              {[
+                ['Color-coded review', 'Different stages stand out without overwhelming the user.'],
+                ['Animated progress', 'Small motion shows work happening and keeps the page warm.'],
+                ['Image-backed moments', 'Real visual scenes help the product feel more trustworthy.'],
+              ].map(([title, copy]) => (
+                <div key={title} className="rounded-lg border border-navy-100 bg-gradient-to-r from-white to-sky-50/70 p-4 transition-transform duration-300 hover:-translate-y-1">
+                  <p className="text-sm font-bold text-navy-900">{title}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-navy-500">{copy}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Trust strip */}
       <section className="py-8 border-y border-navy-100/60 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -184,9 +247,10 @@ export default function Home() {
       </section>
 
       {/* Vision section */}
-      <section className="py-16 bg-navy-900">
+      <section className="relative overflow-hidden bg-navy-900 py-16">
+        <div className="motion-wash absolute inset-0 opacity-35" aria-hidden="true" />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-lime-300 mb-2">Credit made simple</p>
+          <p className="relative text-[11px] font-semibold uppercase tracking-widest text-lime-300 mb-2">Credit made simple</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
             Your future starts with a clearer plan.
           </h2>
@@ -196,12 +260,13 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { title: 'Understand', desc: 'Know what may be holding you back.' },
-              { title: 'Build', desc: 'Learn habits that may help over time.' },
-              { title: 'Review', desc: 'Check possible inaccuracies before any action.' },
-              { title: 'Track', desc: 'Know what was done and what happens next.' },
+              { title: 'Understand', desc: 'Know what may be holding you back.', accent: 'bg-mint-300' },
+              { title: 'Build', desc: 'Learn habits that may help over time.', accent: 'bg-sky-300' },
+              { title: 'Review', desc: 'Check possible inaccuracies before any action.', accent: 'bg-lime-300' },
+              { title: 'Track', desc: 'Know what was done and what happens next.', accent: 'bg-white' },
             ].map((g) => (
-              <div key={g.title} className="bg-white/5 border border-white/10 rounded-xl p-5 text-left">
+              <div key={g.title} className="bg-white/5 border border-white/10 rounded-xl p-5 text-left transition-transform duration-300 hover:-translate-y-1 hover:bg-white/8">
+                <span className={`mb-4 block h-1.5 w-10 rounded-full ${g.accent}`} />
                 <h3 className="text-sm font-bold text-white mb-1">{g.title}</h3>
                 <p className="text-xs text-navy-300">{g.desc}</p>
               </div>
@@ -222,15 +287,15 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { num: '01', title: 'Join free', desc: 'Start your Credit Check-In with no hard pull to begin.', icon: Shield },
-              { num: '02', title: 'Get your roadmap', desc: 'Credit Vivo organizes your profile and explains what matters.', icon: Compass },
-              { num: '03', title: 'Review next steps', desc: 'You see important actions before anything moves forward.', icon: Calendar },
-              { num: '04', title: 'Track progress', desc: 'Stay updated on actions, responses, and next steps.', icon: BarChart3 },
-            ].map(({ num, title, desc, icon: Icon }) => (
-              <div key={num} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
+              { num: '01', title: 'Join free', desc: 'Start your Credit Check-In with no hard pull to begin.', icon: Shield, color: 'bg-mint-100 text-mint-700' },
+              { num: '02', title: 'Get your roadmap', desc: 'Credit Vivo organizes your profile and explains what matters.', icon: Compass, color: 'bg-sky-100 text-sky-700' },
+              { num: '03', title: 'Review next steps', desc: 'You see important actions before anything moves forward.', icon: Calendar, color: 'bg-lime-300/30 text-navy-700' },
+              { num: '04', title: 'Track progress', desc: 'Stay updated on actions, responses, and next steps.', icon: BarChart3, color: 'bg-navy-100 text-navy-700' },
+            ].map(({ num, title, desc, icon: Icon, color }) => (
+              <div key={num} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-navy-100/80">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 bg-sky-100 rounded-lg flex items-center justify-center">
-                    <Icon size={16} className="text-sky-600" />
+                  <div className={`w-9 h-9 ${color} rounded-lg flex items-center justify-center`}>
+                    <Icon size={16} />
                   </div>
                   <span className="text-xl font-bold text-navy-200">{num}</span>
                 </div>
