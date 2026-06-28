@@ -53,6 +53,36 @@ export type ScannerIssue = {
   confidence: 'high' | 'medium' | 'low' | string;
 };
 
+export type ScannerLetterQueueItem = {
+  letter_id: string;
+  issue_id: string;
+  issue_type: string;
+  letter_type: string;
+  round: string;
+  recipient_type: string;
+  responsible_party: string;
+  delivery_method: string;
+  fcra_notice_required: boolean;
+  fcra_notice_included: boolean;
+  customer_approval_required: boolean;
+  customer_authorization_verified: boolean;
+  tracking_status: string;
+  recommended_next_action: string;
+  escalation_candidate: boolean;
+};
+
+export type ScannerFcraReviewItem = {
+  issue_id: string;
+  possible_fcra_issue: boolean;
+  issue_type: string;
+  responsible_party: string;
+  dispute_history_complete: boolean;
+  evidence_strength: 'low' | 'medium' | 'high' | string;
+  damages_evidence: string;
+  next_action: string;
+  requires_admin_review: boolean;
+};
+
 export type ScannerParseResult = {
   job_id: string;
   files: ScannerFileInfo[];
@@ -79,6 +109,9 @@ export type ScannerParseResult = {
     next_step?: string;
   };
   admin_summary?: Record<string, unknown>;
+  letter_workflow?: Record<string, unknown>;
+  recommended_letter_queue?: ScannerLetterQueueItem[];
+  fcra_review?: ScannerFcraReviewItem[];
 };
 
 const SCANNER_API_URL =

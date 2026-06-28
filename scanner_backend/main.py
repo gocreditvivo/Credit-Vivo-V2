@@ -214,6 +214,9 @@ async def parse_uploaded_reports(
         "customer_message": data["customer_summary"]["message"],
         "customer_summary": data["customer_summary"],
         "admin_summary": data["admin_summary"],
+        "letter_workflow": data.get("letter_workflow"),
+        "recommended_letter_queue": data.get("recommended_letter_queue", []),
+        "fcra_review": data.get("fcra_review", []),
         "output_folder": str(out_dir),
     }
 
