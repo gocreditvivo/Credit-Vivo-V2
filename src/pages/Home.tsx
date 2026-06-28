@@ -141,7 +141,7 @@ export default function Home() {
       <section className="border-y border-navy-100/70 bg-white py-7">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['Free Check-In', 'Review First', 'No Guarantees', 'Plain English', 'Join Free'].map((item) => (
+            {['Free Check-In', 'Review First', 'Plain English', 'Join Free'].map((item) => (
               <div key={item} className="lively-trust-pill text-center py-2">
                 <span className="text-xs font-semibold text-navy-600">{item}</span>
               </div>
