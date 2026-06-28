@@ -1,69 +1,148 @@
 import { Link } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 
-const betaFeatures = [
-  'Free Credit Check-In',
-  'No hard pull to start',
-  'Plain-English roadmap',
-  'Draft scanner findings for review',
-  'Learning Center access',
-  'No automatic disputes or letters',
+const plans = [
+  {
+    badge: 'Start here',
+    name: 'Free Scan',
+    price: '$0',
+    cadence: '',
+    description: 'Upload reports, answer a short intake, and see a simple preview.',
+    cta: 'Start Free',
+    to: '/join',
+    featured: false,
+    features: [
+      'Secure report upload',
+      'Plain-English issue preview',
+      'Credit goal intake',
+      'Learning Center access',
+    ],
+  },
+  {
+    badge: 'DIY support',
+    name: 'AI Guided',
+    price: '$29',
+    cadence: '/mo',
+    description: 'For customers who want guidance, education, and draft-ready documents.',
+    cta: 'Choose AI Guided',
+    to: '/join',
+    featured: false,
+    features: [
+      'AI findings dashboard',
+      'Draft dispute letter workspace',
+      'Learning path and reminders',
+      'Monthly roadmap updates',
+    ],
+  },
+  {
+    badge: 'Popular',
+    name: 'Vivo Plus',
+    price: '$59',
+    cadence: '/mo',
+    description: 'A managed workflow for bureau disputes, furnisher follow-up, and progress updates.',
+    cta: 'Choose Vivo Plus',
+    to: '/join',
+    featured: true,
+    features: [
+      'Bureau dispute workflow',
+      'Furnisher validation workflow',
+      'Portal progress updates',
+      'Document vault organization',
+    ],
+  },
+  {
+    badge: 'Top tier',
+    name: 'Attorney Assist',
+    price: '$99',
+    cadence: '/mo',
+    description: 'For customers who may need attorney-ready escalation after normal disputes.',
+    cta: 'Check Eligibility',
+    to: '/join',
+    featured: false,
+    features: [
+      'Attorney-ready evidence packet',
+      'Escalation review eligibility',
+      'CFPB and state complaint prep',
+      'Advanced response tracking',
+    ],
+  },
 ];
 
 export default function Pricing() {
   return (
     <>
       {/* Hero */}
-      <section className="py-16 bg-gradient-to-b from-sky-50/50 to-white">
+      <section className="py-16 bg-gradient-to-b from-emerald-50/70 to-white">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 bg-sky-100 text-sky-700 text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5">
-            <span className="w-1.5 h-1.5 bg-sky-500 rounded-full" />
-            Free Beta
+          <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-emerald-700 text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5">
+            <span className="w-1.5 h-1.5 bg-rose-500 rounded-full" />
+            Pricing
           </div>
           <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Free while Credit Vivo is in beta.
+            Simple packages for every stage.
           </h1>
-          <p className="text-[15px] text-navy-500 max-w-md mx-auto">
-            No paid service is active yet. Start with the free Credit Check-In and help us refine the guided credit experience.
+          <p className="text-[15px] text-navy-500 max-w-xl mx-auto">
+            Start free, then choose the level of guidance that fits your credit goals. Paid packages are launch pricing placeholders until final terms and payment processing are active.
           </p>
         </div>
       </section>
 
-      {/* Beta offer */}
+      {/* Plans */}
       <section className="py-12 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-xl p-6 bg-navy-900 text-white shadow-xl ring-2 ring-mint-500/40">
-            <span className="inline-block text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full w-fit mb-3 bg-mint-500/20 text-mint-300">
-              Current beta
-            </span>
-
-            <h3 className="text-base font-bold mb-1 text-white">Credit Vivo Free Beta</h3>
-            <p className="text-xs mb-4 text-navy-300">
-              For consumers who want clarity, education, and a safer starting point before any paid service exists.
-            </p>
-
-            <div className="flex items-end gap-1 mb-5">
-              <span className="text-3xl font-bold text-white">$0</span>
-              <span className="text-xs pb-1 text-navy-400">during beta</span>
-            </div>
-
-            <Link to="/join" className="btn-mint text-xs py-2.5 w-full mb-5">
-              Join Free Beta
-            </Link>
-
-            <ul className="space-y-2.5">
-              {betaFeatures.map((feature) => (
-                <li key={feature} className="flex items-start gap-2 text-xs">
-                  <Check size={13} className="flex-shrink-0 mt-0.5 text-mint-400" />
-                  <span className="text-navy-200">{feature}</span>
-                </li>
-              ))}
-            </ul>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {plans.map((plan) => (
+              <article
+                key={plan.name}
+                className={`relative flex flex-col rounded-2xl border p-6 shadow-sm ${
+                  plan.featured
+                    ? 'border-emerald-300 bg-gradient-to-b from-white to-emerald-50/60 shadow-emerald-900/10 ring-2 ring-emerald-100'
+                    : 'border-navy-100 bg-white'
+                }`}
+              >
+                <span
+                  className={`mb-4 w-fit rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
+                    plan.featured
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-emerald-50 text-emerald-700'
+                  }`}
+                >
+                  {plan.badge}
+                </span>
+                <h2 className="text-lg font-bold text-navy-900">{plan.name}</h2>
+                <p className="mt-2 min-h-[54px] text-xs leading-relaxed text-navy-500">
+                  {plan.description}
+                </p>
+                <div className="my-6 flex items-end gap-1">
+                  <span className="text-4xl font-extrabold text-navy-900">{plan.price}</span>
+                  {plan.cadence && (
+                    <span className="pb-1 text-sm font-semibold text-navy-400">{plan.cadence}</span>
+                  )}
+                </div>
+                <Link
+                  to={plan.to}
+                  className={`${plan.featured ? 'btn-primary' : 'btn-soft'} mb-6 w-full text-xs py-2.5`}
+                >
+                  {plan.cta}
+                  <ArrowRight size={14} />
+                </Link>
+                <ul className="mt-auto space-y-2.5">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2 text-xs text-navy-600">
+                      <Check size={13} className="mt-0.5 flex-shrink-0 text-emerald-600" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
           </div>
 
-          <p className="text-center text-[11px] text-navy-400 mt-8 max-w-lg mx-auto">
-            Credit Vivo is not accepting paid credit services in beta. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes.
-          </p>
+          <div className="mt-8 rounded-2xl border border-amber-100 bg-amber-50 p-5">
+            <p className="text-xs leading-relaxed text-amber-900">
+              <strong>Launch note:</strong> Pricing shown is planned package positioning. Credit Vivo is not accepting paid credit repair services until final terms, disclosures, cancellation rights, and payment processing are approved. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -72,8 +151,8 @@ export default function Pricing() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              { title: 'Beta gives clarity', desc: 'The free Credit Check-In gives consumers a simple starting point and helps them understand where to focus.' },
-              { title: 'No payment required', desc: 'Credit Vivo should prove the scanner, education, and review flow before introducing paid memberships.' },
+              { title: 'Start with free clarity', desc: 'The free Credit Check-In gives consumers a simple starting point and helps them understand where to focus.' },
+              { title: 'Upgrade when ready', desc: 'Paid tiers are designed around more guidance, tracking, document organization, and escalation support.' },
               { title: 'Review comes first', desc: 'Draft findings are for review only. Nothing should be sent, mailed, or escalated without approval.' },
             ].map((card) => (
               <div key={card.title} className="bg-white rounded-xl p-5 border border-navy-100/60">
@@ -88,10 +167,10 @@ export default function Pricing() {
       {/* CTA */}
       <section className="py-14 bg-navy-900">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h2 className="text-xl font-bold text-white mb-3">Start your free Credit Check-In</h2>
-          <p className="text-sm text-navy-300 mb-5">No hard pull. No payment. No commitment.</p>
+          <h2 className="text-xl font-bold text-white mb-3">Start with the free Credit Check-In</h2>
+          <p className="text-sm text-navy-300 mb-5">No hard pull to start. Review first. Upgrade later when paid plans are active.</p>
           <Link to="/join" className="btn-mint text-sm py-3 px-7">
-            Join Free Beta <ArrowRight size={15} />
+            Start Free <ArrowRight size={15} />
           </Link>
         </div>
       </section>
