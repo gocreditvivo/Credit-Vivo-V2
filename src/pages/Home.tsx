@@ -3,10 +3,10 @@ import {
   ArrowRight,
   CheckCircle,
   TrendingUp,
-  Shield,
-  BarChart3,
+  BrainCircuit,
+  Scale,
+  FileSearch,
   Sparkles,
-  Compass,
   Calendar,
 } from 'lucide-react';
 
@@ -16,7 +16,7 @@ function HeroCard() {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-wider text-emerald-700">Your Roadmap</p>
-          <p className="mt-0.5 text-sm font-bold text-navy-900">Credit Check-In</p>
+          <p className="mt-0.5 text-sm font-bold text-navy-900">AI + Attorney Review</p>
         </div>
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-100 to-cyan-100">
           <TrendingUp size={16} className="text-emerald-700" />
@@ -24,9 +24,9 @@ function HeroCard() {
       </div>
       <div className="space-y-2.5">
         {[
-          { label: 'Profile reviewed', done: true },
-          { label: 'Education items found', done: true },
-          { label: 'Monthly plan created', done: false },
+          { label: 'AI scan completed', done: true },
+          { label: 'Errors prioritized', done: true },
+          { label: 'Attorney escalation checked', done: false },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2.5 rounded-lg bg-navy-50/70 px-3 py-2">
             <div className={`flex h-5 w-5 items-center justify-center rounded-full ${item.done ? 'bg-emerald-600' : 'bg-rose-200'}`}>
@@ -40,7 +40,7 @@ function HeroCard() {
       </div>
       <div className="mt-4 flex items-center gap-2 border-t border-navy-100/60 pt-3">
         <div className="h-2 w-2 rounded-full bg-rose-500" />
-        <span className="text-[11px] text-navy-500">3 steps this month</span>
+        <span className="text-[11px] text-navy-500">Draft review only</span>
       </div>
     </div>
   );
@@ -53,12 +53,12 @@ function HeroVisual() {
       <div className="lively-spark lively-spark-two" />
       <div className="absolute -right-5 -top-8 z-10 w-56 rounded-xl border border-white/80 bg-white/95 p-4 shadow-xl shadow-navy-900/12 backdrop-blur">
         <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">
-          Soft-pull API targets
+          AI scanner path
         </p>
         <div className="mt-2 grid gap-1.5 text-[11px] font-semibold text-navy-700">
-          <span>Equifax CES</span>
-          <span>iSoftpull</span>
-          <span>Soft Pull Solutions</span>
+          <span>Soft report pull</span>
+          <span>Raw report parsing</span>
+          <span>Attorney-ready file</span>
         </div>
       </div>
       <div className="overflow-hidden rounded-2xl border border-white/70 bg-white shadow-2xl shadow-navy-900/18">
@@ -69,8 +69,8 @@ function HeroVisual() {
         />
       </div>
       <div className="lively-score-card rounded-xl border border-white/80 bg-white/95 p-4 shadow-xl shadow-navy-900/16 backdrop-blur">
-        <b className="block text-4xl leading-none text-emerald-600">+48</b>
-        <span className="text-[11px] font-extrabold uppercase text-navy-500">score momentum</span>
+        <b className="block text-4xl leading-none text-emerald-600">AI</b>
+        <span className="text-[11px] font-extrabold uppercase text-navy-500">review engine</span>
       </div>
       <div className="lively-check-card">
         <HeroCard />
@@ -89,22 +89,22 @@ export default function Home() {
             <div className="relative z-10">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/80 px-3 py-1.5 text-[11px] font-semibold text-emerald-800 shadow-sm shadow-emerald-900/5">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                Free Credit Check-In - No hard pull to start
+                AI credit scanner + attorney escalation
               </div>
 
               <h1 className="mb-4 text-[30px] font-semibold leading-tight text-navy-900 sm:text-[36px]">
-                Stronger credit.{' '}
-                <span className="text-gradient-vivo">Less stress.</span>
+                AI finds the credit report problems.{' '}
+                <span className="text-gradient-vivo">Attorneys help with the hard ones.</span>
               </h1>
 
               <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
-                <strong className="text-navy-700">You take control. We clear the path.</strong>{' '}
-                Credit Vivo helps you understand your credit, organize report information, review possible inaccuracies, and follow a simple monthly plan without promising impossible shortcuts.
+                <strong className="text-navy-700">Credit Vivo combines AI report analysis with attorney-reviewed escalation options.</strong>{' '}
+                Start with a no-hard-pull Credit Check-In, see possible errors in plain English, then move qualified files toward bureau disputes, furnisher disputes, CFPB/state escalation, or attorney review.
               </p>
 
               <div className="mb-8 flex flex-wrap gap-3">
                 <Link to="/join" className="btn-primary text-sm py-3 px-6">
-                  Join Free
+                  Start AI Credit Check-In
                   <ArrowRight size={15} />
                 </Link>
                 <Link to="/why" className="btn-outline text-sm py-3 px-6">
@@ -113,7 +113,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                {['No hard pull to start', 'Review before action', 'Track progress monthly'].map((t) => (
+                {['AI parser', 'Attorney escalation', 'No hard pull to start'].map((t) => (
                   <span key={t} className="flex items-center gap-1.5 text-[12px] text-navy-500">
                     <CheckCircle size={13} className="text-emerald-700" />
                     {t}
@@ -122,10 +122,10 @@ export default function Home() {
               </div>
               <div className="mt-6 rounded-xl border border-emerald-100 bg-white/85 p-4 shadow-sm shadow-emerald-900/5 lg:hidden">
                 <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">
-                  Soft-pull API targets
+                  AI scanner path
                 </p>
                 <p className="mt-1 text-xs font-semibold text-navy-700">
-                  Equifax CES, iSoftpull, Soft Pull Solutions
+                  Soft report pull, raw parsing, attorney-ready review file
                 </p>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function Home() {
       <section className="border-y border-navy-100/70 bg-white py-7">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['Free Check-In', 'Review First', 'Plain English', 'Join Free'].map((item) => (
+            {['AI Scanner', 'Attorney Review', 'Bureau Disputes', 'Furnisher Disputes', 'Escalation Tracking'].map((item) => (
               <div key={item} className="lively-trust-pill text-center py-2">
                 <span className="text-xs font-semibold text-navy-600">{item}</span>
               </div>
@@ -153,20 +153,20 @@ export default function Home() {
       {/* Vision section */}
       <section className="bg-gradient-to-br from-navy-950 via-navy-900 to-emerald-950 py-14">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-emerald-200">Credit made simple</p>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-emerald-200">AI first, attorney-ready when needed</p>
           <h2 className="mb-3 text-[22px] font-semibold text-white sm:text-[26px]">
-            Your future starts with a <span className="text-amber-300">clearer plan.</span>
+            Credit repair needs more than templates. <span className="text-amber-300">It needs evidence.</span>
           </h2>
           <p className="text-sm text-navy-300 max-w-lg mx-auto mb-10">
-            Most people do not need more credit jargon or pressure. They need a simple path, reminders, and guidance that makes sense.
+            Credit Vivo uses AI to organize raw report data, spot possible inaccuracies, prepare dispute workflows, and flag files that may need attorney or regulator escalation.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { title: 'Understand', desc: 'Know what may be holding you back.' },
-              { title: 'Build', desc: 'Learn habits that may help over time.' },
-              { title: 'Review', desc: 'Check possible inaccuracies before any action.' },
-              { title: 'Track', desc: 'Know what was done and what happens next.' },
+              { title: 'AI scan', desc: 'Parse credit report data and organize possible errors by account, bureau, and issue type.' },
+              { title: 'Evidence file', desc: 'Keep snippets, dates, bureau differences, and tracking fields ready for review.' },
+              { title: 'Attorney path', desc: 'Route stronger files toward attorney review when escalation may be appropriate.' },
+              { title: 'Tracked action', desc: 'Follow letters, deadlines, responses, and next steps without losing the paper trail.' },
             ].map((g) => (
               <div key={g.title} className="lively-dark-card rounded-xl border border-white/10 bg-white/[0.04] p-5 text-left">
                 <h3 className="text-sm font-bold text-white mb-1">{g.title}</h3>
@@ -183,16 +183,16 @@ export default function Home() {
           <div className="text-center mb-12">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">How it works</p>
             <h2 className="text-[22px] font-semibold text-navy-900 sm:text-[26px]">
-              A guided credit journey.
+              From AI scan to attorney-ready escalation.
             </h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { num: '01', title: 'Join free', desc: 'Start your Credit Check-In with no hard pull to begin.', icon: Shield },
-              { num: '02', title: 'Get your roadmap', desc: 'Credit Vivo organizes your profile and explains what matters.', icon: Compass },
-              { num: '03', title: 'Review next steps', desc: 'You see important actions before anything moves forward.', icon: Calendar },
-              { num: '04', title: 'Track progress', desc: 'Stay updated on actions, responses, and next steps.', icon: BarChart3 },
+              { num: '01', title: 'Start with AI', desc: 'Upload or connect a report for a no-hard-pull Credit Check-In.', icon: BrainCircuit },
+              { num: '02', title: 'Find possible errors', desc: 'The scanner organizes bureau differences, collections, dates, balances, and reporting issues.', icon: FileSearch },
+              { num: '03', title: 'Prepare the action file', desc: 'Credit Vivo builds draft dispute workflows and evidence packets for review.', icon: Calendar },
+              { num: '04', title: 'Escalate when needed', desc: 'Qualified files can move toward attorney review, CFPB/state escalation, or tracked follow-up.', icon: Scale },
             ].map(({ num, title, desc, icon: Icon }) => (
               <div key={num} className="lively-step-card rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/50">
                 <div className="flex items-center gap-3 mb-3">
@@ -215,28 +215,28 @@ export default function Home() {
           <div className="text-center mb-12">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">What we help with</p>
             <h2 className="text-[22px] font-semibold text-navy-900 sm:text-[26px]">
-              Build, review, track, and learn.
+              AI speed with human escalation.
             </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
             {[
               {
-                icon: TrendingUp,
-                title: 'Build credit',
-                desc: 'Learn habits that may support better credit over time: on-time payments, lower balances, and smart applications.',
+                icon: BrainCircuit,
+                title: 'AI report analysis',
+                desc: 'Review raw report data for possible errors, bureau mismatches, missing dates, duplicate reporting, collections, and charge-off issues.',
                 color: 'bg-emerald-100 text-emerald-700',
               },
               {
                 icon: Sparkles,
-                title: 'Review possible inaccuracies',
-                desc: 'Review personal information, collections, bureau differences, and account details that may need attention before any self-directed next step.',
+                title: 'Dispute workflow',
+                desc: 'Prepare draft bureau and furnisher dispute workflows, FCRA notice language, evidence packets, and certified-mail tracking fields.',
                 color: 'bg-rose-100 text-rose-600',
               },
               {
-                icon: Compass,
-                title: 'Know the next step',
-                desc: 'Credit Vivo turns complicated credit work into simple monthly guidance.',
+                icon: Scale,
+                title: 'Attorney escalation',
+                desc: 'When the file shows stronger dispute history or repeated reporting problems, Credit Vivo can prepare it for attorney or regulator review.',
                 color: 'bg-amber-100 text-amber-700',
               },
             ].map(({ icon: Icon, title, desc, color }) => (
@@ -293,10 +293,10 @@ export default function Home() {
         <div className="max-w-2xl mx-auto px-4 text-center">
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-emerald-200">Ready to start?</p>
           <h2 className="mb-3 text-[22px] font-semibold text-white sm:text-[26px]">
-            Your Credit Check-In is free.
+            Start with the AI Credit Check-In.
           </h2>
           <p className="text-sm text-navy-300 mb-6">
-            Get a simple starting point and see your next best steps.
+            See possible report errors first. Upgrade later if you want guided disputes or attorney escalation.
           </p>
           <Link to="/join" className="btn-mint text-sm py-3 px-7">
             Join Free
