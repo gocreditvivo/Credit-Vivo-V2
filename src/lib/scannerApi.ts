@@ -114,9 +114,21 @@ export type ScannerParseResult = {
   fcra_review?: ScannerFcraReviewItem[];
 };
 
-const SCANNER_API_URL =
-  import.meta.env.VITE_SCANNER_API_URL ||
-  (import.meta.env.DEV ? 'http://localhost:8080' : '');
+function getScannerApiUrl() {
+  const configuredUrl = import.meta.env.VITE_SCANNER_API_URL;
+  if (configuredUrl) return configuredUrl;
+
+  if (import.meta.env.DEV) return 'http://127.0.0.1:8080';
+
+  const localHostnames = new Set(['localhost', '127.0.0.1', '::1']);
+  if (typeof window !== 'undefined' && localHostnames.has(window.location.hostname)) {
+    return 'http://127.0.0.1:8080';
+  }
+
+  return '';
+}
+
+const SCANNER_API_URL = getScannerApiUrl();
 
 export async function parseCreditReports(
   files: File[],
