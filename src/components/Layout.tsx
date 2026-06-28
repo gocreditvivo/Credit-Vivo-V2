@@ -1,10 +1,18 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
+const headerLinks = [
+  { to: '/join', label: 'Join Free', primary: true },
+  { to: '/why', label: 'Why Credit Vivo' },
+  { to: '/pricing', label: 'Pricing' },
+  { to: '/faq', label: 'FAQ' },
+  { to: '/learning', label: 'Learning' },
+];
+
 function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-emerald-100/70 bg-white/95 shadow-sm shadow-navy-900/5 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="flex h-[60px] items-center justify-between sm:h-[72px]">
+        <div className="flex min-h-[72px] flex-col items-start justify-center gap-3 py-3 lg:h-[72px] lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:py-0">
           <Link to="/" className="flex items-center gap-3">
             <img src="/logo.webp" alt="Credit Vivo" className="h-9 w-9 sm:h-12 sm:w-12" />
             <span className="text-xl font-semibold tracking-tight text-navy-900 sm:text-3xl">
@@ -12,14 +20,21 @@ function Nav() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link to="/dashboard" className="rounded-lg bg-navy-50 px-5 py-2.5 text-sm font-semibold text-navy-700 transition-colors hover:bg-emerald-50">
-              Sign In
-            </Link>
-            <Link to="/join" className="rounded-lg bg-gradient-to-r from-emerald-600 via-teal-500 to-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-900/15 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/20">
-              Join Free
-            </Link>
-          </div>
+          <nav className="flex w-full items-center gap-2 overflow-x-auto pb-1 lg:w-auto lg:justify-end lg:overflow-visible lg:pb-0" aria-label="Main navigation">
+            {headerLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={
+                  link.primary
+                    ? 'shrink-0 rounded-lg bg-gradient-to-r from-emerald-600 via-teal-500 to-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-900/15 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/20'
+                    : 'shrink-0 rounded-lg px-3 py-2.5 text-sm font-semibold text-navy-700 transition-colors hover:bg-emerald-50 hover:text-emerald-800'
+                }
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </header>

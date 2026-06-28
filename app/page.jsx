@@ -1,12 +1,11 @@
 import BrandLogo from "../components/BrandLogo";
 
 const navLinks = [
-  ["Free Scan", "/scan"],
-  ["Dashboard", "/dashboard"],
-  ["Findings", "/findings"],
-  ["Monthly", "/monthly"],
+  ["Join Free", "/join"],
+  ["Why Credit Vivo", "/why"],
   ["Pricing", "/pricing"],
-  ["Login", "/login"],
+  ["FAQ", "/faq"],
+  ["Learning", "/learning"],
 ];
 
 const steps = [
