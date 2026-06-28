@@ -32,3 +32,10 @@ def test_parse_sample_report():
     assert data["issues"]
     labels = {x["customer_label"] for x in data["issues"]}
     assert "Collection review" in labels or "Charge-off review" in labels
+    assert data["letter_workflow"]["send_letters_automatically"] is False
+    assert "FCRA" in data["letter_workflow"]["fcra_notice_of_dispute"]
+    assert data["recommended_letter_queue"]
+    assert data["recommended_letter_queue"][0]["tracking_status"] == "draft_not_sent"
+    assert data["recommended_letter_queue"][0]["customer_approval_required"] is True
+    assert data["fcra_review"]
+    assert data["fcra_review"][0]["dispute_history_complete"] is False

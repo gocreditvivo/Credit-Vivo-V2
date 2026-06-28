@@ -865,6 +865,190 @@ def parse_reports(report_texts: Dict[str, dict]) -> ParseResult:
     )
 
 
+FCRA_NOTICE_OF_DISPUTE = (
+    "This account appears inaccurate, incomplete, or unverifiable. Please investigate "
+    "under the FCRA and correct, update, or delete any information that cannot be "
+    "verified. Please mark the account as disputed while the investigation is pending "
+    "and provide the investigation results in writing."
+)
+
+
+def _issue_evidence_strength(issue: ReviewIssue) -> str:
+    if issue.severity == "high" or issue.confidence == "high":
+        return "high"
+    if issue.confidence == "low" or issue.severity == "low":
+        return "low"
+    return "medium"
+
+
+def _responsible_party_for_issue(issue: ReviewIssue) -> str:
+    if issue.issue_type.startswith("cross_bureau"):
+        return "bureau_and_furnisher"
+    if issue.issue_type in {"collection_review", "chargeoff_review", "closed_sold_balance_review"}:
+        return "furnisher_or_collector"
+    if issue.issue_type == "missing_dofd_review":
+        return "bureau_and_furnisher"
+    return "admin_review_required"
+
+
+def _next_action_for_issue(issue: ReviewIssue) -> str:
+    if issue.issue_type.startswith("cross_bureau"):
+        return "round_2_field_level_bureau_dispute"
+    if issue.issue_type in {"collection_review", "chargeoff_review", "closed_sold_balance_review"}:
+        return "furnisher_direct_dispute_after_bureau_review"
+    if issue.issue_type == "missing_dofd_review":
+        return "round_2_bureau_dispute_then_reinvestigation_if_unverified"
+    return "admin_review_before_letter"
+
+
+def build_letter_workflow() -> dict:
+    return {
+        "draft_only": True,
+        "send_letters_automatically": False,
+        "customer_authorization_required": True,
+        "fcra_notice_of_dispute": FCRA_NOTICE_OF_DISPUTE,
+        "bureau_dispute_procedure": {
+            "recipient_type": "credit_bureau",
+            "delivery_preference": "certified_mail_for_important_disputes",
+            "round_1_uses": [
+                "wrong balance or status",
+                "unrecognized account",
+                "duplicate collection",
+                "original creditor and debt buyer both showing active balance",
+                "obsolete or missing key date item",
+                "obvious mismatch across bureaus",
+            ],
+            "packet_checklist": [
+                "customer-approved dispute letter",
+                "FCRA notice of dispute",
+                "targeted proof only",
+                "ID and proof of address when needed",
+                "redacted unrelated account data",
+                "highlighted disputed item",
+            ],
+        },
+        "furnisher_direct_dispute_procedure": {
+            "recipient_type": "furnisher_or_collector",
+            "delivery_preference": "certified_mail",
+            "prerequisites": [
+                "consumer-specific issue identified",
+                "customer authorization verified",
+                "evidence packet reviewed by admin",
+            ],
+            "requested_verification": [
+                "basis for reporting",
+                "contract or account records",
+                "itemized balance",
+                "chain of title or assignment where applicable",
+                "payment history",
+                "date of first delinquency support",
+                "proof reporting is complete and accurate",
+            ],
+        },
+        "escalation_procedure": {
+            "cfpb_complaint": {
+                "trigger": "no response, verified-as-accurate with weak support, or repeated inaccurate reporting after dispute history is complete",
+                "packet": "original dispute, proof of delivery, bureau/furnisher responses, current report excerpt, damages or denial evidence if available",
+            },
+            "state_attorney_general": {
+                "trigger": "pattern of non-response, abusive collection conduct, or unresolved state-law concern",
+                "packet": "same evidence packet plus consumer timeline and requested resolution",
+            },
+            "state_regulator": {
+                "trigger": "licensed collector, lender, or credit repair/regulatory issue needs agency review",
+                "packet": "collector/furnisher identity, license information if known, dispute timeline, and supporting evidence",
+            },
+            "attorney_review": {
+                "trigger": "strong FCRA/FDCPA pattern, measurable damages, denial letter, identity theft, mixed file, or repeated verification without reasonable investigation",
+                "packet": "full dispute history, reports before and after disputes, notices, responses, delivery proofs, and damages evidence",
+            },
+        },
+        "tracking_schema": [
+            "letter_id",
+            "issue_ids",
+            "recipient_type",
+            "recipient_name",
+            "recipient_address",
+            "delivery_method",
+            "certified_tracking_number",
+            "sent_date",
+            "delivered_date",
+            "response_due_date",
+            "day_15_check_date",
+            "day_35_followup_check_date",
+            "response_received_date",
+            "current_status",
+            "next_action",
+            "fcra_notice_included",
+            "customer_authorization_verified",
+            "evidence_packet_hash",
+        ],
+        "event_log_entries": [
+            "letter_drafted",
+            "customer_authorization_verified",
+            "fcra_notice_added",
+            "proof_packet_attached",
+            "certified_mail_queued",
+            "tracking_number_saved",
+            "delivery_confirmed",
+            "response_deadline_created",
+            "response_received",
+            "response_scanned",
+            "next_action_assigned",
+        ],
+    }
+
+
+def build_recommended_letter_queue(issues: List[ReviewIssue]) -> List[dict]:
+    queue = []
+    for issue in issues:
+        responsible_party = _responsible_party_for_issue(issue)
+        letter_type = "bureau_dispute"
+        recipient_type = "credit_bureau"
+        if responsible_party == "furnisher_or_collector":
+            letter_type = "furnisher_direct_dispute"
+            recipient_type = "furnisher_or_collector"
+        elif responsible_party == "admin_review_required":
+            letter_type = "admin_review_hold"
+            recipient_type = "undetermined"
+
+        queue.append({
+            "letter_id": stable_id("letter", issue.id, letter_type),
+            "issue_id": issue.id,
+            "issue_type": issue.issue_type,
+            "letter_type": letter_type,
+            "round": issue.suggested_round,
+            "recipient_type": recipient_type,
+            "responsible_party": responsible_party,
+            "delivery_method": "certified_mail_recommended",
+            "fcra_notice_required": letter_type != "admin_review_hold",
+            "fcra_notice_included": letter_type != "admin_review_hold",
+            "customer_approval_required": True,
+            "customer_authorization_verified": False,
+            "tracking_status": "draft_not_sent",
+            "recommended_next_action": _next_action_for_issue(issue),
+            "escalation_candidate": False,
+        })
+    return queue
+
+
+def build_fcra_review(issues: List[ReviewIssue]) -> List[dict]:
+    return [
+        {
+            "issue_id": issue.id,
+            "possible_fcra_issue": issue.issue_type != "low_confidence_admin_review",
+            "issue_type": issue.issue_type,
+            "responsible_party": _responsible_party_for_issue(issue),
+            "dispute_history_complete": False,
+            "evidence_strength": _issue_evidence_strength(issue),
+            "damages_evidence": "none",
+            "next_action": _next_action_for_issue(issue),
+            "requires_admin_review": True,
+        }
+        for issue in issues
+    ]
+
+
 def result_to_dict(result: ParseResult) -> dict:
     return {
         "engine": result.engine,
@@ -876,6 +1060,9 @@ def result_to_dict(result: ParseResult) -> dict:
         "cross_bureau_groups": result.cross_bureau_groups,
         "customer_summary": result.customer_summary,
         "admin_summary": result.admin_summary,
+        "letter_workflow": build_letter_workflow(),
+        "recommended_letter_queue": build_recommended_letter_queue(result.issues),
+        "fcra_review": build_fcra_review(result.issues),
     }
 
 
