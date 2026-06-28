@@ -1,17 +1,6 @@
-import { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-
-const navLinks = [
-  { to: '/scan', label: 'Product' },
-  { to: '/why', label: 'Company' },
-  { to: '/learning', label: 'Learning' },
-];
 
 function Nav() {
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
-
   return (
     <header className="sticky top-0 z-50 border-b border-emerald-100/70 bg-white/95 shadow-sm shadow-navy-900/5 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-6">
@@ -23,23 +12,7 @@ function Nav() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 lg:flex">
-            {navLinks.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === to
-                    ? 'text-navy-900'
-                    : 'text-navy-600 hover:text-emerald-700'
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link to="/dashboard" className="rounded-lg bg-navy-50 px-5 py-2.5 text-sm font-semibold text-navy-700 transition-colors hover:bg-emerald-50">
               Sign In
             </Link>
@@ -47,35 +20,8 @@ function Nav() {
               Join Free
             </Link>
           </div>
-
-          <button
-            className="p-2 text-navy-700 lg:hidden"
-            onClick={() => setOpen(!open)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-          >
-            {open ? <X size={20} /> : <Menu size={20} />}
-          </button>
         </div>
       </div>
-
-      {open && (
-        <div className="lg:hidden bg-white border-t border-navy-100 px-4 pb-4 pt-2">
-          {navLinks.map(({ to, label }) => (
-            <Link
-              key={to}
-              to={to}
-              className="block py-2.5 text-sm text-navy-700 hover:text-navy-900 border-b border-navy-50 last:border-0"
-              onClick={() => setOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
-          <div className="flex flex-col gap-2 mt-3">
-            <Link to="/dashboard" className="btn-soft text-xs py-2 w-full" onClick={() => setOpen(false)}>Sign In</Link>
-            <Link to="/join" className="btn-primary text-xs py-2 w-full" onClick={() => setOpen(false)}>Join Free</Link>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
