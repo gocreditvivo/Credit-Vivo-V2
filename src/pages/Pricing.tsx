@@ -3,22 +3,6 @@ import { Check, ArrowRight } from 'lucide-react';
 
 const plans = [
   {
-    badge: 'Start here',
-    name: 'Free Scan',
-    price: '$0',
-    cadence: '',
-    description: 'Upload reports, answer a short intake, and see a simple preview.',
-    cta: 'Start Free',
-    to: '/join',
-    featured: false,
-    features: [
-      'Secure report upload',
-      'Plain-English issue preview',
-      'Credit goal intake',
-      'Learning Center access',
-    ],
-  },
-  {
     badge: 'DIY support',
     name: 'AI Guided',
     price: '$29',
@@ -82,7 +66,7 @@ export default function Pricing() {
             Simple packages for every stage.
           </h1>
           <p className="text-[15px] text-navy-500 max-w-xl mx-auto">
-            Start free, then choose the level of guidance that fits your credit goals. Paid packages are launch pricing placeholders until final terms and payment processing are active.
+            Start with a free Credit Check-In, then choose from three package levels when paid plans are active.
           </p>
         </div>
       </section>
@@ -90,7 +74,21 @@ export default function Pricing() {
       {/* Plans */}
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Free entry point</p>
+              <h2 className="mt-1 text-base font-bold text-navy-900">Free Credit Check-In</h2>
+              <p className="mt-1 text-xs text-navy-500">
+                Start with secure upload, plain-English issue preview, credit goal intake, and Learning Center access.
+              </p>
+            </div>
+            <Link to="/join" className="btn-primary shrink-0 text-xs py-2.5">
+              Start Free
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
             {plans.map((plan) => (
               <article
                 key={plan.name}
