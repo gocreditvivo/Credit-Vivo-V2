@@ -4,10 +4,10 @@ function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-emerald-100/70 bg-white/95 shadow-sm shadow-navy-900/5 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="flex h-20 items-center justify-between sm:h-24">
-          <Link to="/" className="flex items-center gap-3 sm:gap-4">
-            <img src="/logo.webp" alt="Credit Vivo" className="h-12 w-12 sm:h-16 sm:w-16" />
-            <span className="text-2xl font-semibold tracking-tight text-navy-900 sm:text-4xl">
+        <div className="flex h-[60px] items-center justify-between sm:h-[72px]">
+          <Link to="/" className="flex items-center gap-3">
+            <img src="/logo.webp" alt="Credit Vivo" className="h-9 w-9 sm:h-12 sm:w-12" />
+            <span className="text-xl font-semibold tracking-tight text-navy-900 sm:text-3xl">
               Credit <span className="text-emerald-700">Vivo</span>
             </span>
           </Link>
