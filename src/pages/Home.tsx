@@ -51,6 +51,16 @@ function HeroVisual() {
     <div className="lively-hero-visual relative mx-auto w-full max-w-[520px]">
       <div className="lively-spark lively-spark-one" />
       <div className="lively-spark lively-spark-two" />
+      <div className="absolute -right-5 -top-8 z-10 w-56 rounded-xl border border-white/80 bg-white/95 p-4 shadow-xl shadow-navy-900/12 backdrop-blur">
+        <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">
+          Soft-pull API targets
+        </p>
+        <div className="mt-2 grid gap-1.5 text-[11px] font-semibold text-navy-700">
+          <span>Equifax CES</span>
+          <span>iSoftpull</span>
+          <span>Soft Pull Solutions</span>
+        </div>
+      </div>
       <div className="overflow-hidden rounded-2xl border border-white/70 bg-white shadow-2xl shadow-navy-900/18">
         <img
           src="/brand/credit-vivo-hero.png"
@@ -109,6 +119,14 @@ export default function Home() {
                     {t}
                   </span>
                 ))}
+              </div>
+              <div className="mt-6 rounded-xl border border-emerald-100 bg-white/85 p-4 shadow-sm shadow-emerald-900/5 lg:hidden">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">
+                  Soft-pull API targets
+                </p>
+                <p className="mt-1 text-xs font-semibold text-navy-700">
+                  Equifax CES, iSoftpull, Soft Pull Solutions
+                </p>
               </div>
             </div>
 
