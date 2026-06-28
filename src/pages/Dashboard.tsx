@@ -60,7 +60,7 @@ export default function Dashboard() {
               num: 3,
               title: 'Review balance habits',
               desc: 'One educational action item is ready.',
-              to: '#',
+              to: '/learning',
             },
           ].map((step) => (
             <Link
@@ -75,7 +75,7 @@ export default function Dashboard() {
                 <p className="text-sm font-semibold text-navy-800">{step.title}</p>
                 <p className="text-xs text-navy-400 mt-0.5">{step.desc}</p>
               </div>
-              {step.to !== '#' && <ArrowRight size={13} className="text-navy-300 mt-1" />}
+              <ArrowRight size={13} className="text-navy-300 mt-1" />
             </Link>
           ))}
         </div>

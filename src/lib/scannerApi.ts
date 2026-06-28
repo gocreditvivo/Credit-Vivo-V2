@@ -82,12 +82,19 @@ export type ScannerParseResult = {
 };
 
 const SCANNER_API_URL =
-  import.meta.env.VITE_SCANNER_API_URL || 'http://localhost:8080';
+  import.meta.env.VITE_SCANNER_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:8080' : '');
 
 export async function parseCreditReports(
   files: File[],
   useAiSecondPass = false
 ): Promise<ScannerParseResult> {
+  if (!SCANNER_API_URL) {
+    throw new Error(
+      'The scanner backend is not connected yet. You can still load demo findings to preview the flow.'
+    );
+  }
+
   const form = new FormData();
 
   for (const file of files) {
@@ -111,6 +118,10 @@ export async function parseCreditReports(
 }
 
 export async function getScannerResult(jobId: string): Promise<ScannerParseResult> {
+  if (!SCANNER_API_URL) {
+    throw new Error('The scanner backend is not connected yet.');
+  }
+
   const response = await fetch(`${SCANNER_API_URL}/api/scanner/result/${jobId}`);
 
   if (!response.ok) {

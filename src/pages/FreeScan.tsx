@@ -33,7 +33,7 @@ export default function FreeScan() {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Scanner request failed.';
       setError(
-        `${message} Make sure the scanner backend is running at VITE_SCANNER_API_URL.`
+        `${message} If you are reviewing the beta site, use "Load demo findings" to preview the customer flow.`
       );
     } finally {
       setIsReviewing(false);

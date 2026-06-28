@@ -16,10 +16,10 @@ const sideLinks = [
   { to: '/scan', label: 'Free Scan', icon: Search },
   { to: '/findings', label: 'Findings', icon: FileText },
   { to: '/bank-link', label: 'Bank Link', icon: Landmark },
-  { to: '#', label: 'Monthly Plan', icon: Calendar },
-  { to: '#', label: 'Learning Center', icon: BookOpen },
-  { to: '#', label: 'Updates', icon: Bell },
-  { to: '#', label: 'Support', icon: Headphones },
+  { to: '/dashboard', label: 'Monthly Plan', icon: Calendar },
+  { to: '/learning', label: 'Learning Center', icon: BookOpen },
+  { to: '/dashboard', label: 'Updates', icon: Bell },
+  { to: '/faq', label: 'Support', icon: Headphones },
 ];
 
 export default function DashboardLayout() {
@@ -65,11 +65,27 @@ export default function DashboardLayout() {
       {/* Main */}
       <main className="flex-1 p-6 md:p-8 overflow-y-auto">
         {/* Mobile header */}
-        <div className="md:hidden flex items-center gap-3 mb-6">
+        <div className="md:hidden mb-6">
           <Link to="/" className="flex items-center gap-2">
             <img src="/logo.webp" alt="Credit Vivo" className="w-6 h-6" />
             <span className="text-sm font-bold text-navy-900">Credit <span className="text-mint-600">Vivo</span></span>
           </Link>
+          <nav className="mt-4 flex gap-2 overflow-x-auto pb-2" aria-label="Member navigation">
+            {sideLinks.slice(0, 5).map(({ to, label, icon: Icon }) => (
+              <Link
+                key={`${label}-mobile`}
+                to={to}
+                className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold ${
+                  location.pathname === to
+                    ? 'bg-sky-50 text-sky-700 ring-1 ring-sky-100'
+                    : 'bg-white text-navy-500 ring-1 ring-navy-100'
+                }`}
+              >
+                <Icon size={12} />
+                {label}
+              </Link>
+            ))}
+          </nav>
         </div>
         <Outlet />
       </main>

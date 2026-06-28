@@ -3,14 +3,17 @@ import type { ScannerParseResult } from './scannerApi';
 const LAST_SCAN_KEY = 'creditVivoLastScanResult';
 
 export function saveLastScanResult(result: ScannerParseResult) {
-  localStorage.setItem(LAST_SCAN_KEY, JSON.stringify(result));
+  try {
+    localStorage.setItem(LAST_SCAN_KEY, JSON.stringify(result));
+  } catch {
+    // Storage can be unavailable in strict private browsing modes.
+  }
 }
 
 export function getLastScanResult(): ScannerParseResult | null {
-  const raw = localStorage.getItem(LAST_SCAN_KEY);
-  if (!raw) return null;
-
   try {
+    const raw = localStorage.getItem(LAST_SCAN_KEY);
+    if (!raw) return null;
     return JSON.parse(raw) as ScannerParseResult;
   } catch {
     return null;
@@ -18,7 +21,11 @@ export function getLastScanResult(): ScannerParseResult | null {
 }
 
 export function clearLastScanResult() {
-  localStorage.removeItem(LAST_SCAN_KEY);
+  try {
+    localStorage.removeItem(LAST_SCAN_KEY);
+  } catch {
+    // Storage can be unavailable in strict private browsing modes.
+  }
 }
 
 export function getDemoScanResult(): ScannerParseResult {

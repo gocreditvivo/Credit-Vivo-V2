@@ -30,6 +30,7 @@ export default function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/learning" element={<Learning />} />
           <Route path="/join" element={<JoinFree />} />
+          <Route path="/signup" element={<JoinFree />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/compliance" element={<Compliance />} />
           <Route path="/privacy" element={<Privacy />} />
@@ -40,6 +41,7 @@ export default function App() {
         {/* Member pages */}
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<Dashboard />} />
           <Route path="/scan" element={<FreeScan />} />
           <Route path="/findings" element={<Findings />} />
           <Route path="/admin-review" element={<AdminReview />} />
