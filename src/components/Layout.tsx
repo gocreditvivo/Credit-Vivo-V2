@@ -13,13 +13,13 @@ function Nav() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-navy-100/60 bg-white/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-emerald-100/70 bg-white/95 shadow-sm shadow-navy-900/5 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src="/logo.webp" alt="Credit Vivo" className="h-8 w-8" />
             <span className="text-lg font-semibold tracking-tight text-navy-900">
-              Credit <span className="text-sky-700">Vivo</span>
+              Credit <span className="text-emerald-700">Vivo</span>
             </span>
           </Link>
 
@@ -31,7 +31,7 @@ function Nav() {
                 className={`text-sm font-medium transition-colors ${
                   location.pathname === to
                     ? 'text-navy-900'
-                    : 'text-navy-600 hover:text-sky-700'
+                    : 'text-navy-600 hover:text-emerald-700'
                 }`}
               >
                 {label}
@@ -40,10 +40,10 @@ function Nav() {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <Link to="/dashboard" className="rounded-lg bg-navy-50 px-5 py-2.5 text-sm font-semibold text-navy-700 transition-colors hover:bg-navy-100">
+            <Link to="/dashboard" className="rounded-lg bg-navy-50 px-5 py-2.5 text-sm font-semibold text-navy-700 transition-colors hover:bg-emerald-50">
               Sign In
             </Link>
-            <Link to="/join" className="rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-sky-900/10 transition-colors hover:bg-sky-800">
+            <Link to="/join" className="rounded-lg bg-gradient-to-r from-emerald-600 via-teal-500 to-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-900/15 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/20">
               Join Free
             </Link>
           </div>
@@ -121,7 +121,7 @@ function Footer() {
             <Link to="/" className="flex items-center gap-2 mb-3">
               <img src="/logo.webp" alt="Credit Vivo" className="w-6 h-6 brightness-200" />
               <span className="text-sm font-bold text-white">
-                Credit <span className="text-sky-300">Vivo</span>
+                Credit <span className="text-emerald-300">Vivo</span>
               </span>
             </Link>
             <p className="text-xs text-navy-400 leading-relaxed">

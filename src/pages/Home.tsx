@@ -12,14 +12,14 @@ import {
 
 function HeroCard() {
   return (
-    <div className="w-full max-w-sm rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/60">
-      <div className="flex items-center justify-between mb-4">
+    <div className="lively-hero-card w-full max-w-sm rounded-xl border border-white/70 bg-white/92 p-5 shadow-xl shadow-navy-900/14 backdrop-blur">
+      <div className="mb-4 flex items-center justify-between">
         <div>
-          <p className="text-[11px] font-medium text-navy-400 uppercase tracking-wider">Your Roadmap</p>
-          <p className="text-sm font-bold text-navy-900 mt-0.5">Credit Check-In</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-emerald-700">Your Roadmap</p>
+          <p className="mt-0.5 text-sm font-bold text-navy-900">Credit Check-In</p>
         </div>
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50">
-          <TrendingUp size={16} className="text-sky-700" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-100 to-cyan-100">
+          <TrendingUp size={16} className="text-emerald-700" />
         </div>
       </div>
       <div className="space-y-2.5">
@@ -28,8 +28,8 @@ function HeroCard() {
           { label: 'Education items found', done: true },
           { label: 'Monthly plan created', done: false },
         ].map((item) => (
-          <div key={item.label} className="flex items-center gap-2.5 py-2 px-3 bg-navy-50/60 rounded-lg">
-            <div className={`flex h-5 w-5 items-center justify-center rounded-full ${item.done ? 'bg-sky-700' : 'bg-navy-200'}`}>
+          <div key={item.label} className="flex items-center gap-2.5 rounded-lg bg-navy-50/70 px-3 py-2">
+            <div className={`flex h-5 w-5 items-center justify-center rounded-full ${item.done ? 'bg-emerald-600' : 'bg-rose-200'}`}>
               {item.done && <CheckCircle size={12} className="text-white" />}
             </div>
             <span className={`text-xs font-medium ${item.done ? 'text-navy-700' : 'text-navy-400'}`}>
@@ -38,9 +38,32 @@ function HeroCard() {
           </div>
         ))}
       </div>
-      <div className="mt-4 pt-3 border-t border-navy-100/60 flex items-center gap-2">
-        <div className="h-2 w-2 rounded-full bg-sky-600" />
+      <div className="mt-4 flex items-center gap-2 border-t border-navy-100/60 pt-3">
+        <div className="h-2 w-2 rounded-full bg-rose-500" />
         <span className="text-[11px] text-navy-500">3 steps this month</span>
+      </div>
+    </div>
+  );
+}
+
+function HeroVisual() {
+  return (
+    <div className="lively-hero-visual relative mx-auto w-full max-w-[520px]">
+      <div className="lively-spark lively-spark-one" />
+      <div className="lively-spark lively-spark-two" />
+      <div className="overflow-hidden rounded-2xl border border-white/70 bg-white shadow-2xl shadow-navy-900/18">
+        <img
+          src="/brand/credit-vivo-hero.png"
+          alt="Credit Vivo dashboard preview"
+          className="h-[360px] w-full object-cover object-center"
+        />
+      </div>
+      <div className="lively-score-card rounded-xl border border-white/80 bg-white/95 p-4 shadow-xl shadow-navy-900/16 backdrop-blur">
+        <b className="block text-4xl leading-none text-emerald-600">+48</b>
+        <span className="text-[11px] font-extrabold uppercase text-navy-500">score momentum</span>
+      </div>
+      <div className="lively-check-card">
+        <HeroCard />
       </div>
     </div>
   );
@@ -50,18 +73,18 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-white py-14 md:py-20">
+      <section className="lively-hero-bg overflow-hidden py-14 md:py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-[11px] font-semibold text-sky-800">
-                <span className="h-1.5 w-1.5 rounded-full bg-sky-600" />
+            <div className="relative z-10">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/80 px-3 py-1.5 text-[11px] font-semibold text-emerald-800 shadow-sm shadow-emerald-900/5">
+                <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
                 Free Credit Check-In - No hard pull to start
               </div>
 
               <h1 className="mb-4 text-[30px] font-semibold leading-tight text-navy-900 sm:text-[36px]">
                 Stronger credit.{' '}
-                <span className="text-sky-700">Less stress.</span>
+                <span className="text-gradient-vivo">Less stress.</span>
               </h1>
 
               <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
@@ -82,15 +105,15 @@ export default function Home() {
               <div className="flex flex-wrap gap-4">
                 {['No hard pull to start', 'Review before action', 'Track progress monthly'].map((t) => (
                   <span key={t} className="flex items-center gap-1.5 text-[12px] text-navy-500">
-                    <CheckCircle size={13} className="text-sky-700" />
+                    <CheckCircle size={13} className="text-emerald-700" />
                     {t}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="hidden lg:flex justify-center">
-              <HeroCard />
+            <div className="hidden justify-center lg:flex">
+              <HeroVisual />
             </div>
           </div>
         </div>
@@ -101,7 +124,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {['Free Check-In', 'Review First', 'No Guarantees', 'Plain English', 'Join Free'].map((item) => (
-              <div key={item} className="text-center py-2">
+              <div key={item} className="lively-trust-pill text-center py-2">
                 <span className="text-xs font-semibold text-navy-600">{item}</span>
               </div>
             ))}
@@ -110,11 +133,11 @@ export default function Home() {
       </section>
 
       {/* Vision section */}
-      <section className="bg-navy-950 py-14">
+      <section className="bg-gradient-to-br from-navy-950 via-navy-900 to-emerald-950 py-14">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-200">Credit made simple</p>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-emerald-200">Credit made simple</p>
           <h2 className="mb-3 text-[22px] font-semibold text-white sm:text-[26px]">
-            Your future starts with a clearer plan.
+            Your future starts with a <span className="text-amber-300">clearer plan.</span>
           </h2>
           <p className="text-sm text-navy-300 max-w-lg mx-auto mb-10">
             Most people do not need more credit jargon or pressure. They need a simple path, reminders, and guidance that makes sense.
@@ -127,7 +150,7 @@ export default function Home() {
               { title: 'Review', desc: 'Check possible inaccuracies before any action.' },
               { title: 'Track', desc: 'Know what was done and what happens next.' },
             ].map((g) => (
-              <div key={g.title} className="rounded-xl border border-white/10 bg-white/[0.04] p-5 text-left">
+              <div key={g.title} className="lively-dark-card rounded-xl border border-white/10 bg-white/[0.04] p-5 text-left">
                 <h3 className="text-sm font-bold text-white mb-1">{g.title}</h3>
                 <p className="text-xs text-navy-300">{g.desc}</p>
               </div>
@@ -153,12 +176,12 @@ export default function Home() {
               { num: '03', title: 'Review next steps', desc: 'You see important actions before anything moves forward.', icon: Calendar },
               { num: '04', title: 'Track progress', desc: 'Stay updated on actions, responses, and next steps.', icon: BarChart3 },
             ].map(({ num, title, desc, icon: Icon }) => (
-              <div key={num} className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/50">
+              <div key={num} className="lively-step-card rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/50">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 bg-sky-100 rounded-lg flex items-center justify-center">
-                    <Icon size={16} className="text-sky-700" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-100 to-cyan-100">
+                    <Icon size={16} className="text-emerald-700" />
                   </div>
-                  <span className="text-xl font-bold text-navy-200">{num}</span>
+                  <span className="text-xl font-bold text-rose-200">{num}</span>
                 </div>
                 <h3 className="text-sm font-bold text-navy-900 mb-1">{title}</h3>
                 <p className="text-xs text-navy-500 leading-relaxed">{desc}</p>
@@ -169,7 +192,7 @@ export default function Home() {
       </section>
 
       {/* What we help with */}
-      <section className="bg-sky-50/30 py-14">
+      <section className="bg-emerald-50/35 py-14">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">What we help with</p>
@@ -184,22 +207,22 @@ export default function Home() {
                 icon: TrendingUp,
                 title: 'Build credit',
                 desc: 'Learn habits that may support better credit over time: on-time payments, lower balances, and smart applications.',
-                color: 'bg-sky-100 text-sky-700',
+                color: 'bg-emerald-100 text-emerald-700',
               },
               {
                 icon: Sparkles,
                 title: 'Review possible inaccuracies',
                 desc: 'Review personal information, collections, bureau differences, and account details that may need attention before any self-directed next step.',
-                color: 'bg-sky-100 text-sky-600',
+                color: 'bg-rose-100 text-rose-600',
               },
               {
                 icon: Compass,
                 title: 'Know the next step',
                 desc: 'Credit Vivo turns complicated credit work into simple monthly guidance.',
-                color: 'bg-navy-100 text-navy-600',
+                color: 'bg-amber-100 text-amber-700',
               },
             ].map(({ icon: Icon, title, desc, color }) => (
-              <div key={title} className="rounded-xl border border-navy-100 bg-white p-6 shadow-sm shadow-navy-100/50">
+              <div key={title} className="lively-step-card rounded-xl border border-navy-100 bg-white p-6 shadow-sm shadow-navy-100/50">
                 <div className={`w-10 h-10 ${color} rounded-lg flex items-center justify-center mb-4`}>
                   <Icon size={18} />
                 </div>
@@ -248,9 +271,9 @@ export default function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-navy-950 py-14">
+      <section className="bg-gradient-to-br from-navy-950 via-emerald-950 to-navy-900 py-14">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-200">Ready to start?</p>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-emerald-200">Ready to start?</p>
           <h2 className="mb-3 text-[22px] font-semibold text-white sm:text-[26px]">
             Your Credit Check-In is free.
           </h2>
