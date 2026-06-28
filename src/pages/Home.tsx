@@ -12,14 +12,14 @@ import {
 
 function HeroCard() {
   return (
-    <div className="bg-white rounded-2xl shadow-lg shadow-navy-100/50 border border-navy-100/60 p-5 w-full max-w-sm">
+    <div className="w-full max-w-sm rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/60">
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-[11px] font-medium text-navy-400 uppercase tracking-wider">Your Roadmap</p>
           <p className="text-sm font-bold text-navy-900 mt-0.5">Credit Check-In</p>
         </div>
-        <div className="w-9 h-9 bg-mint-50 rounded-lg flex items-center justify-center">
-          <TrendingUp size={16} className="text-mint-600" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50">
+          <TrendingUp size={16} className="text-sky-700" />
         </div>
       </div>
       <div className="space-y-2.5">
@@ -29,7 +29,7 @@ function HeroCard() {
           { label: 'Monthly plan created', done: false },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2.5 py-2 px-3 bg-navy-50/60 rounded-lg">
-            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${item.done ? 'bg-mint-500' : 'bg-navy-200'}`}>
+            <div className={`flex h-5 w-5 items-center justify-center rounded-full ${item.done ? 'bg-sky-700' : 'bg-navy-200'}`}>
               {item.done && <CheckCircle size={12} className="text-white" />}
             </div>
             <span className={`text-xs font-medium ${item.done ? 'text-navy-700' : 'text-navy-400'}`}>
@@ -39,7 +39,7 @@ function HeroCard() {
         ))}
       </div>
       <div className="mt-4 pt-3 border-t border-navy-100/60 flex items-center gap-2">
-        <div className="w-2 h-2 bg-mint-400 rounded-full animate-pulse" />
+        <div className="h-2 w-2 rounded-full bg-sky-600" />
         <span className="text-[11px] text-navy-500">3 steps this month</span>
       </div>
     </div>
@@ -50,18 +50,18 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-sky-50/50 to-white py-16 md:py-24">
+      <section className="bg-white py-14 md:py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mint-200 bg-mint-50 px-3 py-1.5 text-[11px] font-semibold text-mint-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-mint-500" />
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-[11px] font-semibold text-sky-800">
+                <span className="h-1.5 w-1.5 rounded-full bg-sky-600" />
                 Free Credit Check-In - No hard pull to start
               </div>
 
-              <h1 className="text-3xl sm:text-[40px] font-bold text-navy-900 leading-tight mb-4">
+              <h1 className="mb-4 text-[30px] font-semibold leading-tight text-navy-900 sm:text-[36px]">
                 Stronger credit.{' '}
-                <span className="text-mint-600">Less stress.</span>
+                <span className="text-sky-700">Less stress.</span>
               </h1>
 
               <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
@@ -82,7 +82,7 @@ export default function Home() {
               <div className="flex flex-wrap gap-4">
                 {['No hard pull to start', 'Review before action', 'Track progress monthly'].map((t) => (
                   <span key={t} className="flex items-center gap-1.5 text-[12px] text-navy-500">
-                    <CheckCircle size={13} className="text-mint-500" />
+                    <CheckCircle size={13} className="text-sky-700" />
                     {t}
                   </span>
                 ))}
@@ -97,7 +97,7 @@ export default function Home() {
       </section>
 
       {/* Trust strip */}
-      <section className="py-8 border-y border-navy-100/60 bg-white">
+      <section className="border-y border-navy-100/70 bg-white py-7">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {['Free Check-In', 'Review First', 'No Guarantees', 'Plain English', 'Join Free'].map((item) => (
@@ -110,10 +110,10 @@ export default function Home() {
       </section>
 
       {/* Vision section */}
-      <section className="py-16 bg-navy-900">
+      <section className="bg-navy-950 py-14">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-lime-300 mb-2">Credit made simple</p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-200">Credit made simple</p>
+          <h2 className="mb-3 text-[22px] font-semibold text-white sm:text-[26px]">
             Your future starts with a clearer plan.
           </h2>
           <p className="text-sm text-navy-300 max-w-lg mx-auto mb-10">
@@ -127,7 +127,7 @@ export default function Home() {
               { title: 'Review', desc: 'Check possible inaccuracies before any action.' },
               { title: 'Track', desc: 'Know what was done and what happens next.' },
             ].map((g) => (
-              <div key={g.title} className="bg-white/5 border border-white/10 rounded-xl p-5 text-left">
+              <div key={g.title} className="rounded-xl border border-white/10 bg-white/[0.04] p-5 text-left">
                 <h3 className="text-sm font-bold text-white mb-1">{g.title}</h3>
                 <p className="text-xs text-navy-300">{g.desc}</p>
               </div>
@@ -137,11 +137,11 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="py-16 bg-white">
+      <section className="bg-white py-14">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">How it works</p>
-            <h2 className="text-2xl sm:text-[28px] font-bold text-navy-900">
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">How it works</p>
+            <h2 className="text-[22px] font-semibold text-navy-900 sm:text-[26px]">
               A guided credit journey.
             </h2>
           </div>
@@ -153,10 +153,10 @@ export default function Home() {
               { num: '03', title: 'Review next steps', desc: 'You see important actions before anything moves forward.', icon: Calendar },
               { num: '04', title: 'Track progress', desc: 'Stay updated on actions, responses, and next steps.', icon: BarChart3 },
             ].map(({ num, title, desc, icon: Icon }) => (
-              <div key={num} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
+              <div key={num} className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/50">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-9 h-9 bg-sky-100 rounded-lg flex items-center justify-center">
-                    <Icon size={16} className="text-sky-600" />
+                    <Icon size={16} className="text-sky-700" />
                   </div>
                   <span className="text-xl font-bold text-navy-200">{num}</span>
                 </div>
@@ -169,11 +169,11 @@ export default function Home() {
       </section>
 
       {/* What we help with */}
-      <section className="py-16 bg-sky-50/40">
+      <section className="bg-sky-50/30 py-14">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">What we help with</p>
-            <h2 className="text-2xl sm:text-[28px] font-bold text-navy-900">
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">What we help with</p>
+            <h2 className="text-[22px] font-semibold text-navy-900 sm:text-[26px]">
               Build, review, track, and learn.
             </h2>
           </div>
@@ -184,7 +184,7 @@ export default function Home() {
                 icon: TrendingUp,
                 title: 'Build credit',
                 desc: 'Learn habits that may support better credit over time: on-time payments, lower balances, and smart applications.',
-                color: 'bg-mint-100 text-mint-600',
+                color: 'bg-sky-100 text-sky-700',
               },
               {
                 icon: Sparkles,
@@ -199,7 +199,7 @@ export default function Home() {
                 color: 'bg-navy-100 text-navy-600',
               },
             ].map(({ icon: Icon, title, desc, color }) => (
-              <div key={title} className="bg-white rounded-xl p-6 border border-navy-100/60 shadow-sm">
+              <div key={title} className="rounded-xl border border-navy-100 bg-white p-6 shadow-sm shadow-navy-100/50">
                 <div className={`w-10 h-10 ${color} rounded-lg flex items-center justify-center mb-4`}>
                   <Icon size={18} />
                 </div>
@@ -212,12 +212,12 @@ export default function Home() {
       </section>
 
       {/* Learning preview */}
-      <section className="py-16 bg-white">
+      <section className="bg-white py-14">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">Learning Center</p>
-              <h2 className="text-xl font-bold text-navy-900">Credit basics made simple.</h2>
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">Learning Center</p>
+              <h2 className="text-xl font-semibold text-navy-900">Credit basics made simple.</h2>
             </div>
             <Link to="/learning" className="btn-soft text-xs hidden sm:flex">
               View all lessons
@@ -231,7 +231,7 @@ export default function Home() {
               { cat: 'Report Review', title: 'What is a collection?', desc: 'A collection means a debt may have been sent or sold to a collector.' },
               { cat: 'Goals', title: 'Before buying a home', desc: 'Start early, keep payments on time, lower balances, and avoid new debt.' },
             ].map((l) => (
-              <div key={l.title} className="bg-navy-50/50 rounded-xl p-5 border border-navy-100/60">
+              <div key={l.title} className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/50">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-sky-600">{l.cat}</span>
                 <h3 className="text-sm font-bold text-navy-900 mt-1 mb-1">{l.title}</h3>
                 <p className="text-xs text-navy-500 leading-relaxed">{l.desc}</p>
@@ -248,10 +248,10 @@ export default function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-16 bg-navy-900">
+      <section className="bg-navy-950 py-14">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-lime-300 mb-2">Ready to start?</p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-sky-200">Ready to start?</p>
+          <h2 className="mb-3 text-[22px] font-semibold text-white sm:text-[26px]">
             Your Credit Check-In is free.
           </h2>
           <p className="text-sm text-navy-300 mb-6">

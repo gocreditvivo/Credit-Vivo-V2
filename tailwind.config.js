@@ -41,11 +41,6 @@ export default {
           800: '#166534',
           900: '#14532d',
         },
-        lime: {
-          300: '#d7ff58',
-          400: '#c5f02a',
-          500: '#a3e635',
-        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

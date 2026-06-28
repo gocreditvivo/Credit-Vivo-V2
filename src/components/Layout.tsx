@@ -18,8 +18,8 @@ function Nav() {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src="/logo.webp" alt="Credit Vivo" className="h-8 w-8" />
-            <span className="text-xl font-bold tracking-tight text-navy-900">
-              Credit <span className="text-mint-600">Vivo</span>
+            <span className="text-lg font-semibold tracking-tight text-navy-900">
+              Credit <span className="text-sky-700">Vivo</span>
             </span>
           </Link>
 
@@ -31,7 +31,7 @@ function Nav() {
                 className={`text-sm font-medium transition-colors ${
                   location.pathname === to
                     ? 'text-navy-900'
-                    : 'text-navy-600 hover:text-mint-600'
+                    : 'text-navy-600 hover:text-sky-700'
                 }`}
               >
                 {label}
@@ -43,7 +43,7 @@ function Nav() {
             <Link to="/dashboard" className="rounded-lg bg-navy-50 px-5 py-2.5 text-sm font-semibold text-navy-700 transition-colors hover:bg-navy-100">
               Sign In
             </Link>
-            <Link to="/join" className="rounded-lg bg-navy-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-800">
+            <Link to="/join" className="rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-sky-900/10 transition-colors hover:bg-sky-800">
               Join Free
             </Link>
           </div>
@@ -121,7 +121,7 @@ function Footer() {
             <Link to="/" className="flex items-center gap-2 mb-3">
               <img src="/logo.webp" alt="Credit Vivo" className="w-6 h-6 brightness-200" />
               <span className="text-sm font-bold text-white">
-                Credit <span className="text-mint-400">Vivo</span>
+                Credit <span className="text-sky-300">Vivo</span>
               </span>
             </Link>
             <p className="text-xs text-navy-400 leading-relaxed">
