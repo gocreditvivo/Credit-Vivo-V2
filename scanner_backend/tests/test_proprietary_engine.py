@@ -258,6 +258,7 @@ def test_parse_sample_report(tmp_path):
         "Review Items",
         "Metro 2 + FCRA Review",
         "Metro 2 Requirements",
+        "Metro 2 Guide Notes",
         "FCRA Compliance Review",
         "Field Compliance Audit",
         "e-OSCAR Packaging Review",
@@ -391,7 +392,20 @@ def test_parse_sample_report(tmp_path):
     )
     assert "Collection account" in requirements_text
     assert "Date of First Delinquency" in requirements_text
+    assert "K1 Original Creditor Name" in requirements_text
+    assert "Original Charge-off Amount" in requirements_text
+    assert "Compliance Condition Code" in requirements_text
     assert "official licensed CDIA Metro 2 CRRG" in requirements_text
+    guide_notes = workbook["Metro 2 Guide Notes"]
+    guide_text = " ".join(
+        str(guide_notes.cell(row=row, column=column).value or "")
+        for row in range(1, guide_notes.max_row + 1)
+        for column in range(1, guide_notes.max_column + 1)
+    )
+    assert "https://www.collect.org/cv13/Help/howtoreadthemetro2format.html" in guide_text
+    assert "Payment History Profile" in guide_text
+    assert "Consumer Information Indicator" in guide_text
+    assert "official licensed CDIA Metro 2 CRRG" in guide_text
     fcra_compliance = workbook["FCRA Compliance Review"]
     fcra_headers = [fcra_compliance.cell(row=1, column=column).value for column in range(1, fcra_compliance.max_column + 1)]
     assert "FCRA Area" in fcra_headers
@@ -417,6 +431,9 @@ def test_parse_sample_report(tmp_path):
         for row in range(2, field_compliance.max_row + 1)
         for column in range(1, field_compliance.max_column + 1)
     )
+    assert "K1 original creditor/source account" in field_workbook_text
+    assert "Compliance condition code" in field_workbook_text
+    assert "Consumer information indicator" in field_workbook_text
     assert "Date of First Delinquency" in field_workbook_text
     assert "Original Creditor" in field_workbook_text
     assert "FCRA 623(a)(5)" in field_workbook_text

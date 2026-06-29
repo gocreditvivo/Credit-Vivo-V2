@@ -1587,6 +1587,43 @@ def build_metro2_fcra_review(issues: List[ReviewIssue]) -> List[dict]:
     return review
 
 
+METRO2_PUBLIC_GUIDE_NOTES = {
+    "source": "Collect.org public guide: How to Read the Metro 2 Format",
+    "url": "https://www.collect.org/cv13/Help/howtoreadthemetro2format.html",
+    "purpose": "Public field-reading guide used to improve scanner worksheets and staff review prompts.",
+    "production_guardrail": "Use as a practical guide only; validate production Metro 2 logic against the official licensed CDIA Metro 2 CRRG and compliance counsel.",
+    "base_segment_fields": [
+        "Consumer Account Number",
+        "Portfolio Type",
+        "Account Type",
+        "Date Opened",
+        "Credit Limit",
+        "Highest Credit / Original Loan Amount",
+        "Terms Duration",
+        "Scheduled Monthly Payment Amount",
+        "Actual Payment Amount",
+        "Account Status",
+        "Payment Rating",
+        "Payment History Profile",
+        "Special Comment",
+        "Compliance Condition Code",
+        "Current Balance",
+        "Amount Past Due",
+        "Original Charge-off Amount",
+        "Date of Account Information / Date Reported",
+        "Date of First Delinquency",
+        "Date Closed",
+        "Date of Last Payment",
+        "Consumer Information Indicator",
+        "ECOA Code",
+    ],
+    "collection_segments": [
+        "K1 segment: original creditor name and creditor classification where applicable",
+        "J1/J2 segments: consumer name/address information where associated consumers exist",
+    ],
+}
+
+
 METRO2_FIELD_REQUIREMENTS = {
     "collection": {
         "label": "Collection account",
@@ -1598,13 +1635,17 @@ METRO2_FIELD_REQUIREMENTS = {
             "Account Status",
             "Current Balance",
             "Amount Past Due if reporting past due",
+            "Original Charge-off Amount if applicable",
             "Date Opened or collection acquisition/open date",
             "Date Reported / Date Updated",
             "Date of First Delinquency for negative reporting",
-            "Original Creditor",
+            "K1 Original Creditor Name",
+            "K1 Creditor Classification",
             "Creditor Classification / Collection Agency Type",
+            "Payment History Profile when furnished",
             "Special Comment / Remarks when needed",
             "Compliance Condition Code / Dispute Indicator when disputed",
+            "Consumer Information Indicator when bankruptcy/deceased/dispute conditions apply",
         ],
         "field_map": {
             "Account Number / Consumer Account Identifier": ["account_number_masked"],
@@ -1614,16 +1655,20 @@ METRO2_FIELD_REQUIREMENTS = {
             "Account Status": ["status", "pay_status"],
             "Current Balance": ["balance"],
             "Amount Past Due if reporting past due": ["past_due", "balance"],
+            "Original Charge-off Amount if applicable": ["high_credit_or_original_amount", "raw_block"],
             "Date Opened or collection acquisition/open date": ["date_opened"],
             "Date Reported / Date Updated": ["date_reported"],
             "Date of First Delinquency for negative reporting": ["date_of_first_delinquency"],
-            "Original Creditor": ["original_creditor"],
+            "K1 Original Creditor Name": ["original_creditor"],
+            "K1 Creditor Classification": ["creditor_classification", "raw_block"],
             "Creditor Classification / Collection Agency Type": ["creditor_classification", "collector_or_debt_buyer"],
+            "Payment History Profile when furnished": ["payment_history_summary", "raw_block"],
             "Special Comment / Remarks when needed": ["remarks"],
             "Compliance Condition Code / Dispute Indicator when disputed": ["remarks", "raw_block"],
+            "Consumer Information Indicator when bankruptcy/deceased/dispute conditions apply": ["remarks", "raw_block"],
         },
         "validation_notes": [
-            "A collection should identify the original creditor or the basis for ownership/assignment.",
+            "A collection should identify the K1 original creditor name and creditor classification when applicable.",
             "Negative collection reporting should have a supportable Date of First Delinquency timeline.",
             "If disputed, the report should show an appropriate dispute notation or compliance condition after notice.",
         ],
@@ -1641,6 +1686,7 @@ METRO2_FIELD_REQUIREMENTS = {
             "Current Balance",
             "Amount Past Due",
             "Charge-off Amount or High Credit / Original Amount",
+            "Original Charge-off Amount",
             "Date of First Delinquency",
             "Date Closed when closed",
             "Date Reported / Date Updated",
@@ -1648,6 +1694,7 @@ METRO2_FIELD_REQUIREMENTS = {
             "Payment History Profile",
             "Special Comment / Remarks",
             "Compliance Condition Code / Dispute Indicator when disputed",
+            "Consumer Information Indicator when applicable",
         ],
         "field_map": {
             "Account Number / Consumer Account Identifier": ["account_number_masked"],
@@ -1659,6 +1706,7 @@ METRO2_FIELD_REQUIREMENTS = {
             "Current Balance": ["balance"],
             "Amount Past Due": ["past_due"],
             "Charge-off Amount or High Credit / Original Amount": ["high_credit_or_original_amount"],
+            "Original Charge-off Amount": ["high_credit_or_original_amount", "raw_block"],
             "Date of First Delinquency": ["date_of_first_delinquency"],
             "Date Closed when closed": ["date_closed", "status"],
             "Date Reported / Date Updated": ["date_reported"],
@@ -1666,6 +1714,7 @@ METRO2_FIELD_REQUIREMENTS = {
             "Payment History Profile": ["payment_history_summary", "raw_block"],
             "Special Comment / Remarks": ["remarks"],
             "Compliance Condition Code / Dispute Indicator when disputed": ["remarks", "raw_block"],
+            "Consumer Information Indicator when applicable": ["remarks", "raw_block"],
         },
         "validation_notes": [
             "Charge-off status, payment rating, balance, and past-due amount should not contradict each other.",
@@ -1682,10 +1731,12 @@ METRO2_FIELD_REQUIREMENTS = {
             "Account Status",
             "Current Balance",
             "Amount Past Due",
+            "Original Charge-off Amount if applicable",
             "Date Closed",
             "Date Reported / Date Updated",
             "Date of First Delinquency if negative",
             "Special Comment / Sold-Transferred Remark",
+            "Compliance Condition Code / Dispute Indicator when disputed",
             "Current Owner / Original Creditor context when applicable",
         ],
         "field_map": {
@@ -1694,10 +1745,12 @@ METRO2_FIELD_REQUIREMENTS = {
             "Account Status": ["status", "pay_status"],
             "Current Balance": ["balance"],
             "Amount Past Due": ["past_due"],
+            "Original Charge-off Amount if applicable": ["high_credit_or_original_amount", "raw_block"],
             "Date Closed": ["date_closed", "status"],
             "Date Reported / Date Updated": ["date_reported"],
             "Date of First Delinquency if negative": ["date_of_first_delinquency", "status"],
             "Special Comment / Sold-Transferred Remark": ["remarks", "status"],
+            "Compliance Condition Code / Dispute Indicator when disputed": ["remarks", "raw_block"],
             "Current Owner / Original Creditor context when applicable": ["original_creditor", "collector_or_debt_buyer", "remarks"],
         },
         "validation_notes": [
@@ -1720,11 +1773,14 @@ METRO2_FIELD_REQUIREMENTS = {
             "Amount Past Due",
             "High Credit / Original Amount",
             "Terms or Scheduled Payment Amount when available",
+            "Actual Payment Amount when available",
             "Date Opened",
             "Date Reported / Date Updated",
             "Date Last Payment / Date Last Activity",
             "Date of First Delinquency if negative",
             "Payment History Profile",
+            "Special Comment / Remarks when needed",
+            "Compliance Condition Code / Dispute Indicator when disputed",
         ],
         "field_map": {
             "Account Number / Consumer Account Identifier": ["account_number_masked"],
@@ -1737,11 +1793,14 @@ METRO2_FIELD_REQUIREMENTS = {
             "Amount Past Due": ["past_due"],
             "High Credit / Original Amount": ["high_credit_or_original_amount"],
             "Terms or Scheduled Payment Amount when available": ["raw_block"],
+            "Actual Payment Amount when available": ["raw_block"],
             "Date Opened": ["date_opened"],
             "Date Reported / Date Updated": ["date_reported"],
             "Date Last Payment / Date Last Activity": ["date_last_payment", "date_last_activity"],
             "Date of First Delinquency if negative": ["date_of_first_delinquency", "status"],
             "Payment History Profile": ["payment_history_summary", "raw_block"],
+            "Special Comment / Remarks when needed": ["remarks"],
+            "Compliance Condition Code / Dispute Indicator when disputed": ["remarks", "raw_block"],
         },
         "validation_notes": [
             "Late-payment sequence should make sense against payment history and reported status.",
@@ -1768,6 +1827,8 @@ METRO2_FIELD_REQUIREMENTS = {
             "Date Last Payment / Date Last Activity",
             "Date of First Delinquency if negative",
             "Payment History Profile",
+            "Special Comment / Remarks when needed",
+            "Compliance Condition Code / Dispute Indicator when disputed",
         ],
         "field_map": {
             "Account Number / Consumer Account Identifier": ["account_number_masked"],
@@ -1785,6 +1846,8 @@ METRO2_FIELD_REQUIREMENTS = {
             "Date Last Payment / Date Last Activity": ["date_last_payment", "date_last_activity"],
             "Date of First Delinquency if negative": ["date_of_first_delinquency", "status"],
             "Payment History Profile": ["payment_history_summary", "raw_block"],
+            "Special Comment / Remarks when needed": ["remarks"],
+            "Compliance Condition Code / Dispute Indicator when disputed": ["remarks", "raw_block"],
         },
         "validation_notes": [
             "Revolving balance, limit, high credit, past due, and payment rating should tell the same story.",
@@ -2150,11 +2213,20 @@ FIELD_COMPLIANCE_RULES = {
     "Original Creditor": {
         "source_field": "original_creditor",
         "required_for": ["collection", "debt buyer", "factoring"],
-        "metro2_concept": "Original creditor/source account, especially important for collections and purchased debt.",
+        "metro2_concept": "K1 original creditor/source account, especially important for collections and purchased debt.",
         "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher duties after notice; Reg V direct dispute where applicable.",
         "missing_issue": "Original creditor is missing for a collection/debt-buyer review item.",
         "different_issue": "Original creditor differs across bureaus.",
-        "verification_ask": "Verify the original creditor/source account and ownership or assignment chain.",
+        "verification_ask": "Verify the K1 original creditor/source account and ownership or assignment chain.",
+    },
+    "Creditor Classification": {
+        "source_field": "creditor_classification",
+        "required_for": ["collection", "debt buyer", "factoring"],
+        "metro2_concept": "K1 creditor classification for the original creditor/source account when applicable.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Creditor classification is missing or not visible for a collection/debt-buyer item.",
+        "different_issue": "Creditor classification differs across bureaus.",
+        "verification_ask": "Verify the K1 creditor classification and whether the account is being reported under the correct source category.",
     },
     "Current Balance": {
         "source_field": "balance",
@@ -2183,6 +2255,15 @@ FIELD_COMPLIANCE_RULES = {
         "different_issue": "Original amount/high credit differs across bureaus.",
         "verification_ask": "Verify the original balance, original amount, high credit, or charge-off amount.",
     },
+    "Original Charge-off Amount": {
+        "source_field": "high_credit_or_original_amount",
+        "required_for": ["charge-off", "collection", "debt buyer"],
+        "metro2_concept": "Original charge-off amount when the account was charged off before collection/sale/transfer.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties; FCRA 611 reinvestigation.",
+        "missing_issue": "Original charge-off amount is not separately visible for a charged-off or collection review item.",
+        "different_issue": "Original charge-off/high-credit amount differs across bureaus.",
+        "verification_ask": "Verify the original charge-off amount and how it relates to current balance, past due, and sale/transfer history.",
+    },
     "Credit Limit": {
         "source_field": "credit_limit",
         "required_for": ["credit card", "revolving"],
@@ -2201,6 +2282,24 @@ FIELD_COMPLIANCE_RULES = {
         "different_issue": "Status/pay status differs across bureaus.",
         "verification_ask": "Verify the exact account/payment status and supporting account history.",
     },
+    "Payment Rating": {
+        "source_field": "pay_status",
+        "required_for": ["charge-off", "late", "past due", "delinquent", "collection", "revolving", "installment"],
+        "metro2_concept": "Payment rating represents the current payment condition and should align with account status and history.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Payment rating/pay status is missing or not visible for an account where payment condition matters.",
+        "different_issue": "Payment rating/pay status differs across bureaus.",
+        "verification_ask": "Verify the payment rating against the payment history profile, account status, and current balance.",
+    },
+    "Payment History Profile": {
+        "source_field": "payment_history_summary",
+        "required_for": ["charge-off", "late", "past due", "delinquent", "revolving", "installment", "auto", "mortgage"],
+        "metro2_concept": "Monthly payment history string showing whether months were current, late, charged off, or otherwise coded.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties; FCRA 611 reinvestigation.",
+        "missing_issue": "Payment history profile is missing or not visible for a payment-history review item.",
+        "different_issue": "Payment history differs across bureaus.",
+        "verification_ask": "Verify the payment history profile month by month against the account ledger.",
+    },
     "Date Opened / Assigned": {
         "source_field": "date_opened",
         "required_for": ["all"],
@@ -2213,7 +2312,7 @@ FIELD_COMPLIANCE_RULES = {
     "Date Reported / Updated": {
         "source_field": "date_reported",
         "required_for": ["all"],
-        "metro2_concept": "Date the furnisher last reported or updated the account.",
+        "metro2_concept": "Date of account information/date reported: the date the furnisher last reported or updated the account.",
         "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
         "missing_issue": "Date reported/updated is missing.",
         "different_issue": "Date reported/updated differs across bureaus.",
@@ -2249,11 +2348,29 @@ FIELD_COMPLIANCE_RULES = {
     "Remarks / Narrative Codes": {
         "source_field": "remarks",
         "required_for": ["disputed", "collection", "charge-off", "transferred", "sold", "bankruptcy"],
-        "metro2_concept": "Special comments, remarks, compliance condition, dispute, or narrative codes.",
+        "metro2_concept": "Special comment, remarks, compliance condition, dispute, or narrative codes.",
         "fcra_basis": "FCRA 623(a)(3) disputed-account notation; FCRA 607(b) accuracy.",
         "missing_issue": "Remarks/dispute notation may be missing where expected.",
         "different_issue": "Remarks/narrative codes differ across bureaus.",
         "verification_ask": "Verify special comments, dispute indicators, and narrative codes.",
+    },
+    "Compliance Condition Code": {
+        "source_field": "remarks",
+        "required_for": ["disputed", "collection", "charge-off", "bankruptcy", "identity theft", "deceased"],
+        "metro2_concept": "Compliance condition code signals disputes and special compliance conditions.",
+        "fcra_basis": "FCRA 623(a)(3) disputed-account notation; FCRA 611 reinvestigation; Reg V accuracy/integrity duties.",
+        "missing_issue": "Compliance/dispute condition is not visible where a dispute or special condition may apply.",
+        "different_issue": "Compliance condition/dispute notation differs across bureaus.",
+        "verification_ask": "Verify whether the account should be marked disputed or carry another compliance condition code.",
+    },
+    "Consumer Information Indicator": {
+        "source_field": "remarks",
+        "required_for": ["bankruptcy", "deceased", "personal receivership"],
+        "metro2_concept": "Consumer information indicator can reflect consumer-level conditions such as bankruptcy or deceased status.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 611 reinvestigation; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Consumer information indicator is not visible where a consumer-level condition may apply.",
+        "different_issue": "Consumer information indicator differs across bureaus.",
+        "verification_ask": "Verify whether any consumer-level indicator is being reported and whether it is accurate.",
     },
 }
 
@@ -2437,6 +2554,7 @@ def result_to_dict(result: ParseResult) -> dict:
         "recommended_letter_queue": build_recommended_letter_queue(result.issues),
         "fcra_review": build_fcra_review(result.issues),
         "metro2_fcra_review": build_metro2_fcra_review(result.issues),
+        "metro2_public_guide_notes": METRO2_PUBLIC_GUIDE_NOTES,
         "metro2_requirement_review": metro2_requirement_review,
         "fcra_compliance_review": build_fcra_compliance_review(tradelines, issues, metro2_requirement_review),
         "field_compliance_audit": field_compliance_audit,
@@ -3056,6 +3174,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     items = wb.create_sheet("Review Items")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
     metro2_requirements = wb.create_sheet("Metro 2 Requirements")
+    metro2_guide_notes = wb.create_sheet("Metro 2 Guide Notes")
     fcra_compliance = wb.create_sheet("FCRA Compliance Review")
     field_compliance = wb.create_sheet("Field Compliance Audit")
     eoscar_packaging = wb.create_sheet("e-OSCAR Packaging Review")
@@ -3258,6 +3377,17 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
             ]
             for row in data.get("metro2_requirement_review", [])
         ],
+    ])
+
+    guide_notes = data.get("metro2_public_guide_notes", {})
+    _write_workbook_sheet(metro2_guide_notes, [
+        ["Item", "Value"],
+        ["Source", guide_notes.get("source", "")],
+        ["URL", guide_notes.get("url", "")],
+        ["Purpose", guide_notes.get("purpose", "")],
+        ["Production Guardrail", guide_notes.get("production_guardrail", "")],
+        ["Base Segment Fields Mapped", guide_notes.get("base_segment_fields", [])],
+        ["Collection / Associated Segments", guide_notes.get("collection_segments", [])],
     ])
 
     _write_workbook_sheet(fcra_compliance, [
