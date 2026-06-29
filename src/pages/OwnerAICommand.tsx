@@ -91,6 +91,22 @@ type ProblemBrief = {
   example_questions?: string[];
 };
 
+type ForensicSearchResult = {
+  query?: string;
+  owner_brief?: {
+    best_first_search?: string;
+    why?: string;
+    campaign_to_use?: string;
+    next_action?: string;
+    verification?: string;
+  };
+  selected_lanes?: Array<{
+    name: string;
+    purpose: string;
+    campaign_mapping: string;
+  }>;
+};
+
 type DashboardData = {
   command: GrowthBrief | null;
   liveAccess: LiveAccessBrief | null;
@@ -224,6 +240,8 @@ export default function OwnerAICommand() {
   const [state, setState] = useState<FetchState>('loading');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [searchState, setSearchState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
+  const [searchResult, setSearchResult] = useState<ForensicSearchResult | null>(null);
 
   async function loadDashboard() {
     setState((current) => (current === 'live' ? 'live' : 'loading'));
@@ -254,6 +272,29 @@ export default function OwnerAICommand() {
       setError(`${failed} live AI feed${failed === 1 ? '' : 's'} not connected yet. Showing the best available fallback view.`);
     } else {
       setState('live');
+    }
+  }
+
+  async function runGrowthSearch() {
+    setSearchState('running');
+    setSearchResult(null);
+
+    try {
+      const response = await fetch('/api/growth-ai/forensic-search/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: 'Find the strongest growth opportunity for Credit Vivo this week',
+        }),
+      });
+
+      if (!response.ok) throw new Error(`Growth search returned ${response.status}`);
+
+      const result = (await response.json()) as ForensicSearchResult;
+      setSearchResult(result);
+      setSearchState('done');
+    } catch {
+      setSearchState('error');
     }
   }
 
@@ -307,12 +348,57 @@ export default function OwnerAICommand() {
             <RefreshCcw size={13} />
             Refresh
           </button>
+          <button
+            type="button"
+            onClick={() => void runGrowthSearch()}
+            disabled={searchState === 'running'}
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
+          >
+            <TrendingUp size={13} />
+            {searchState === 'running' ? 'Searching' : 'Run Growth Search'}
+          </button>
         </div>
       </div>
 
       {error && (
         <div className="mb-5 rounded-xl border border-amber-100 bg-amber-50 p-4 text-xs leading-relaxed text-amber-900">
           <strong>Owner note:</strong> {error}
+        </div>
+      )}
+
+      {searchResult?.owner_brief && (
+        <section className="mb-5 rounded-xl border border-emerald-100 bg-emerald-50/70 p-5">
+          <div className="mb-3 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
+              <TrendingUp size={18} className="text-emerald-700" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-navy-900">Growth Search result</h2>
+              <p className="text-xs text-navy-500">Best opportunity Growth AI found for this run.</p>
+            </div>
+          </div>
+          <div className="grid gap-3 lg:grid-cols-3">
+            <div className="rounded-xl border border-emerald-100 bg-white p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Focus</p>
+              <p className="mt-1 text-sm font-bold text-navy-900">{searchResult.owner_brief.best_first_search}</p>
+              <p className="mt-2 text-xs leading-relaxed text-navy-500">{searchResult.owner_brief.why}</p>
+            </div>
+            <div className="rounded-xl border border-emerald-100 bg-white p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Campaign</p>
+              <p className="mt-1 text-sm font-bold text-navy-900">{searchResult.owner_brief.campaign_to_use}</p>
+              <p className="mt-2 text-xs leading-relaxed text-navy-500">{searchResult.owner_brief.next_action}</p>
+            </div>
+            <div className="rounded-xl border border-emerald-100 bg-white p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">How we judge it</p>
+              <p className="mt-1 text-xs leading-relaxed text-navy-500">{searchResult.owner_brief.verification}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {searchState === 'error' && (
+        <div className="mb-5 rounded-xl border border-amber-100 bg-amber-50 p-4 text-xs leading-relaxed text-amber-900">
+          <strong>Growth Search could not connect yet.</strong> The dashboard is still usable, but the backend search endpoint needs to be available.
         </div>
       )}
 
@@ -492,6 +578,31 @@ export default function OwnerAICommand() {
           {(data.crossAi?.weekly_growth_command_questions ?? []).map((question) => (
             <div key={question} className="rounded-xl border border-sky-100 bg-sky-50/40 p-3 text-xs font-semibold text-navy-700">
               {question}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-5 rounded-xl border border-navy-100 bg-white p-5">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-50">
+            <Database size={18} className="text-navy-700" />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-navy-900">Where Credit Vivo stores information</h2>
+            <p className="text-xs text-navy-400">Owner-friendly map of what belongs where.</p>
+          </div>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {[
+            ['Website code', 'GitHub keeps the official code history and backup for the site.'],
+            ['Live website', 'Vercel serves the customer-facing pages like Join, Pricing, and Learning.'],
+            ['Scanner backend', 'Render runs the API that parses reports, tracks events, and powers AI dashboards.'],
+            ['Customer data', 'A production database such as Supabase should store accounts, leads, scans, disputes, payments, and partner referrals.'],
+          ].map(([title, detail]) => (
+            <div key={title} className="rounded-xl border border-navy-100 bg-navy-50/30 p-4">
+              <h3 className="text-xs font-bold text-navy-900">{title}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-navy-500">{detail}</p>
             </div>
           ))}
         </div>
