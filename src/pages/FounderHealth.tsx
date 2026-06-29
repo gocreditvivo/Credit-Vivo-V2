@@ -1,115 +1,26 @@
 import {
-  AlertTriangle,
-  CheckCircle,
-  CreditCard,
-  FileText,
-  HeartPulse,
-  Server,
-  ShieldCheck,
-  Users,
-  Brain,
-} from 'lucide-react';
-
-const healthCards = [
-  {
-    title: 'Website',
-    status: 'Watch',
-    detail: 'CreditVivo.com should be checked after every GitHub/Vercel deploy.',
-    icon: Server,
-    tone: 'yellow',
-  },
-  {
-    title: 'Scanner Backend',
-    status: 'Ready to monitor',
-    detail: 'Render health check should watch /health once the backend service is deployed.',
-    icon: HeartPulse,
-    tone: 'green',
-  },
-  {
-    title: 'Customer Reports',
-    status: 'Beta caution',
-    detail: 'Track uploads, failed scans, retained files, deletion status, and customer approval logs.',
-    icon: FileText,
-    tone: 'yellow',
-  },
-  {
-    title: 'Financial',
-    status: 'Not live yet',
-    detail: 'Payments, refunds, failed charges, LegalShield/IDShield add-ons, and mail costs are not active yet.',
-    icon: CreditCard,
-    tone: 'gray',
-  },
-  {
-    title: 'Customer Issues',
-    status: 'Needs tracker',
-    detail: 'Track support tickets, stuck scans, complaint risk, dispute delays, and attorney-review requests.',
-    icon: AlertTriangle,
-    tone: 'yellow',
-  },
-  {
-    title: 'Compliance',
-    status: 'Review before launch',
-    detail: 'Watch consent logs, disclosures, no-guarantee language, approval before sending, and state launch rules.',
-    icon: ShieldCheck,
-    tone: 'yellow',
-  },
-];
-
-const founderMetrics = [
-  { label: 'real customer reports stored', value: '0', note: 'Keep at zero until security audit is done.' },
-  { label: 'payments active', value: 'No', note: 'Turn on only after processor/compliance approval.' },
-  { label: 'open customer issues', value: 'Manual', note: 'Use a support tracker before public launch.' },
-  { label: 'backend health URL', value: 'Pending', note: 'Add Render URL after deployment.' },
-];
-
-const customerMetrics = [
-  { label: 'total customers', today: '0', week: '0', month: '0', note: 'All active customer accounts.' },
-  { label: 'new accounts', today: '0', week: '0', month: '0', note: 'People who joined Credit Vivo.' },
-  { label: 'canceled accounts', today: '0', week: '0', month: '0', note: 'Customers who canceled or did not continue.' },
-  { label: 'free check-ins', today: '0', week: '0', month: '0', note: 'Customers who started the free scan path.' },
-];
-
-const moneyMetrics = [
-  { label: 'revenue', today: '$0', week: '$0', month: '$0', note: 'Money collected from Credit Vivo plans.' },
-  { label: 'refunds', today: '$0', week: '$0', month: '$0', note: 'Money returned to customers.' },
-  { label: 'failed payments', today: '0', week: '0', month: '0', note: 'Cards or payments that did not go through.' },
-  { label: 'outside costs', today: '$0', week: '$0', month: '$0', note: 'Mail, report access, ID checks, or partner costs.' },
-];
-
-const retentionSignals = [
-  {
-    title: 'Customers likely to cancel',
-    value: '0',
-    detail: 'AI should flag customers who stopped logging in, did not finish a scan, had a failed payment, or opened repeated support issues.',
-  },
-  {
-    title: 'Customers needing attention',
-    value: '0',
-    detail: 'AI should flag customers waiting on findings, stuck at approval, confused by next steps, or needing a human check-in.',
-  },
-  {
-    title: 'Upsell-ready customers',
-    value: '0',
-    detail: 'AI should flag customers who completed the free Check-In, reviewed findings, and may be ready for AI Guided or Vivo Plus.',
-  },
-  {
-    title: 'Legal-access candidates',
-    value: '0',
-    detail: 'AI should flag customers with repeated unresolved issues who may want optional attorney/legal access through a separate provider.',
-  },
-];
-
-const retentionActions = [
-  'Send a plain-English progress update before the customer feels stuck.',
-  'Offer a human review when scan results look confusing or high-stress.',
-  'Remind customers what step is waiting on them before cancellation risk rises.',
-  'Suggest AI Guided or Vivo Plus only when the customer has a clear next-step reason.',
-  'Offer optional legal access only as a separate customer choice, not pressure.',
-];
+  aiInsightIcon as Brain,
+  campaignIcon as MousePointerClick,
+  completedIcon as CheckCircle,
+  customerMetrics,
+  founderSummaryMetrics,
+  growthActions,
+  growthChannels,
+  growthIcon as Target,
+  growthMetrics,
+  healthCards,
+  moneyMetrics,
+  monitoringAlertExamples,
+  opsFeatureModules,
+  retentionActions,
+  retentionSignals,
+} from '../lib/founderOpsModules';
 
 function toneClass(tone: string) {
   if (tone === 'green') return 'border-mint-100 bg-mint-50/60 text-mint-700';
   if (tone === 'yellow') return 'border-amber-100 bg-amber-50/70 text-amber-700';
+  if (tone === 'sky') return 'border-sky-100 bg-sky-50/70 text-sky-700';
+  if (tone === 'purple') return 'border-violet-100 bg-violet-50/70 text-violet-700';
   return 'border-navy-100 bg-navy-50/70 text-navy-500';
 }
 
@@ -125,7 +36,7 @@ export default function FounderHealth() {
       </p>
 
       <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {founderMetrics.map((metric) => (
+        {founderSummaryMetrics.map((metric) => (
           <div key={metric.label} className="rounded-xl border border-navy-100/60 bg-white p-4">
             <p className="text-2xl font-bold text-navy-900">{metric.value}</p>
             <p className="mt-0.5 text-[11px] text-navy-400">{metric.label}</p>
@@ -232,6 +143,110 @@ export default function FounderHealth() {
         </div>
       </section>
 
+      <section className="mb-5 rounded-xl border border-emerald-100 bg-emerald-50/60 p-5">
+        <div className="mb-4 flex items-start gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
+            <Target size={18} className="text-emerald-700" />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-navy-900">Growth AI: bring customers to help</h2>
+            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-navy-500">
+              This will help Credit Vivo learn which channels bring real customers, which messages work, and where AI should recommend the next growth move.
+            </p>
+          </div>
+        </div>
+
+        <div className="mb-5 overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="border-b border-emerald-100 text-navy-500">
+                <th className="py-2 pr-4">Metric</th>
+                <th className="py-2 pr-4">Today</th>
+                <th className="py-2 pr-4">This week</th>
+                <th className="py-2 pr-4">This month</th>
+                <th className="py-2 pr-4">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              {growthMetrics.map((metric) => (
+                <tr key={metric.label} className="border-b border-white/80">
+                  <td className="py-3 pr-4 font-semibold text-navy-800">{metric.label}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.today}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.week}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.month}</td>
+                  <td className="py-3 pr-4 text-navy-500">{metric.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mb-5 grid gap-3 lg:grid-cols-4">
+          {growthChannels.map((channel) => (
+            <div key={channel.channel} className="rounded-xl border border-emerald-100 bg-white p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <MousePointerClick size={14} className="text-emerald-700" />
+                <h3 className="text-xs font-bold text-navy-900">{channel.channel}</h3>
+              </div>
+              <span className="inline-flex rounded-full border border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                {channel.stage}
+              </span>
+              <p className="mt-3 text-[11px] leading-relaxed text-navy-500">{channel.aiUse}</p>
+              <p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-navy-400">First data needed</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-navy-400">{channel.firstDataNeeded}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-xl border border-white bg-white/80 p-4">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-emerald-700">AI growth recommendations</h3>
+          <div className="grid gap-2 md:grid-cols-2">
+            {growthActions.map((action) => (
+              <div key={action} className="flex gap-2 text-xs text-navy-600">
+                <CheckCircle size={13} className="mt-0.5 flex-shrink-0 text-emerald-700" />
+                <span>{action}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mb-5 rounded-xl border border-violet-100 bg-white p-5">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="mb-1 text-sm font-bold text-navy-900">Add-anytime AI operations modules</h2>
+            <p className="max-w-2xl text-xs leading-relaxed text-navy-400">
+              This is the feature registry. Each box is a monitoring area we can connect when the business is ready.
+            </p>
+          </div>
+          <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-violet-700">
+            Flexible
+          </span>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {opsFeatureModules.map(({ id, title, ownerView, status, firstDataNeeded, nextAction, icon: Icon, tone }) => (
+            <div key={id} className="rounded-xl border border-navy-100/60 bg-navy-50/30 p-4">
+              <div className="mb-3 flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white">
+                  <Icon size={16} className="text-sky-700" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-navy-900">{title}</h3>
+                  <span className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${toneClass(tone)}`}>
+                    {status}
+                  </span>
+                </div>
+              </div>
+              <p className="text-[11px] leading-relaxed text-navy-600">{ownerView}</p>
+              <p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-navy-400">First data needed</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-navy-400">{firstDataNeeded}</p>
+              <p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-navy-400">Next</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-navy-400">{nextAction}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <div className="mb-5 grid gap-4 lg:grid-cols-2">
         {healthCards.map(({ title, status, detail, icon: Icon, tone }) => (
           <section key={title} className="rounded-xl border border-navy-100/60 bg-white p-5">
@@ -259,16 +274,9 @@ export default function FounderHealth() {
           <h2 className="text-sm font-bold text-navy-900">What real-time monitoring should send you</h2>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
-          {[
-            'Website is down or latest Vercel deploy failed.',
-            'Scanner backend is down or Render health check fails.',
-            'Report upload failed or scan error rate goes up.',
-            'Customer issue needs review, refund, or legal escalation.',
-            'Payment, LegalShield/IDShield add-on, or mail cost fails.',
-            'Compliance-sensitive action is missing customer approval.',
-          ].map((item) => (
+          {monitoringAlertExamples.map((item) => (
             <div key={item} className="flex gap-2 text-xs text-navy-600">
-              <Users size={13} className="mt-0.5 flex-shrink-0 text-emerald-700" />
+              <CheckCircle size={13} className="mt-0.5 flex-shrink-0 text-emerald-700" />
               <span>{item}</span>
             </div>
           ))}

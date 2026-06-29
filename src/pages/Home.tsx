@@ -26,7 +26,7 @@ function HeroCard() {
         {[
           { label: 'AI scan completed', done: true },
           { label: 'Errors prioritized', done: true },
-          { label: 'Attorney help checked', done: false },
+          { label: 'Attorney review option checked', done: false },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2.5 rounded-lg bg-navy-50/70 px-3 py-2">
             <div className={`flex h-5 w-5 items-center justify-center rounded-full ${item.done ? 'bg-emerald-600' : 'bg-rose-200'}`}>
@@ -111,7 +111,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                {['Plain-English review', 'Attorney help available', 'No hard pull to start'].map((t) => (
+                {['Plain-English review', 'Attorney support when needed', 'No hard pull to start'].map((t) => (
                   <span key={t} className="flex items-center gap-1.5 text-[12px] text-navy-500">
                     <CheckCircle size={13} className="text-emerald-700" />
                     {t}
@@ -139,7 +139,7 @@ export default function Home() {
       <section className="border-y border-navy-100/70 bg-white py-7">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['Free Check-In', 'Plain English', 'Review Options', 'Attorney Help', 'Progress Tracking'].map((item) => (
+            {['Free Check-In', 'Plain English', 'Review Options', 'Attorney Access', 'Progress Tracking'].map((item) => (
               <div key={item} className="lively-trust-pill text-center py-2">
                 <span className="text-xs font-semibold text-navy-600">{item}</span>
               </div>
@@ -233,8 +233,8 @@ export default function Home() {
               },
               {
                 icon: Scale,
-                title: 'Attorney help',
-                desc: 'When the issue is more serious, Credit Vivo can help prepare the file for attorney review.',
+                title: 'Attorney support',
+                desc: 'When the issue is more serious, Credit Vivo can help prepare your file for attorney review.',
                 color: 'bg-amber-100 text-amber-700',
               },
             ].map(({ icon: Icon, title, desc, color }) => (
@@ -294,7 +294,7 @@ export default function Home() {
             Start with the AI Credit Check-In.
           </h2>
           <p className="text-sm text-navy-300 mb-6">
-            See possible report errors first. Upgrade later if you want guided next steps or attorney help.
+            See possible report errors first. Upgrade later if you want guided next steps or attorney-ready support.
           </p>
           <Link to="/join" className="btn-mint text-sm py-3 px-7">
             Join Free

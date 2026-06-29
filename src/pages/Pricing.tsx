@@ -7,14 +7,15 @@ const plans = [
     name: 'Free Check-In',
     price: '$0',
     cadence: '/mo',
-    description: 'A simple starting point to upload or connect a report and see a plain-English preview.',
+    description: 'A free starting point to see what may be on your report before choosing support.',
     cta: 'Start Free',
     to: '/join',
     featured: false,
     features: [
       'No-hard-pull starting point',
-      'AI issue preview',
+      'One-report AI issue preview',
       'Plain-English summary',
+      'See possible next steps',
       'Learning Center access',
     ],
   },
@@ -23,7 +24,7 @@ const plans = [
     name: 'AI Guided',
     price: '$29',
     cadence: '/mo',
-    description: 'For customers who want the scanner findings, dispute prep, and a monthly action path.',
+    description: 'For customers who want guided support after the free scan, including tracking and draft dispute prep.',
     cta: 'Choose AI Guided',
     to: '/join',
     featured: true,
@@ -32,6 +33,7 @@ const plans = [
       'Draft dispute letter workspace',
       'Monthly roadmap updates',
       'Progress tracking',
+      'Customer next-step reminders',
     ],
   },
   {
@@ -39,7 +41,7 @@ const plans = [
     name: 'Vivo Plus',
     price: '$59',
     cadence: '/mo',
-    description: 'For customers who want bureau/furnisher workflows, stronger tracking, and escalation prep.',
+    description: 'For customers who want a fuller workflow for bureau, furnisher, tracking, and escalation preparation.',
     cta: 'Choose Vivo Plus',
     to: '/join',
     featured: false,
@@ -48,6 +50,7 @@ const plans = [
       'Furnisher validation workflow',
       'Attorney-ready evidence packet',
       'CFPB and state complaint prep',
+      'Priority file organization',
     ],
   },
 ];
@@ -84,10 +87,10 @@ export default function Pricing() {
             Pricing
           </div>
           <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Start free. Add support when needed.
+            Start free. Attorney support when needed.
           </h1>
           <p className="text-[15px] text-navy-500 max-w-xl mx-auto">
-            Credit Vivo pricing stays simple. Legal access and credit monitoring are optional separate services.
+            Credit Vivo gives you a free Credit Check-In first. Paid plans add guided support, tracking, and preparation for attorney review when the situation calls for it.
           </p>
         </div>
       </section>
@@ -98,9 +101,9 @@ export default function Pricing() {
           <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Free entry point</p>
-              <h2 className="mt-1 text-base font-bold text-navy-900">AI Credit + Attorney Access</h2>
+              <h2 className="mt-1 text-base font-bold text-navy-900">AI Credit Help + Optional Attorney Access</h2>
               <p className="mt-1 text-xs text-navy-500">
-                Start with the Credit Vivo scanner first. If legal help or credit monitoring is wanted, customers can choose separate provider options.
+                Start with the scanner first. Upgrade only if you want guided support, tracking, or attorney-ready escalation preparation.
               </p>
             </div>
             <Link to="/join" className="btn-primary shrink-0 text-xs py-2.5">
@@ -159,7 +162,7 @@ export default function Pricing() {
 
           <div className="mt-8 rounded-2xl border border-amber-100 bg-amber-50 p-5">
             <p className="text-xs leading-relaxed text-amber-900">
-              <strong>Launch note:</strong> Pricing shown is planned package positioning. Credit Vivo is not accepting paid credit repair services until final terms, disclosures, cancellation rights, and payment processing are approved. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes. LegalShield, IDShield, attorney services, credit monitoring, mail, report access, and third-party costs are separate unless a written plan says otherwise.
+              <strong>Launch note:</strong> Pricing shown is planned founding package positioning. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes. Customers review and approve next steps before anything is sent or escalated. LegalShield, IDShield, attorney services, credit monitoring, mail, report access, and third-party costs are separate unless a written plan says otherwise.
             </p>
           </div>
         </div>
@@ -193,8 +196,8 @@ export default function Pricing() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              { title: 'Start with free clarity', desc: 'The free Credit Check-In gives consumers a simple starting point and helps them understand where to focus.' },
-              { title: 'Upgrade when ready', desc: 'Paid tiers are designed around more guidance, tracking, document organization, and escalation prep.' },
+              { title: 'Start with free clarity', desc: 'The free Credit Check-In gives consumers a simple starting point before they decide whether they want paid support.' },
+              { title: 'Add support when ready', desc: 'Paid tiers are designed around more guidance, tracking, document organization, and attorney-ready escalation preparation.' },
               { title: 'Review comes first', desc: 'Draft findings are for review only. Nothing should be sent, mailed, or escalated without approval.' },
             ].map((card) => (
               <div key={card.title} className="bg-white rounded-xl p-5 border border-navy-100/60">
@@ -210,7 +213,7 @@ export default function Pricing() {
       <section className="py-14 bg-navy-900">
         <div className="max-w-2xl mx-auto px-4 text-center">
           <h2 className="text-xl font-bold text-white mb-3">Start with the free Credit Check-In</h2>
-          <p className="text-sm text-navy-300 mb-5">No hard pull to start. Review first. Upgrade later when paid plans are active.</p>
+          <p className="text-sm text-navy-300 mb-5">No hard pull to start. Review first. Add attorney-ready support when needed.</p>
           <Link to="/join" className="btn-mint text-sm py-3 px-7">
             Start Free <ArrowRight size={15} />
           </Link>

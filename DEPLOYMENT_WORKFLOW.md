@@ -5,18 +5,19 @@ Use this process every time Credit Vivo website or portal files change.
 ## Default Rule
 
 1. Edit files locally.
-2. Run `npm run build`.
-3. Commit changes to Git.
-4. Review the commit before pushing.
-5. Push to GitHub only when the change is approved for production.
-6. Let Vercel deploy from GitHub.
-7. Verify `https://www.creditvivo.com`.
+2. Run the deploy script so checks happen before anything is pushed.
+3. Commit changes to GitHub.
+4. Let Vercel deploy the website from GitHub.
+5. Let Render deploy the scanner API from GitHub when backend files change.
+6. Verify the live site and key scanner/API health checks.
+
+Plain English: GitHub is the source of truth. Vercel and Render should update from GitHub automatically after a verified push to `main`.
 
 ## Local App
 
 Current working app:
 
-`C:\CreditVivo\creditvivo_v1_clean_frontend\creditvivo_v1_clean_frontend`
+`C:\Users\miste\Documents\Codex\2026-06-28\ca\work\creditvivo-site-live`
 
 Local preview:
 
@@ -32,7 +33,23 @@ Target repository:
 
 Vercel should stay connected to the GitHub repository. After each approved push to the production branch, Vercel should rebuild and publish the site automatically.
 
-Do not auto-push every local change. Production deployment should require a deliberate `git push origin main` or running `tools\deploy-creditvivo.ps1 -Push`.
+Default behavior is now: after changes pass checks, `tools\deploy-creditvivo.ps1` commits and pushes to GitHub.
+
+Use `tools\deploy-creditvivo.ps1 -NoPush` only when you want a local commit without updating GitHub/Vercel/Render.
+
+## Render
+
+Render should stay connected to the GitHub repository and use `render.yaml`.
+
+Backend service:
+
+`creditvivo-scanner-api`
+
+Health check:
+
+`/health`
+
+If Render auto-deploy is enabled, pushing to GitHub updates the scanner API. If auto-deploy is disabled in Render, manually deploy the latest GitHub commit from the Render dashboard.
 
 ## Do Not Commit
 
@@ -48,14 +65,17 @@ Do not auto-push every local change. Production deployment should require a deli
 ## Verification Checklist
 
 - `npm run build` passes.
+- `npm run typecheck` passes.
+- `python -m pytest tests` passes inside `scanner_backend` when backend files change.
 - `/`, `/scan`, `/privacy`, `/terms`, `/disclosure`, `/pricing`, `/faq`, and `/signup` load.
 - Security headers are present.
 - Demo scan still creates a case.
 - Live domain opens after Vercel deploys.
+- Render `/health` returns healthy after scanner backend deployment.
 
 ## Safer Deploy Script
 
-`tools\deploy-creditvivo.ps1` now commits locally by default and does not push unless `-Push` is provided.
+`tools\deploy-creditvivo.ps1` now verifies, commits, and pushes by default.
 
 Examples:
 
@@ -63,10 +83,10 @@ Examples:
 .\tools\deploy-creditvivo.ps1 -Message "Update homepage"
 ```
 
-Creates the local commit only.
+Runs checks, commits, pushes to GitHub, and triggers Vercel/Render if connected.
 
 ```powershell
-.\tools\deploy-creditvivo.ps1 -Message "Update homepage" -Push
+.\tools\deploy-creditvivo.ps1 -Message "Update homepage" -NoPush
 ```
 
-Commits and pushes to GitHub, which triggers Vercel.
+Runs checks and commits locally only.

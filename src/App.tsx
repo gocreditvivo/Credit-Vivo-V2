@@ -13,12 +13,17 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Disclosure from './pages/Disclosure';
 import InvestorDemo from './pages/InvestorDemo';
+import AutoLoanDenial from './pages/AutoLoanDenial';
+import MortgageReadiness from './pages/MortgageReadiness';
+import ApartmentDenial from './pages/ApartmentDenial';
+import CollectionNotMine from './pages/CollectionNotMine';
 import Dashboard from './pages/Dashboard';
 import FreeScan from './pages/FreeScan';
 import Findings from './pages/Findings';
 import AdminReview from './pages/AdminReview';
 import BankLink from './pages/BankLink';
 import FounderHealth from './pages/FounderHealth';
+import GrowthAI from './pages/GrowthAI';
 
 export default function App() {
   return (
@@ -39,6 +44,10 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/disclosure" element={<Disclosure />} />
           <Route path="/investor-demo" element={<InvestorDemo />} />
+          <Route path="/auto-loan-denial" element={<AutoLoanDenial />} />
+          <Route path="/mortgage-readiness" element={<MortgageReadiness />} />
+          <Route path="/apartment-denial" element={<ApartmentDenial />} />
+          <Route path="/collection-not-mine" element={<CollectionNotMine />} />
         </Route>
 
         {/* Member pages */}
@@ -48,6 +57,7 @@ export default function App() {
           <Route path="/scan" element={<FreeScan />} />
           <Route path="/findings" element={<Findings />} />
           <Route path="/founder-health" element={<FounderHealth />} />
+          <Route path="/growth-ai" element={<GrowthAI />} />
           <Route path="/admin-review" element={<AdminReview />} />
           <Route path="/bank-link" element={<BankLink />} />
         </Route>

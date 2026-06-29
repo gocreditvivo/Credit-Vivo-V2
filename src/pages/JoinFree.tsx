@@ -1,7 +1,68 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { trackEvent } from '../lib/trackEvent';
+
+const goals = [
+  'Understand my score factors',
+  'Review possible report inaccuracies',
+  'Buy a car',
+  'Buy a home',
+  'Rent an apartment',
+  'Collection account I do not recognize',
+  'Understand my credit',
+];
+
+async function captureLead(firstName: string, email: string, goal: string, campaign?: string) {
+  await fetch('/api/leads/capture', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      first_name: firstName,
+      email,
+      goal,
+      campaign,
+      source: campaign ? 'campaign_join_page' : 'join_page',
+      consent_to_contact: true,
+      timestamp: new Date().toISOString(),
+    }),
+  });
+}
+
+function trackJoin(campaign?: string) {
+  void trackEvent({
+    event_type: 'join_clicked',
+    source: campaign ? 'campaign_join_page' : 'join_page',
+    campaign,
+  });
+}
 
 export default function JoinFree() {
+  const navigate = useNavigate();
+  const params = new URLSearchParams(window.location.search);
+  const campaign = params.get('campaign') || undefined;
+  const [goal, setGoal] = useState(goals[0]);
+  const [firstName, setFirstName] = useState('');
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+
+    try {
+      await captureLead(firstName, email, goal, campaign);
+      trackJoin(campaign);
+      navigate('/scan');
+    } catch {
+      setError('Please enter your first name and a valid email before continuing.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <>
       {/* Hero */}
@@ -23,16 +84,18 @@ export default function JoinFree() {
       {/* Form */}
       <section className="py-12 bg-white">
         <div className="max-w-md mx-auto px-4">
-          <div className="bg-navy-50/50 rounded-2xl p-6 border border-navy-100/60">
+          <form onSubmit={handleSubmit} className="bg-navy-50/50 rounded-2xl p-6 border border-navy-100/60">
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-navy-700 mb-1.5">Your main goal</label>
-                <select className="w-full bg-white border border-navy-200 rounded-lg px-3 py-2.5 text-sm text-navy-800 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all">
-                  <option>Understand my score factors</option>
-                  <option>Review possible report inaccuracies</option>
-                  <option>Buy a car</option>
-                  <option>Buy a home</option>
-                  <option>Understand my credit</option>
+                <select
+                  value={goal}
+                  onChange={(event) => setGoal(event.target.value)}
+                  className="w-full bg-white border border-navy-200 rounded-lg px-3 py-2.5 text-sm text-navy-800 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all"
+                >
+                  {goals.map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
                 </select>
               </div>
 
@@ -40,6 +103,8 @@ export default function JoinFree() {
                 <label className="block text-xs font-semibold text-navy-700 mb-1.5">First name</label>
                 <input
                   type="text"
+                  value={firstName}
+                  onChange={(event) => setFirstName(event.target.value)}
                   placeholder="Your first name"
                   className="w-full bg-white border border-navy-200 rounded-lg px-3 py-2.5 text-sm text-navy-800 placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all"
                 />
@@ -49,21 +114,30 @@ export default function JoinFree() {
                 <label className="block text-xs font-semibold text-navy-700 mb-1.5">Email</label>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                   placeholder="you@example.com"
                   className="w-full bg-white border border-navy-200 rounded-lg px-3 py-2.5 text-sm text-navy-800 placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all"
                 />
               </div>
 
-              <Link to="/scan" className="btn-primary w-full text-sm py-3 mt-2">
-                Join Free Beta
+              <label className="flex gap-2 text-[11px] leading-relaxed text-navy-500">
+                <input type="checkbox" checked readOnly className="mt-0.5 h-3.5 w-3.5 rounded border-navy-300" />
+                I agree Credit Vivo may contact me about my free Credit Check-In and related next steps. No payment today.
+              </label>
+
+              {error && <p className="text-xs font-semibold text-rose-600">{error}</p>}
+
+              <button type="submit" disabled={isSubmitting} className="btn-primary w-full text-sm py-3 mt-2 disabled:opacity-60">
+                {isSubmitting ? 'Saving...' : 'Join Free Beta'}
                 <ArrowRight size={15} />
-              </Link>
+              </button>
 
               <p className="text-[11px] text-navy-400 text-center leading-relaxed mt-3">
-                This beta preview does not create an account yet or start a paid service. Continue to the Credit Check-In flow to review the next step.
+                This beta preview does not start a paid service. Continue to the Credit Check-In flow to review the next step.
               </p>
             </div>
-          </div>
+          </form>
         </div>
       </section>
     </>

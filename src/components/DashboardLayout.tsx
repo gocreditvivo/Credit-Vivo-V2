@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   Landmark,
   Activity,
+  Megaphone,
 } from 'lucide-react';
 
 const sideLinks = [
@@ -17,6 +18,7 @@ const sideLinks = [
   { to: '/scan', label: 'Free Scan', icon: Search },
   { to: '/findings', label: 'Findings', icon: FileText },
   { to: '/founder-health', label: 'Founder Health', icon: Activity },
+  { to: '/growth-ai', label: 'Growth AI', icon: Megaphone },
   { to: '/bank-link', label: 'Bank Link', icon: Landmark },
   { to: '/dashboard', label: 'Monthly Plan', icon: Calendar },
   { to: '/learning', label: 'Learning Center', icon: BookOpen },

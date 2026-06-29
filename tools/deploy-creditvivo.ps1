@@ -1,34 +1,35 @@
 param(
-  [string]$Message = "Update Credit Vivo site",
-  [switch]$Push
+  [string]$Message = "Update Credit Vivo",
+  [switch]$NoPush,
+  [switch]$SkipBackendTests
 )
 
 $ErrorActionPreference = "Stop"
 
-$Source = "C:\CreditVivo\creditvivo_v1_clean_frontend\creditvivo_v1_clean_frontend"
-$Repo = "C:\CreditVivo\_GITHUB\creditvivo-site"
-
-if (!(Test-Path -LiteralPath $Source)) {
-  throw "Source app folder not found: $Source"
-}
-
-if (!(Test-Path -LiteralPath (Join-Path $Repo ".git"))) {
-  throw "GitHub working repo not found: $Repo"
-}
-
-Write-Host "Syncing current app into GitHub working repo..."
-robocopy $Source $Repo /MIR /XD .git .next node_modules .vercel customer-files uploads credit-reports ids _backup_before_creditvivo_full_mvp src /XF .env *.local *.pem *.key *.pfx *.pdf *.xlsx *.xls *.csv *.zip
-if ($LASTEXITCODE -gt 7) {
-  throw "Robocopy failed with exit code $LASTEXITCODE"
-}
-
+$Repo = Resolve-Path (Join-Path $PSScriptRoot "..")
 Set-Location $Repo
 
-Write-Host "Installing dependencies..."
-npm ci
+if (!(Test-Path -LiteralPath ".git")) {
+  throw "This script must run inside the Credit Vivo Git repository."
+}
 
-Write-Host "Building production app..."
+$branch = git branch --show-current
+if ($branch -ne "main") {
+  throw "Credit Vivo production deploys must run from main. Current branch: $branch"
+}
+
+Write-Host "Checking frontend types..."
+npm run typecheck
+
+Write-Host "Building frontend..."
 npm run build
+
+if (!$SkipBackendTests -and (Test-Path -LiteralPath "scanner_backend\tests")) {
+  Write-Host "Running scanner backend tests..."
+  Push-Location scanner_backend
+  python -m pytest tests
+  Pop-Location
+}
 
 $changes = git status --porcelain
 if (-not $changes) {
@@ -36,16 +37,19 @@ if (-not $changes) {
   exit 0
 }
 
-Write-Host "Committing changes..."
+Write-Host "Committing Credit Vivo changes..."
 git add -A
 git commit -m $Message
 
-if ($Push) {
-  Write-Host "Pushing to GitHub. Vercel should auto-deploy from GitHub..."
-  git push origin main
-  Write-Host "Done. Verify https://www.creditvivo.com after Vercel finishes."
-} else {
-  Write-Host "Committed locally only. Review the commit, then run:"
-  Write-Host "  git push origin main"
-  Write-Host "Or rerun this script with -Push when you intentionally want Vercel deployment."
+if ($NoPush) {
+  Write-Host "Committed locally only because -NoPush was used."
+  Write-Host "When ready, push with: git push origin main"
+  exit 0
 }
+
+Write-Host "Pushing to GitHub..."
+git push origin main
+
+Write-Host "Done. GitHub is updated."
+Write-Host "Vercel should deploy the website from GitHub."
+Write-Host "Render should deploy the scanner API from GitHub if auto-deploy is enabled there."

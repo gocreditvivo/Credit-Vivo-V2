@@ -36,6 +36,19 @@ try:
         result_to_dict,
         write_outputs,
     )
+    from .event_collector import (
+        append_event,
+        build_event,
+        growth_snapshot_from_events,
+        operator_events_from_vivo_events,
+        read_events,
+        summarize_events,
+    )
+    from .growth_ai import GrowthSnapshot, build_growth_brief, lead_score
+    from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
+    from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
+    from .outreach_ai import build_outreach_plan
+    from .vivo_command_ai import build_command_brief
 except ImportError:
     from credit_vivo_proprietary_engine import (
         detect_bureau,
@@ -43,11 +56,26 @@ except ImportError:
         result_to_dict,
         write_outputs,
     )
+    from event_collector import (
+        append_event,
+        build_event,
+        growth_snapshot_from_events,
+        operator_events_from_vivo_events,
+        read_events,
+        summarize_events,
+    )
+    from growth_ai import GrowthSnapshot, build_growth_brief, lead_score
+    from lead_capture import append_lead, build_lead, read_leads, summarize_leads
+    from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
+    from outreach_ai import build_outreach_plan
+    from vivo_command_ai import build_command_brief
 
 ROOT = Path(__file__).resolve().parent
 STORAGE_ROOT = Path(os.getenv("SCANNER_STORAGE_DIR", "/tmp/creditvivo-scanner" if os.getenv("VERCEL") else str(ROOT)))
 UPLOADS = STORAGE_ROOT / "uploads"
 OUTPUT = STORAGE_ROOT / "output"
+EVENT_LOG = STORAGE_ROOT / "events" / "vivo_events.jsonl"
+LEAD_LOG = STORAGE_ROOT / "leads" / "captured_leads.jsonl"
 UPLOADS.mkdir(parents=True, exist_ok=True)
 OUTPUT.mkdir(parents=True, exist_ok=True)
 
@@ -241,6 +269,180 @@ async def parse_uploaded_reports(
 @app.get("/api/health")
 def api_health():
     return health()
+
+
+@app.get("/growth-ai/brief")
+@app.get("/api/growth-ai/brief")
+def growth_ai_brief(
+    visitors: int = 0,
+    leads: int = 0,
+    free_scans_started: int = 0,
+    free_scans_completed: int = 0,
+    paid_customers: int = 0,
+    monthly_recurring_revenue: float = 0.0,
+    cancellations: int = 0,
+    ad_spend: float = 0.0,
+    referral_signups: int = 0,
+):
+    snapshot = GrowthSnapshot(
+        visitors=visitors,
+        leads=leads,
+        free_scans_started=free_scans_started,
+        free_scans_completed=free_scans_completed,
+        paid_customers=paid_customers,
+        monthly_recurring_revenue=monthly_recurring_revenue,
+        cancellations=cancellations,
+        ad_spend=ad_spend,
+        referral_signups=referral_signups,
+    )
+    return JSONResponse(build_growth_brief(snapshot))
+
+
+@app.post("/growth-ai/lead-score")
+@app.post("/api/growth-ai/lead-score")
+async def growth_ai_lead_score(signals: Dict[str, bool]):
+    return JSONResponse({
+        "ok": True,
+        "service": "credit-vivo-growth-ai",
+        "lead_score": lead_score(signals),
+    })
+
+
+@app.get("/operator-ai/brief")
+@app.get("/api/operator-ai/brief")
+def operator_ai_demo_brief():
+    return JSONResponse(build_operator_brief(demo_operator_events()))
+
+
+@app.post("/operator-ai/brief")
+@app.post("/api/operator-ai/brief")
+async def operator_ai_brief(events: List[Dict[str, str]]):
+    parsed_events = [
+        OperatorEvent(
+            area=event.get("area", "general"),
+            event_type=event.get("event_type", "review"),
+            severity=event.get("severity", "low"),
+            detail=event.get("detail", ""),
+            customer_id=event.get("customer_id"),
+        )
+        for event in events
+    ]
+    return JSONResponse(build_operator_brief(parsed_events))
+
+
+@app.get("/vivo-command/brief")
+@app.get("/api/vivo-command/brief")
+def vivo_command_brief(
+    visitors: int = 0,
+    leads: int = 0,
+    free_scans_started: int = 0,
+    free_scans_completed: int = 0,
+    paid_customers: int = 0,
+    monthly_recurring_revenue: float = 0.0,
+    cancellations: int = 0,
+    ad_spend: float = 0.0,
+    referral_signups: int = 0,
+):
+    snapshot = GrowthSnapshot(
+        visitors=visitors,
+        leads=leads,
+        free_scans_started=free_scans_started,
+        free_scans_completed=free_scans_completed,
+        paid_customers=paid_customers,
+        monthly_recurring_revenue=monthly_recurring_revenue,
+        cancellations=cancellations,
+        ad_spend=ad_spend,
+        referral_signups=referral_signups,
+    )
+    return JSONResponse(build_command_brief(growth_snapshot=snapshot))
+
+
+@app.post("/events/track")
+@app.post("/api/events/track")
+async def track_vivo_event(payload: Dict[str, object]):
+    event = build_event(payload)
+    append_event(event, EVENT_LOG)
+    return JSONResponse({
+        "ok": True,
+        "service": "vivo-event-collector",
+        "event_type": event.event_type,
+        "source": event.source,
+        "stored": True,
+    })
+
+
+@app.get("/events/summary")
+@app.get("/api/events/summary")
+def vivo_event_summary():
+    events = read_events(EVENT_LOG)
+    return JSONResponse({
+        "ok": True,
+        "service": "vivo-event-collector",
+        "summary": summarize_events(events),
+        "growth_snapshot": growth_snapshot_from_events(events).__dict__,
+    })
+
+
+@app.post("/leads/capture")
+@app.post("/api/leads/capture")
+async def capture_lead(payload: Dict[str, object]):
+    try:
+        lead = build_lead(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    append_lead(lead, LEAD_LOG)
+    append_event(build_event({
+        "event_type": "lead_created",
+        "source": lead.source,
+        "campaign": lead.campaign,
+        "metadata": {
+            "goal": lead.goal,
+            "email_domain": lead.email.split("@")[-1],
+        },
+    }), EVENT_LOG)
+
+    return JSONResponse({
+        "ok": True,
+        "service": "vivo-lead-capture",
+        "stored": True,
+        "campaign": lead.campaign,
+        "source": lead.source,
+    })
+
+
+@app.get("/leads/summary")
+@app.get("/api/leads/summary")
+def lead_summary():
+    leads = read_leads(LEAD_LOG)
+    return JSONResponse({
+        "ok": True,
+        "service": "vivo-lead-capture",
+        "summary": summarize_leads(leads),
+    })
+
+
+@app.post("/growth-ai/outreach-plan")
+@app.post("/api/growth-ai/outreach-plan")
+async def growth_ai_outreach_plan(payload: Dict[str, object]):
+    contacts = payload.get("contacts", [])
+    if not isinstance(contacts, list):
+        raise HTTPException(status_code=400, detail="contacts must be a list.")
+
+    owner_approved = bool(payload.get("owner_approved", False))
+    return JSONResponse(build_outreach_plan(contacts, owner_approved=owner_approved))
+
+
+@app.get("/vivo-command/live")
+@app.get("/api/vivo-command/live")
+def vivo_command_live_brief():
+    events = read_events(EVENT_LOG)
+    snapshot = growth_snapshot_from_events(events)
+    operator_events = operator_events_from_vivo_events(events)
+    return JSONResponse({
+        **build_command_brief(growth_snapshot=snapshot, operator_events=operator_events),
+        "event_summary": summarize_events(events),
+    })
 
 
 @app.get("/scanner/result/{job_id}")
