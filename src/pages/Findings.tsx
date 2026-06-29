@@ -105,7 +105,7 @@ export default function Findings() {
   const downloads = [
     {
       label: 'Download desktop workbook',
-      detail: 'One Excel file with 3-bureau comparison, errors, review items, draft letters, and FCRA review tabs.',
+      detail: 'One Excel file with 3-bureau comparison, Metro 2/FCRA review, errors, draft letters, and tracking tabs.',
       href: getScannerOutputDownloadUrl(result.job_id, 'workbook.xlsx'),
       filename: 'credit-vivo-desktop-scanner-output.xlsx',
       primary: true,

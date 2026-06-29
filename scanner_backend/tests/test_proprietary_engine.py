@@ -80,6 +80,15 @@ def test_parse_sample_report(tmp_path):
     assert "FCRA" in data["recommended_letter_queue"][0]["draft_letter_body"]
     assert data["fcra_review"]
     assert data["fcra_review"][0]["dispute_history_complete"] is False
+    assert data["metro2_fcra_review"]
+    metro2_fields = {
+        field
+        for row in data["metro2_fcra_review"]
+        for field in row["metro2_fields_to_review"]
+    }
+    assert "Current Balance" in metro2_fields
+    assert "Date of First Delinquency" in metro2_fields
+    assert any("FCRA 611" in section for row in data["metro2_fcra_review"] for section in row["fcra_sections"])
     cross_labels = {x["customer_label"] for x in data["issues"] if x["issue_type"].startswith("cross_bureau")}
     assert "Balance differs across bureaus" in cross_labels
     assert "Status differs across bureaus" in cross_labels
@@ -97,6 +106,7 @@ def test_parse_sample_report(tmp_path):
         "3 Bureau Comparison",
         "Detected Errors",
         "Review Items",
+        "Metro 2 + FCRA Review",
         "Draft Letters",
         "FCRA Review",
     ]
@@ -112,6 +122,10 @@ def test_parse_sample_report(tmp_path):
     assert "Balance differs" in comparison_flags
     assert "Status differs" in comparison_flags
     assert "DOFD differs" in comparison_flags
+    expert = workbook["Metro 2 + FCRA Review"]
+    expert_headers = [expert.cell(row=1, column=column).value for column in range(1, expert.max_column + 1)]
+    assert "Metro 2 Fields To Review" in expert_headers
+    assert "FCRA Sections / Duties" in expert_headers
     draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
     assert "DRAFT" in draft_letters
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters

@@ -1120,6 +1120,99 @@ def build_fcra_review(issues: List[ReviewIssue]) -> List[dict]:
     ]
 
 
+METRO2_FCRA_RULES = {
+    "collection_review": {
+        "metro2_fields": ["Account Type", "Portfolio Type", "Original Creditor", "Current Balance", "Account Status", "Date Reported"],
+        "fcra_focus": "Accuracy, completeness, ownership, and verification of collection reporting.",
+        "fcra_sections": ["FCRA 611 reinvestigation", "FCRA 623 furnisher duties after notice"],
+        "evidence_needed": ["original creditor", "assignment or ownership proof", "balance calculation", "reporting authority", "account-level source records"],
+        "dispute_theory": "The collection must be accurate, complete, and verifiable. If ownership, balance, or reporting authority cannot be supported, correction or deletion may be appropriate.",
+    },
+    "chargeoff_review": {
+        "metro2_fields": ["Account Status", "Payment Rating", "Current Balance", "Amount Past Due", "Date of First Delinquency", "Date Closed", "Special Comment"],
+        "fcra_focus": "Charge-off reporting accuracy, dates, balance, sold/transferred status, and obsolescence risk.",
+        "fcra_sections": ["FCRA 611 reinvestigation", "FCRA 623 furnisher duties after notice", "FCRA 605 obsolescence review"],
+        "evidence_needed": ["charge-off ledger", "payment history", "DOFD support", "sale or transfer record", "balance breakdown"],
+        "dispute_theory": "A charge-off should not report internally inconsistent status, balance, ownership, or delinquency dates.",
+    },
+    "missing_dofd_review": {
+        "metro2_fields": ["Date of First Delinquency", "FCRA Compliance/Date of First Delinquency", "Estimated Removal Date"],
+        "fcra_focus": "Missing or unsupported delinquency date for negative reporting.",
+        "fcra_sections": ["FCRA 611 reinvestigation", "FCRA 605 obsolescence review", "FCRA 623 furnisher duties after notice"],
+        "evidence_needed": ["first delinquency date", "payment history", "charge-off/collection timeline", "bureau reporting history"],
+        "dispute_theory": "Negative reporting needs a supportable delinquency timeline so the account is not reported longer than allowed.",
+    },
+    "closed_sold_balance_review": {
+        "metro2_fields": ["Account Status", "Current Balance", "Amount Past Due", "Date Closed", "Special Comment", "Purchased/Sold/Transferred Indicator"],
+        "fcra_focus": "Closed, sold, transferred, or assigned account still reporting a balance.",
+        "fcra_sections": ["FCRA 611 reinvestigation", "FCRA 623 furnisher duties after notice"],
+        "evidence_needed": ["sale/transfer record", "current owner", "balance ledger", "zero-balance update support"],
+        "dispute_theory": "If the account was sold or transferred, the reporting balance/status must match the furnisher's actual ownership and records.",
+    },
+    "cross_bureau_balance_mismatch": {
+        "metro2_fields": ["Current Balance", "Amount Past Due", "High Credit/Original Amount", "Date Reported"],
+        "fcra_focus": "Same account reports different balances across bureaus.",
+        "fcra_sections": ["FCRA 611 reasonable reinvestigation", "FCRA 623 furnisher duties after bureau notice"],
+        "evidence_needed": ["current account ledger", "last statement", "bureau reporting snapshots", "furnisher update history"],
+        "dispute_theory": "The same account should have a supportable balance. Differences may be explainable by timing, but unsupported differences should be corrected.",
+    },
+    "cross_bureau_status_mismatch": {
+        "metro2_fields": ["Account Status", "Payment Rating", "Special Comment", "Compliance Condition Code"],
+        "fcra_focus": "Same account reports different status/payment condition across bureaus.",
+        "fcra_sections": ["FCRA 611 reasonable reinvestigation", "FCRA 623 furnisher duties after bureau notice"],
+        "evidence_needed": ["account status records", "payment history", "charge-off/collection status support", "bureau update records"],
+        "dispute_theory": "Status and payment condition should be consistent with the furnisher's records and not materially misleading.",
+    },
+    "cross_bureau_date_mismatch": {
+        "metro2_fields": ["Date Opened", "Date Closed", "Date Reported", "Date of First Delinquency", "Estimated Removal Date"],
+        "fcra_focus": "Same account reports different key dates across bureaus.",
+        "fcra_sections": ["FCRA 611 reasonable reinvestigation", "FCRA 605 obsolescence review", "FCRA 623 furnisher duties after bureau notice"],
+        "evidence_needed": ["opening records", "closing records", "DOFD support", "payment history", "bureau report snapshots"],
+        "dispute_theory": "Key dates drive legal reporting age and consumer harm. Unsupported date differences should be corrected or deleted.",
+    },
+    "low_confidence_admin_review": {
+        "metro2_fields": ["Raw tradeline block", "All extracted fields"],
+        "fcra_focus": "Manual validation before dispute strategy.",
+        "fcra_sections": ["Admin review required before FCRA dispute theory is selected"],
+        "evidence_needed": ["raw report excerpt", "account-level PDF pages", "manual field validation"],
+        "dispute_theory": "Do not send a dispute until the extracted fields are confirmed against the raw report.",
+    },
+}
+
+
+def _expert_rule_for_issue(issue: ReviewIssue) -> dict:
+    return METRO2_FCRA_RULES.get(issue.issue_type, {
+        "metro2_fields": ["Account Status", "Current Balance", "Date Reported", "Remarks"],
+        "fcra_focus": "Accuracy, completeness, and verifiability review.",
+        "fcra_sections": ["FCRA 611 reinvestigation", "FCRA 623 furnisher duties after notice"],
+        "evidence_needed": ["raw report excerpt", "furnisher records", "bureau investigation response"],
+        "dispute_theory": "If the reporting cannot be verified as accurate and complete, it should be corrected, updated, or deleted.",
+    })
+
+
+def build_metro2_fcra_review(issues: List[ReviewIssue]) -> List[dict]:
+    review = []
+    for issue in issues:
+        rule = _expert_rule_for_issue(issue)
+        review.append({
+            "issue_id": issue.id,
+            "issue_type": issue.issue_type,
+            "customer_label": issue.customer_label,
+            "severity": issue.severity,
+            "confidence": issue.confidence,
+            "metro2_fields_to_review": rule["metro2_fields"],
+            "fcra_focus": rule["fcra_focus"],
+            "fcra_sections": rule["fcra_sections"],
+            "evidence_needed": rule["evidence_needed"],
+            "dispute_theory": rule["dispute_theory"],
+            "responsible_party": _responsible_party_for_issue(issue),
+            "recommended_next_action": _next_action_for_issue(issue),
+            "customer_approval_required": True,
+            "attorney_review_signal": issue.severity == "high" or issue.issue_type.startswith("cross_bureau"),
+        })
+    return review
+
+
 def result_to_dict(result: ParseResult) -> dict:
     return {
         "engine": result.engine,
@@ -1134,6 +1227,7 @@ def result_to_dict(result: ParseResult) -> dict:
         "letter_workflow": build_letter_workflow(),
         "recommended_letter_queue": build_recommended_letter_queue(result.issues),
         "fcra_review": build_fcra_review(result.issues),
+        "metro2_fcra_review": build_metro2_fcra_review(result.issues),
     }
 
 
@@ -1291,6 +1385,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     bureau_comparison = wb.create_sheet("3 Bureau Comparison")
     errors = wb.create_sheet("Detected Errors")
     items = wb.create_sheet("Review Items")
+    metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
     letters = wb.create_sheet("Draft Letters")
     fcra = wb.create_sheet("FCRA Review")
 
@@ -1347,6 +1442,40 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
                 "Yes" if item.get("needs_admin_review") else "No",
             ]
             for item in data.get("tradelines", [])
+        ],
+    ])
+
+    _write_workbook_sheet(metro2_fcra, [
+        [
+            "Issue ID",
+            "Issue Type",
+            "Customer Label",
+            "Metro 2 Fields To Review",
+            "FCRA Focus",
+            "FCRA Sections / Duties",
+            "Evidence Needed",
+            "Dispute Theory",
+            "Responsible Party",
+            "Recommended Next Action",
+            "Attorney Review Signal",
+            "Customer Approval Required",
+        ],
+        *[
+            [
+                row.get("issue_id", ""),
+                row.get("issue_type", ""),
+                row.get("customer_label", ""),
+                row.get("metro2_fields_to_review", []),
+                row.get("fcra_focus", ""),
+                row.get("fcra_sections", []),
+                row.get("evidence_needed", []),
+                row.get("dispute_theory", ""),
+                row.get("responsible_party", ""),
+                row.get("recommended_next_action", ""),
+                "Yes" if row.get("attorney_review_signal") else "No",
+                "Yes" if row.get("customer_approval_required") else "No",
+            ]
+            for row in data.get("metro2_fcra_review", [])
         ],
     ])
 
