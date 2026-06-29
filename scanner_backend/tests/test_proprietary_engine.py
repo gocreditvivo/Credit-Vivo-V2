@@ -71,6 +71,12 @@ def test_parse_sample_report(tmp_path):
     assert "Collection review" in labels or "Charge-off review" in labels
     assert data["letter_workflow"]["send_letters_automatically"] is False
     assert "FCRA" in data["letter_workflow"]["fcra_notice_of_dispute"]
+    assert "formal notice of dispute" in data["letter_workflow"]["fcra_notice_of_dispute"]
+    assert "written results" in data["letter_workflow"]["fcra_notice_of_dispute"]
+    assert data["letter_workflow"]["fcra_notice_rules"]["consumer_notice_contents"]
+    assert data["letter_workflow"]["fcra_notice_rules"]["bureau_dispute_rules"]
+    assert data["letter_workflow"]["fcra_notice_rules"]["furnisher_dispute_rules"]
+    assert data["letter_workflow"]["fcra_notice_rules"]["credit_vivo_controls"]
     assert data["recommended_letter_queue"]
     assert data["recommended_letter_queue"][0]["tracking_status"] == "draft_not_sent"
     assert data["recommended_letter_queue"][0]["customer_approval_required"] is True
@@ -107,6 +113,7 @@ def test_parse_sample_report(tmp_path):
         "Detected Errors",
         "Review Items",
         "Metro 2 + FCRA Review",
+        "FCRA Notice Rules",
         "Draft Letters",
         "FCRA Review",
     ]
@@ -126,6 +133,13 @@ def test_parse_sample_report(tmp_path):
     expert_headers = [expert.cell(row=1, column=column).value for column in range(1, expert.max_column + 1)]
     assert "Metro 2 Fields To Review" in expert_headers
     assert "FCRA Sections / Duties" in expert_headers
+    notice_rules = workbook["FCRA Notice Rules"]
+    notice_rule_text = " ".join(
+        str(notice_rules.cell(row=row, column=2).value or "")
+        for row in range(2, notice_rules.max_row + 1)
+    )
+    assert "customer approval required" in notice_rule_text
+    assert "written reinvestigation results" in notice_rule_text
     draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
     assert "DRAFT" in draft_letters
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters

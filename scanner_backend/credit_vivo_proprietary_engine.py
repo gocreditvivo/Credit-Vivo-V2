@@ -877,11 +877,46 @@ def parse_reports(report_texts: Dict[str, dict]) -> ParseResult:
 
 
 FCRA_NOTICE_OF_DISPUTE = (
-    "This account appears inaccurate, incomplete, or unverifiable. Please investigate "
-    "under the FCRA and correct, update, or delete any information that cannot be "
-    "verified. Please mark the account as disputed while the investigation is pending "
-    "and provide the investigation results in writing."
+    "This is my formal notice of dispute. I dispute the accuracy, completeness, "
+    "and/or verifiability of the item identified in this letter. Please conduct a "
+    "reasonable investigation under the Fair Credit Reporting Act (FCRA), review all "
+    "information I provide with this dispute, forward the dispute and all relevant "
+    "information to the furnisher when this is a bureau dispute, and correct, update, "
+    "or delete any information that cannot be verified as accurate and complete. "
+    "Please mark the item as disputed while the investigation is pending and provide "
+    "the written results of the investigation, including any corrected report or "
+    "explanation of the verification method used."
 )
+
+FCRA_NOTICE_RULES = {
+    "consumer_notice_contents": [
+        "identify the consumer",
+        "identify the account or item being disputed",
+        "state the specific information disputed",
+        "explain the basis for the dispute",
+        "include supporting documents or evidence when available",
+        "request correction, update, deletion, or verification results",
+    ],
+    "bureau_dispute_rules": [
+        "consumer reporting agency must conduct a reasonable reinvestigation when accuracy or completeness is disputed",
+        "bureau should forward notice of the dispute and relevant information to the furnisher",
+        "bureau should provide written reinvestigation results after completion",
+        "bureau dispute path is preferred when the next step needs furnisher duties triggered through bureau notice",
+    ],
+    "furnisher_dispute_rules": [
+        "direct furnisher dispute should be sent to the furnisher address shown on the report or other proper direct-dispute address",
+        "direct dispute should include enough identifying information, the specific disputed information, the basis for dispute, and supporting evidence",
+        "furnisher should conduct a reasonable investigation and review relevant information provided with a proper direct dispute",
+        "furnisher should report corrections or stop reporting information that cannot be verified as accurate and complete",
+    ],
+    "credit_vivo_controls": [
+        "do not send automatically",
+        "customer approval required before mail, bureau dispute, furnisher dispute, CFPB complaint, state complaint, or attorney escalation",
+        "store date sent, recipient, delivery method, tracking number, response due date, response received, and next action",
+        "attach evidence packet hash or file reference before sending",
+        "record whether the item was marked disputed and whether written results were received",
+    ],
+}
 
 
 def _issue_evidence_strength(issue: ReviewIssue) -> str:
@@ -976,6 +1011,7 @@ def build_letter_workflow() -> dict:
         "send_letters_automatically": False,
         "customer_authorization_required": True,
         "fcra_notice_of_dispute": FCRA_NOTICE_OF_DISPUTE,
+        "fcra_notice_rules": FCRA_NOTICE_RULES,
         "bureau_dispute_procedure": {
             "recipient_type": "credit_bureau",
             "delivery_preference": "certified_mail_for_important_disputes",
@@ -990,10 +1026,12 @@ def build_letter_workflow() -> dict:
             "packet_checklist": [
                 "customer-approved dispute letter",
                 "FCRA notice of dispute",
+                "specific disputed item and reason",
                 "targeted proof only",
                 "ID and proof of address when needed",
                 "redacted unrelated account data",
                 "highlighted disputed item",
+                "request written investigation results",
             ],
         },
         "furnisher_direct_dispute_procedure": {
@@ -1003,6 +1041,8 @@ def build_letter_workflow() -> dict:
                 "consumer-specific issue identified",
                 "customer authorization verified",
                 "evidence packet reviewed by admin",
+                "specific furnisher item and dispute reason stated",
+                "proper furnisher/direct-dispute address confirmed when available",
             ],
             "requested_verification": [
                 "basis for reporting",
@@ -1012,6 +1052,7 @@ def build_letter_workflow() -> dict:
                 "payment history",
                 "date of first delinquency support",
                 "proof reporting is complete and accurate",
+                "written investigation result or correction/deletion notice",
             ],
         },
         "escalation_procedure": {
@@ -1386,6 +1427,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     errors = wb.create_sheet("Detected Errors")
     items = wb.create_sheet("Review Items")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
+    fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
     letters = wb.create_sheet("Draft Letters")
     fcra = wb.create_sheet("FCRA Review")
 
@@ -1478,6 +1520,13 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
             for row in data.get("metro2_fcra_review", [])
         ],
     ])
+
+    notice_rows = [["Rule Area", "Requirement / Control"]]
+    for area, controls in data.get("letter_workflow", {}).get("fcra_notice_rules", {}).items():
+        label = area.replace("_", " ").title()
+        for control in controls:
+            notice_rows.append([label, control])
+    _write_workbook_sheet(fcra_notice_rules, notice_rows)
 
     _write_workbook_sheet(letters, [
         ["Letter ID", "Issue ID", "Subject", "Letter Type", "Round", "Recipient Type", "Delivery Method", "FCRA Notice Included", "Customer Approval Required", "Tracking Status", "Recommended Next Action", "Draft Letter Body"],
