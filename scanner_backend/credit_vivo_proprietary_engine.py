@@ -1958,6 +1958,131 @@ FCRA_COMPLIANCE_AREAS = {
 }
 
 
+EOSCAR_PUBLIC_FACTS = [
+    {
+        "title": "What e-OSCAR is",
+        "detail": "e-OSCAR is used by consumer reporting agencies and data furnishers to exchange and respond to credit-history disputes. Consumers submit disputes to bureaus and/or furnishers, not directly inside e-OSCAR.",
+        "source": "Credit Vivo local e-OSCAR learning guide; public e-OSCAR getting-started concepts",
+    },
+    {
+        "title": "ACDV path",
+        "detail": "When a bureau receives a consumer dispute, it may send an Automated Credit Dispute Verification (ACDV) to the furnisher. The furnisher can verify, update, or correct the information.",
+        "source": "Credit Vivo local e-OSCAR learning guide",
+    },
+    {
+        "title": "AUD path",
+        "detail": "A furnisher can initiate an Automated Universal Dataform (AUD) to request an out-of-cycle correction. AUD is not a consumer direct-submission path.",
+        "source": "Credit Vivo local e-OSCAR learning guide",
+    },
+    {
+        "title": "Best packaging principle",
+        "detail": "A strong dispute package identifies each account, exact field, reported value, consumer position, support documents, and requested correction or deletion.",
+        "source": "Credit Vivo local e-OSCAR learning guide; FTC/CFPB consumer dispute guidance",
+    },
+]
+
+
+EOSCAR_ISSUE_PACKAGING = {
+    "cross_bureau_balance_mismatch": {
+        "category": "field-specific accuracy dispute",
+        "package_hint": "List each balance reported by each bureau and attach the 3-bureau comparison.",
+        "evidence_hint": "3-bureau comparison, statements, payoff/settlement proof, itemization, or account ledger.",
+    },
+    "cross_bureau_status_mismatch": {
+        "category": "account status/payment history accuracy dispute",
+        "package_hint": "Separate current status, pay status, charge-off, collection, paid/settled, and closed/open wording.",
+        "evidence_hint": "Settlement letter, payoff confirmation, account statements, bureau report pages, response letters.",
+    },
+    "cross_bureau_date_mismatch": {
+        "category": "date field accuracy dispute",
+        "package_hint": "List each date reported by bureau and ask for source-record verification of the correct date.",
+        "evidence_hint": "Prior reports, account statements, payment history, charge-off notice, collection notice.",
+    },
+    "missing_dofd_review": {
+        "category": "date of first delinquency completeness dispute",
+        "package_hint": "Ask for verification of the DOFD and the basis for the reporting period.",
+        "evidence_hint": "Payment history, charge-off statement, collection notice, old account statement showing delinquency timeline.",
+    },
+    "collection_review": {
+        "category": "collection account completeness dispute",
+        "package_hint": "Identify the collection account, original creditor, balance, ownership/assignment question, and requested verification.",
+        "evidence_hint": "Credit report page, collector letter, original creditor statement, assignment/sale letter if available.",
+    },
+    "chargeoff_review": {
+        "category": "charge-off accuracy dispute",
+        "package_hint": "Separate charge-off status, current balance, past due, charge-off amount, DOFD, and sold/transferred status.",
+        "evidence_hint": "Charge-off statement, account ledger, payment history, sale/transfer notice, settlement or payoff proof.",
+    },
+    "closed_sold_balance_review": {
+        "category": "sold/transferred balance accuracy dispute",
+        "package_hint": "Ask whether the furnisher still owns the debt and why a balance remains after sold/transferred/closed status.",
+        "evidence_hint": "Sale/transfer notice, account statement, collector notice, original creditor response.",
+    },
+    "low_confidence_admin_review": {
+        "category": "manual packaging review",
+        "package_hint": "Do not send until the account identity and specific field dispute are confirmed from the raw report.",
+        "evidence_hint": "Raw report pages, manual parser review notes, customer statement, supporting documents.",
+    },
+}
+
+
+def _eoscar_packaging_for_issue(issue_type: str) -> dict:
+    return EOSCAR_ISSUE_PACKAGING.get(issue_type or "", {
+        "category": "specific factual dispute",
+        "package_hint": "Explain the exact inaccurate or incomplete reporting field. Avoid broad wording unless identity/liability is truly disputed.",
+        "evidence_hint": "Relevant report page plus account-level documents supporting the specific correction requested.",
+    })
+
+
+def build_eoscar_packaging_review(issues: List[dict], tradelines: List[dict]) -> List[dict]:
+    tradelines_by_id = {item.get("id"): item for item in tradelines}
+    rows = []
+    for issue in issues:
+        related = [
+            tradelines_by_id[item_id]
+            for item_id in issue.get("related_tradeline_ids", [])
+            if item_id in tradelines_by_id
+        ]
+        packaging = _eoscar_packaging_for_issue(issue.get("issue_type", ""))
+        account_names = sorted({item.get("account_name", "") for item in related if item.get("account_name")})
+        bureaus = sorted({item.get("bureau", "") for item in related if item.get("bureau")})
+        fields = _expert_rule_for_issue(ReviewIssue(
+            id=issue.get("id", ""),
+            issue_type=issue.get("issue_type", ""),
+            severity=issue.get("severity", ""),
+            customer_label=issue.get("customer_label", ""),
+            customer_explanation=issue.get("customer_explanation", ""),
+            admin_explanation=issue.get("admin_explanation", ""),
+            suggested_round=issue.get("suggested_round", ""),
+        )).get("metro2_fields", [])
+        rows.append({
+            "issue_id": issue.get("id", ""),
+            "issue_type": issue.get("issue_type", ""),
+            "account_names": account_names,
+            "bureaus": bureaus,
+            "eoscar_category": packaging["category"],
+            "acdv_packaging_steps": [
+                "Create one bureau-specific package for each bureau reporting the error so the issue can survive CRA intake and ACDV routing.",
+                "Use one account group per section.",
+                "Include exact account name and masked account number.",
+                "Name the exact disputed field and reported value.",
+                "State the consumer position and factual basis.",
+                "Attach exhibits and request correct, update, verify, delete, or block as appropriate.",
+            ],
+            "field_focus": fields,
+            "package_hint": packaging["package_hint"],
+            "evidence_hint": packaging["evidence_hint"],
+            "avoid": [
+                "Do not send generic 'this is inaccurate' wording by itself.",
+                "Do not claim direct e-OSCAR access.",
+                "Do not send without customer approval and proof review.",
+                "Do not misrepresent facts or create false disputes.",
+            ],
+            "tracking_status": "draft_packaging_review_not_sent",
+        })
+    return rows
+
+
 FIELD_COMPLIANCE_RULES = {
     "Account/Furnisher Name": {
         "source_field": "account_name",
@@ -2270,6 +2395,7 @@ def result_to_dict(result: ParseResult) -> dict:
     issues = [asdict(i) for i in result.issues]
     metro2_requirement_review = build_metro2_requirement_review(tradelines)
     field_compliance_audit = build_field_compliance_audit(tradelines)
+    eoscar_packaging_review = build_eoscar_packaging_review(issues, tradelines)
     return {
         "engine": result.engine,
         "version": result.version,
@@ -2287,6 +2413,8 @@ def result_to_dict(result: ParseResult) -> dict:
         "metro2_requirement_review": metro2_requirement_review,
         "fcra_compliance_review": build_fcra_compliance_review(tradelines, issues, metro2_requirement_review),
         "field_compliance_audit": field_compliance_audit,
+        "eoscar_public_facts": EOSCAR_PUBLIC_FACTS,
+        "eoscar_packaging_review": eoscar_packaging_review,
     }
 
 
@@ -2903,6 +3031,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     metro2_requirements = wb.create_sheet("Metro 2 Requirements")
     fcra_compliance = wb.create_sheet("FCRA Compliance Review")
     field_compliance = wb.create_sheet("Field Compliance Audit")
+    eoscar_packaging = wb.create_sheet("e-OSCAR Packaging Review")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
     dispute_methods = wb.create_sheet("Dispute Methods")
     dispute_sop = wb.create_sheet("Dispute SOP")
@@ -3174,6 +3303,41 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
             ]
             for row in data.get("field_compliance_audit", [])
         ],
+    ])
+
+    _write_workbook_sheet(eoscar_packaging, [
+        [
+            "Issue ID",
+            "Issue Type",
+            "Account Names",
+            "Bureaus",
+            "e-OSCAR / ACDV Category",
+            "ACDV Packaging Steps",
+            "Field Focus",
+            "Package Hint",
+            "Evidence Hint",
+            "Avoid",
+            "Tracking Status",
+        ],
+        *[
+            [
+                row.get("issue_id", ""),
+                row.get("issue_type", ""),
+                row.get("account_names", []),
+                row.get("bureaus", []),
+                row.get("eoscar_category", ""),
+                row.get("acdv_packaging_steps", []),
+                row.get("field_focus", []),
+                row.get("package_hint", ""),
+                row.get("evidence_hint", ""),
+                row.get("avoid", []),
+                row.get("tracking_status", ""),
+            ]
+            for row in data.get("eoscar_packaging_review", [])
+        ],
+        ["Public Fact", "What e-OSCAR is", "", "", "", EOSCAR_PUBLIC_FACTS[0]["detail"], "", "", "", EOSCAR_PUBLIC_FACTS[0]["source"], ""],
+        ["Public Fact", "ACDV path", "", "", "", EOSCAR_PUBLIC_FACTS[1]["detail"], "", "", "", EOSCAR_PUBLIC_FACTS[1]["source"], ""],
+        ["Public Fact", "AUD path", "", "", "", EOSCAR_PUBLIC_FACTS[2]["detail"], "", "", "", EOSCAR_PUBLIC_FACTS[2]["source"], ""],
     ])
 
     notice_rows = [["Rule Area", "Requirement / Control"]]

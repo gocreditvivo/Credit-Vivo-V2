@@ -222,6 +222,20 @@ def test_parse_sample_report(tmp_path):
     assert "Original Creditor" in field_audit_text
     assert "FCRA 623(a)(5)" in field_audit_text
     assert "Reg V direct dispute" in field_audit_text or "Regulation V" in field_audit_text
+    assert data["eoscar_packaging_review"]
+    eoscar_text = " ".join(
+        row["eoscar_category"] + " " +
+        " ".join(row["acdv_packaging_steps"]) + " " +
+        " ".join(row["field_focus"]) + " " +
+        row["package_hint"] + " " +
+        row["evidence_hint"]
+        for row in data["eoscar_packaging_review"]
+    )
+    assert "ACDV" in eoscar_text
+    assert "Date of First Delinquency" in eoscar_text
+    assert "specific field" in eoscar_text or "field-specific" in eoscar_text
+    assert data["eoscar_public_facts"]
+    assert any("AUD" in fact["title"] or "AUD" in fact["detail"] for fact in data["eoscar_public_facts"])
     cross_labels = {x["customer_label"] for x in data["issues"] if x["issue_type"].startswith("cross_bureau")}
     assert "Balance differs across bureaus" in cross_labels
     assert "Status differs across bureaus" in cross_labels
@@ -246,6 +260,7 @@ def test_parse_sample_report(tmp_path):
         "Metro 2 Requirements",
         "FCRA Compliance Review",
         "Field Compliance Audit",
+        "e-OSCAR Packaging Review",
         "FCRA Notice Rules",
         "Dispute Methods",
         "Dispute SOP",
@@ -405,6 +420,19 @@ def test_parse_sample_report(tmp_path):
     assert "Date of First Delinquency" in field_workbook_text
     assert "Original Creditor" in field_workbook_text
     assert "FCRA 623(a)(5)" in field_workbook_text
+    eoscar = workbook["e-OSCAR Packaging Review"]
+    eoscar_headers = [eoscar.cell(row=1, column=column).value for column in range(1, eoscar.max_column + 1)]
+    assert "e-OSCAR / ACDV Category" in eoscar_headers
+    assert "ACDV Packaging Steps" in eoscar_headers
+    assert "Evidence Hint" in eoscar_headers
+    eoscar_workbook_text = " ".join(
+        str(eoscar.cell(row=row, column=column).value or "")
+        for row in range(2, eoscar.max_row + 1)
+        for column in range(1, eoscar.max_column + 1)
+    )
+    assert "ACDV" in eoscar_workbook_text
+    assert "AUD" in eoscar_workbook_text
+    assert "Do not claim direct e-OSCAR access" in eoscar_workbook_text
     notice_rules = workbook["FCRA Notice Rules"]
     notice_rule_text = " ".join(
         str(notice_rules.cell(row=row, column=2).value or "")
