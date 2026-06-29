@@ -1,5 +1,6 @@
 param(
-  [string]$Message = "Update Credit Vivo site"
+  [string]$Message = "Update Credit Vivo site",
+  [switch]$Push
 )
 
 $ErrorActionPreference = "Stop"
@@ -39,7 +40,12 @@ Write-Host "Committing changes..."
 git add -A
 git commit -m $Message
 
-Write-Host "Pushing to GitHub. Vercel should auto-deploy from GitHub..."
-git push origin main
-
-Write-Host "Done. Verify https://www.creditvivo.com after Vercel finishes."
+if ($Push) {
+  Write-Host "Pushing to GitHub. Vercel should auto-deploy from GitHub..."
+  git push origin main
+  Write-Host "Done. Verify https://www.creditvivo.com after Vercel finishes."
+} else {
+  Write-Host "Committed locally only. Review the commit, then run:"
+  Write-Host "  git push origin main"
+  Write-Host "Or rerun this script with -Push when you intentionally want Vercel deployment."
+}
