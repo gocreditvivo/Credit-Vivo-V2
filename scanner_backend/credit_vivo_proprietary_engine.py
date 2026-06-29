@@ -1195,6 +1195,21 @@ FCRA_NOTICE_OF_DISPUTE = (
 )
 
 FCRA_NOTICE_RULES = {
+    "cfpb_official_template_sources": [
+        "CFPB credit reporting company dispute letter template",
+        "CFPB furnisher dispute letter template",
+        "CFPB complaint process overview",
+    ],
+    "cfpb_letter_fields": [
+        "consumer full name and mailing address",
+        "date of letter",
+        "recipient name and mailing address",
+        "account name and account number",
+        "specific information being disputed",
+        "plain-language explanation of why the information is wrong",
+        "requested correction or investigation result",
+        "copies of supporting documents",
+    ],
     "consumer_notice_contents": [
         "identify the consumer",
         "identify the account or item being disputed",
@@ -1208,12 +1223,14 @@ FCRA_NOTICE_RULES = {
         "bureau should forward notice of the dispute and relevant information to the furnisher",
         "bureau should provide written reinvestigation results after completion",
         "bureau dispute path is preferred when the next step needs furnisher duties triggered through bureau notice",
+        "CFPB template method: clearly identify the disputed item, explain the problem, request correction, and attach copies of proof",
     ],
     "furnisher_dispute_rules": [
         "direct furnisher dispute should be sent to the furnisher address shown on the report or other proper direct-dispute address",
         "direct dispute should include enough identifying information, the specific disputed information, the basis for dispute, and supporting evidence",
         "furnisher should conduct a reasonable investigation and review relevant information provided with a proper direct dispute",
         "furnisher should report corrections or stop reporting information that cannot be verified as accurate and complete",
+        "CFPB template method: dispute directly with the company that gave the information to the bureau when the furnisher's records appear wrong",
     ],
     "credit_vivo_controls": [
         "do not send automatically",
@@ -1318,9 +1335,17 @@ def build_letter_workflow() -> dict:
         "customer_authorization_required": True,
         "fcra_notice_of_dispute": FCRA_NOTICE_OF_DISPUTE,
         "fcra_notice_rules": FCRA_NOTICE_RULES,
+        "official_cfpb_files_to_reference": [
+            "CFPB_credit_reporting_company_dispute_letter_template.docx",
+            "CFPB_credit_reporting_company_dispute_instructions.pdf",
+            "CFPB_furnisher_dispute_letter_template.docx",
+            "CFPB_furnisher_dispute_instructions.pdf",
+            "CFPB_complaint_process_one_page.pdf",
+        ],
         "bureau_dispute_procedure": {
             "recipient_type": "credit_bureau",
             "delivery_preference": "certified_mail_for_important_disputes",
+            "cfpb_template_alignment": "Use the CFPB credit reporting company dispute template structure: identify the item, explain the dispute, request correction, and attach supporting copies.",
             "round_1_uses": [
                 "wrong balance or status",
                 "unrecognized account",
@@ -1343,6 +1368,7 @@ def build_letter_workflow() -> dict:
         "furnisher_direct_dispute_procedure": {
             "recipient_type": "furnisher_or_collector",
             "delivery_preference": "certified_mail",
+            "cfpb_template_alignment": "Use the CFPB furnisher dispute template structure when the source company, collector, or servicer appears to be reporting wrong information.",
             "prerequisites": [
                 "consumer-specific issue identified",
                 "customer authorization verified",
@@ -1365,6 +1391,7 @@ def build_letter_workflow() -> dict:
             "cfpb_complaint": {
                 "trigger": "no response, verified-as-accurate with weak support, or repeated inaccurate reporting after dispute history is complete",
                 "packet": "original dispute, proof of delivery, bureau/furnisher responses, current report excerpt, damages or denial evidence if available",
+                "cfpb_method": "Use CFPB complaint escalation only after the normal dispute record is clear: who was contacted, when, what was disputed, how the company responded, and what remains wrong.",
             },
             "state_attorney_general": {
                 "trigger": "pattern of non-response, abusive collection conduct, or unresolved state-law concern",

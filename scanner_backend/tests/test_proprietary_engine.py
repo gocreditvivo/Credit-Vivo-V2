@@ -440,6 +440,9 @@ def test_parse_sample_report(tmp_path):
     )
     assert "customer approval required" in notice_rule_text
     assert "written reinvestigation results" in notice_rule_text
+    assert "CFPB credit reporting company dispute letter template" in notice_rule_text
+    assert "CFPB furnisher dispute letter template" in notice_rule_text
+    assert "specific information being disputed" in notice_rule_text
     dispute_methods = workbook["Dispute Methods"]
     method_text = " ".join(
         str(dispute_methods.cell(row=row, column=1).value or "") + " " +

@@ -1,0 +1,37 @@
+id,bureau,source_filename,account_name,account_number_masked,account_type,portfolio_type,responsibility,creditor_classification,original_creditor,collector_or_debt_buyer,status,pay_status,balance,past_due,high_credit_or_original_amount,credit_limit,date_opened,date_closed,date_reported,date_last_activity,date_last_payment,date_of_first_delinquency,estimated_removal_date,remarks,payment_history_summary,raw_block,page_start,confidence,confidence_score,needs_admin_review
+cvp_a24cdae2e949a75f,Experian,experian.pdf,MIDLAND CREDIT MANAGEMENT,*7890,Collection,,,,CAPITAL ONE BANK,,Collection,,"$1,234",,,,01/10/2021,,04/01/2026,,,,,Account placed for collection,,"MIDLAND CREDIT MANAGEMENT
+Account Number: 1234567890
+Account Type: Collection
+Original Creditor: CAPITAL ONE BANK
+Balance: $1,234
+Status: Collection
+Date Opened: 01/10/2021
+Date Reported: 04/01/2026
+Remarks: Account placed for collection",1,high,0.82,False
+cvp_c50d7ae16f8c41e1,Experian,experian.pdf,CAPITAL ONE,*1111,Credit Card,,,,,,Charge-off transferred or sold,,$0,,,,05/01/2019,,,,,10/01/2020,,,,"CAPITAL ONE
+Account Number: 999988881111
+Account Type: Credit Card
+Balance: $0
+Status: Charge-off transferred or sold
+Date Opened: 05/01/2019
+Date of First Delinquency: 10/01/2020",2,high,0.84,False
+cvp_97668de0fd7e8668,Equifax,equifax.pdf,MIDLAND CREDIT MANAGEMENT,*7890,Collection,,,,CAPITAL ONE BANK,,Collection Account,,"$1,999",,,,01/10/2021,,05/01/2026,,,02/01/2021,,Account placed for collection,,"MIDLAND CREDIT MANAGEMENT
+Account Number: 1234567890
+Account Type: Collection
+Original Creditor: CAPITAL ONE BANK
+Balance: $1,999
+Status: Collection Account
+Date Opened: 01/10/2021
+Date Reported: 05/01/2026
+Date of First Delinquency: 02/01/2021
+Remarks: Account placed for collection",1,high,0.9999999999999999,False
+cvp_3b36fc8bc5316165,TransUnion,transunion.pdf,MIDLAND CREDIT MANAGEMENT,*7890,Collection,,,,CAPITAL ONE BANK,,Paid collection,,"$1,234",,,,01/10/2021,,04/01/2026,,,01/01/2021,,Account placed for collection,,"MIDLAND CREDIT MANAGEMENT
+Account Number: 1234567890
+Account Type: Collection
+Original Creditor: CAPITAL ONE BANK
+Balance: $1,234
+Status: Paid collection
+Date Opened: 01/10/2021
+Date Reported: 04/01/2026
+Date of First Delinquency: 01/01/2021
+Remarks: Account placed for collection",1,high,0.9999999999999999,False
