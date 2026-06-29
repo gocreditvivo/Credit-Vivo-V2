@@ -5,8 +5,10 @@ from enum import Enum
 from typing import Dict, List
 
 try:
+    from .bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from .fcra_rights_reference import build_fcra_rights_reference
 except ImportError:
+    from bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from fcra_rights_reference import build_fcra_rights_reference
 
 
@@ -115,6 +117,7 @@ def build_operator_brief(events: List[OperatorEvent]) -> Dict[str, object]:
     actions = [recommend_operator_action(event) for event in events]
     actions.sort(key=lambda item: item["priority_score"], reverse=True)
     fcra_rights = build_fcra_rights_reference()
+    bureau_reference = build_bureau_debt_collection_reference()
 
     return {
         "ok": True,
@@ -127,6 +130,11 @@ def build_operator_brief(events: List[OperatorEvent]) -> Dict[str, object]:
             "plain_english_note": fcra_rights["source_notes"]["plain_english_note"],
             "maryland_rights_summary": fcra_rights["maryland_consumer_rights"]["plain_english_summary"],
             "ai_rules": fcra_rights["ai_rules"],
+        },
+        "bureau_debt_collection_reference": {
+            "experian_outcomes": [item["outcome"] for item in bureau_reference["experian_dispute_outcomes"]],
+            "fdcpa_rule_count": len(bureau_reference["fdcpa_collection_rules"]),
+            "ai_rules": bureau_reference["ai_rules"],
         },
         "auto_safe_count": sum(1 for action in actions if action["approval_level"] == ApprovalLevel.AUTO_SAFE.value),
         "approval_required_count": sum(1 for action in actions if action["approval_required"]),

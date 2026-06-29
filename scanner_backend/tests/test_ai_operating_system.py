@@ -44,3 +44,14 @@ def test_ai_operating_system_includes_fcra_rights_reference():
     assert any("state rights" in rule for rule in reference["ai_rules"])
     assert reference["federal_consumer_rights_count"] >= 10
     assert "Maryland consumers" in reference["maryland_rights_summary"]
+
+
+def test_ai_operating_system_includes_bureau_and_fdcpa_reference():
+    brief = build_ai_operating_system_brief()
+    reference = brief["bureau_debt_collection_reference"]
+
+    assert reference["bureau_count"] == 3
+    assert "Remains" in reference["experian_outcomes"]
+    assert "Verified and updated" in reference["experian_outcomes"]
+    assert reference["fdcpa_rule_count"] >= 10
+    assert any("approval-gated" in rule for rule in reference["ai_rules"])

@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 try:
+    from .bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from .fcra_rights_reference import build_fcra_rights_reference
 except ImportError:
+    from bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from fcra_rights_reference import build_fcra_rights_reference
 
 
@@ -97,6 +99,7 @@ AI_ROLE_CAPABILITIES: List[AiRoleCapability] = [
             "flag possible mismatches",
             "rank possible errors",
             "create customer-friendly summaries",
+            "translate bureau dispute outcomes into next-step options",
         ],
         cannot_do_without_approval=[
             "send disputes",
@@ -117,6 +120,7 @@ AI_ROLE_CAPABILITIES: List[AiRoleCapability] = [
             "track dispute rounds",
             "recommend next escalation path",
             "prepare FCRA federal regulator and state-rights routing notes",
+            "prepare FDCPA debt-validation and collector-conduct review checklists",
         ],
         cannot_do_without_approval=[
             "send bureau letters",
@@ -209,6 +213,7 @@ def role_capability_to_dict(role: AiRoleCapability) -> Dict[str, object]:
 
 def build_ai_operating_system_brief() -> Dict[str, object]:
     fcra_rights = build_fcra_rights_reference()
+    bureau_reference = build_bureau_debt_collection_reference()
     return {
         "ok": True,
         "service": "credit-vivo-ai-operating-system",
@@ -232,6 +237,12 @@ def build_ai_operating_system_brief() -> Dict[str, object]:
                 for contact in item["contacts"]
             ],
             "state_notice_states": [item["state"] for item in fcra_rights["state_notice_links"]],
+        },
+        "bureau_debt_collection_reference": {
+            "bureau_count": len(bureau_reference["bureau_dispute_workflow"]),
+            "experian_outcomes": [item["outcome"] for item in bureau_reference["experian_dispute_outcomes"]],
+            "fdcpa_rule_count": len(bureau_reference["fdcpa_collection_rules"]),
+            "ai_rules": bureau_reference["ai_rules"],
         },
         "highest_priority_next_connections": [
             "real analytics events",

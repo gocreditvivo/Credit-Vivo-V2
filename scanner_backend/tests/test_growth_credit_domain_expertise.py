@@ -10,6 +10,7 @@ def test_credit_domain_expertise_includes_required_topics():
     assert "Metro 2" in topics
     assert "Credit report dispute process" in topics
     assert "FCRA federal and state rights routing" in topics
+    assert "FDCPA debt collection conduct" in topics
     assert "Soft pull vs hard pull" in topics
 
 
@@ -38,3 +39,12 @@ def test_credit_domain_expertise_includes_state_rights_reference():
     assert "Texas" in reference["state_notice_states"]
     assert reference["federal_consumer_rights_count"] >= 10
     assert "Maryland consumers" in reference["maryland_rights_summary"]
+
+
+def test_credit_domain_expertise_includes_bureau_and_fdcpa_reference():
+    brief = build_credit_domain_expertise_brief()
+    reference = brief["bureau_debt_collection_reference"]
+
+    assert "Deleted" in reference["experian_outcomes"]
+    assert "Remains" in reference["experian_outcomes"]
+    assert reference["fdcpa_rule_count"] >= 10

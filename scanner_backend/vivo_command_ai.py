@@ -5,11 +5,13 @@ from typing import Dict, List
 
 try:
     from .ai_operating_system import build_ai_operating_system_brief
+    from .bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from .fcra_rights_reference import build_fcra_rights_reference
     from .growth_ai import GrowthSnapshot, build_growth_brief
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
 except ImportError:
     from ai_operating_system import build_ai_operating_system_brief
+    from bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from fcra_rights_reference import build_fcra_rights_reference
     from growth_ai import GrowthSnapshot, build_growth_brief
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -90,6 +92,7 @@ def build_command_brief(
     operator = build_operator_brief(events)
     ai_system = build_ai_operating_system_brief()
     fcra_rights = build_fcra_rights_reference()
+    bureau_reference = build_bureau_debt_collection_reference()
 
     top_actions = []
     for action in growth["recommended_actions"][:3]:
@@ -153,6 +156,12 @@ def build_command_brief(
             "state_notice_count": len(fcra_rights["state_notice_links"]),
             "federal_contact_count": len(fcra_rights["federal_contacts"]),
             "ai_rules": fcra_rights["ai_rules"],
+        },
+        "bureau_debt_collection_reference": {
+            "bureau_count": len(bureau_reference["bureau_dispute_workflow"]),
+            "experian_outcomes": [item["outcome"] for item in bureau_reference["experian_dispute_outcomes"]],
+            "fdcpa_rule_count": len(bureau_reference["fdcpa_collection_rules"]),
+            "ai_rules": bureau_reference["ai_rules"],
         },
         "growth_brief": growth,
         "operator_brief": operator,

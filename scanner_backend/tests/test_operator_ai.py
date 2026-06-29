@@ -61,3 +61,5 @@ def test_operator_brief_includes_fcra_rights_reference():
     assert "state Attorney General" in brief["fcra_rights_reference"]["plain_english_note"]
     assert "Maryland consumers" in brief["fcra_rights_reference"]["maryland_rights_summary"]
     assert any("regulator contacts" in rule for rule in brief["fcra_rights_reference"]["ai_rules"])
+    assert "Remains" in brief["bureau_debt_collection_reference"]["experian_outcomes"]
+    assert brief["bureau_debt_collection_reference"]["fdcpa_rule_count"] >= 10

@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 try:
+    from .bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from .fcra_rights_reference import build_fcra_rights_reference
 except ImportError:
+    from bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from fcra_rights_reference import build_fcra_rights_reference
 
 
@@ -112,6 +114,17 @@ CREDIT_DOMAIN_TOPICS: List[CreditDomainTopic] = [
         caution="Do not tell customers to dispute accurate debt just to remove it.",
     ),
     CreditDomainTopic(
+        topic="FDCPA debt collection conduct",
+        plain_english_meaning="The FDCPA is a federal law that limits abusive, deceptive, or unfair third-party debt collection practices.",
+        why_growth_ai_needs_it="Many collection customers need help separating credit-report accuracy issues from collector-contact, validation, harassment, or legal-threat issues.",
+        growth_use=[
+            "create education around debt validation and collector conduct",
+            "route collection-account users to scanner and dispute tracking",
+            "flag when attorney/compliance review is needed",
+        ],
+        caution="Do not accuse a collector of violating the FDCPA in ads or customer output without qualified review.",
+    ),
+    CreditDomainTopic(
         topic="Charge-offs and late payments",
         plain_english_meaning="Charge-offs and late payments are negative account statuses that may affect credit and may remain if accurate.",
         why_growth_ai_needs_it="These are common reasons people seek help and need clear expectations.",
@@ -153,6 +166,7 @@ def topic_to_dict(topic: CreditDomainTopic) -> Dict[str, object]:
 
 def build_credit_domain_expertise_brief() -> Dict[str, object]:
     fcra_rights = build_fcra_rights_reference()
+    bureau_reference = build_bureau_debt_collection_reference()
     return {
         "ok": True,
         "service": "credit-vivo-growth-credit-domain-expertise",
@@ -164,6 +178,10 @@ def build_credit_domain_expertise_brief() -> Dict[str, object]:
             "maryland_rights_summary": fcra_rights["maryland_consumer_rights"]["plain_english_summary"],
             "state_notice_states": [item["state"] for item in fcra_rights["state_notice_links"]],
             "federal_contact_categories": [item["category"] for item in fcra_rights["federal_contacts"]],
+        },
+        "bureau_debt_collection_reference": {
+            "experian_outcomes": [item["outcome"] for item in bureau_reference["experian_dispute_outcomes"]],
+            "fdcpa_rule_count": len(bureau_reference["fdcpa_collection_rules"]),
         },
         "how_growth_ai_uses_this": [
             "turn technical credit terms into simple customer-facing language",

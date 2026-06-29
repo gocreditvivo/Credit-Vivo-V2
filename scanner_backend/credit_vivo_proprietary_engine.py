@@ -32,8 +32,10 @@ import csv
 from pathlib import Path
 
 try:
+    from .bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from .fcra_rights_reference import build_fcra_rights_reference
 except ImportError:
+    from bureau_debt_collection_reference import build_bureau_debt_collection_reference
     from fcra_rights_reference import build_fcra_rights_reference
 
 try:
@@ -2564,6 +2566,7 @@ def result_to_dict(result: ParseResult) -> dict:
         "fcra_compliance_review": build_fcra_compliance_review(tradelines, issues, metro2_requirement_review),
         "fcra_rights_reference": build_fcra_rights_reference(),
         "field_compliance_audit": field_compliance_audit,
+        "bureau_debt_collection_reference": build_bureau_debt_collection_reference(),
         "eoscar_public_facts": EOSCAR_PUBLIC_FACTS,
         "eoscar_packaging_review": eoscar_packaging_review,
     }
@@ -3183,6 +3186,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     metro2_guide_notes = wb.create_sheet("Metro 2 Guide Notes")
     fcra_compliance = wb.create_sheet("FCRA Compliance Review")
     fcra_rights = wb.create_sheet("FCRA Rights Regulators")
+    bureau_help = wb.create_sheet("Bureau Help + FDCPA")
     field_compliance = wb.create_sheet("Field Compliance Audit")
     eoscar_packaging = wb.create_sheet("e-OSCAR Packaging Review")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
@@ -3501,6 +3505,44 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     for rule in rights_reference.get("ai_rules", []):
         rights_rows.append(["AI Rule", "All AI engines", "FCRA rights routing rule", "", rule])
     _write_workbook_sheet(fcra_rights, rights_rows)
+
+    bureau_reference = data.get("bureau_debt_collection_reference", {})
+    source_notes = bureau_reference.get("source_notes", {})
+    bureau_rows = [
+        ["Section", "Bureau / Rule", "Meaning", "Scanner / Customer Next Step", "Source / Note"],
+        ["Source", "Equifax dispute help", source_notes.get("equifax_dispute_url", ""), source_notes.get("equifax_mail_dispute_url", ""), source_notes.get("compliance_note", "")],
+        ["Source", "Experian dispute/outcomes", source_notes.get("experian_dispute_url", ""), source_notes.get("experian_outcome_url", ""), ""],
+        ["Source", "TransUnion dispute help", source_notes.get("transunion_dispute_url", ""), "", ""],
+        ["Source", "CFPB dispute help", source_notes.get("cfpb_dispute_url", ""), "", ""],
+        ["Source", "FDCPA", source_notes.get("fdcpa_source", ""), "", ""],
+    ]
+    for item in bureau_reference.get("bureau_dispute_workflow", []):
+        bureau_rows.append([
+            "Bureau Workflow",
+            item.get("bureau", ""),
+            item.get("customer_help_rule", ""),
+            item.get("scanner_action", ""),
+            "Channels: " + "; ".join(item.get("channels", [])) + " | Proof: " + "; ".join(item.get("proof_examples", [])),
+        ])
+    for item in bureau_reference.get("experian_dispute_outcomes", []):
+        bureau_rows.append([
+            "Experian Outcome",
+            item.get("outcome", ""),
+            item.get("meaning", ""),
+            item.get("scanner_next_step", ""),
+            "Use to parse bureau response/results letters.",
+        ])
+    for item in bureau_reference.get("fdcpa_collection_rules", []):
+        bureau_rows.append([
+            "FDCPA Rule",
+            item.get("rule", ""),
+            item.get("plain_english", ""),
+            item.get("scanner_use", ""),
+            "Debt-collection conduct rule; approval-gated.",
+        ])
+    for rule in bureau_reference.get("ai_rules", []):
+        bureau_rows.append(["AI Rule", "All AI engines", rule, "", ""])
+    _write_workbook_sheet(bureau_help, bureau_rows)
 
     _write_workbook_sheet(field_compliance, [
         [

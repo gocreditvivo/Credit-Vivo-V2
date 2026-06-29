@@ -261,6 +261,7 @@ def test_parse_sample_report(tmp_path):
         "Metro 2 Guide Notes",
         "FCRA Compliance Review",
         "FCRA Rights Regulators",
+        "Bureau Help + FDCPA",
         "Field Compliance Audit",
         "e-OSCAR Packaging Review",
         "FCRA Notice Rules",
@@ -436,6 +437,18 @@ def test_parse_sample_report(tmp_path):
     assert "Adverse action notice" in fcra_rights_text
     assert "Maryland Office of Financial Regulation" in fcra_rights_text
     assert "100 words" in fcra_rights_text
+    bureau_help = workbook["Bureau Help + FDCPA"]
+    bureau_help_text = " ".join(
+        str(bureau_help.cell(row=row, column=column).value or "")
+        for row in range(1, bureau_help.max_row + 1)
+        for column in range(1, bureau_help.max_column + 1)
+    )
+    assert "Equifax" in bureau_help_text
+    assert "TransUnion" in bureau_help_text
+    assert "Verified and updated" in bureau_help_text
+    assert "Remains" in bureau_help_text
+    assert "Validation notice" in bureau_help_text
+    assert "Contact time and place limits" in bureau_help_text
     field_compliance = workbook["Field Compliance Audit"]
     field_headers = [field_compliance.cell(row=1, column=column).value for column in range(1, field_compliance.max_column + 1)]
     assert "Metro 2 Concept" in field_headers
