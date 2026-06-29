@@ -1365,13 +1365,352 @@ def build_metro2_fcra_review(issues: List[ReviewIssue]) -> List[dict]:
     return review
 
 
+METRO2_FIELD_REQUIREMENTS = {
+    "collection": {
+        "label": "Collection account",
+        "required_fields": [
+            "Account Number / Consumer Account Identifier",
+            "Account Type",
+            "Portfolio Type",
+            "ECOA / Responsibility",
+            "Account Status",
+            "Current Balance",
+            "Amount Past Due if reporting past due",
+            "Date Opened or collection acquisition/open date",
+            "Date Reported / Date Updated",
+            "Date of First Delinquency for negative reporting",
+            "Original Creditor",
+            "Creditor Classification / Collection Agency Type",
+            "Special Comment / Remarks when needed",
+            "Compliance Condition Code / Dispute Indicator when disputed",
+        ],
+        "field_map": {
+            "Account Number / Consumer Account Identifier": ["account_number_masked"],
+            "Account Type": ["account_type"],
+            "Portfolio Type": ["portfolio_type"],
+            "ECOA / Responsibility": ["responsibility"],
+            "Account Status": ["status", "pay_status"],
+            "Current Balance": ["balance"],
+            "Amount Past Due if reporting past due": ["past_due", "balance"],
+            "Date Opened or collection acquisition/open date": ["date_opened"],
+            "Date Reported / Date Updated": ["date_reported"],
+            "Date of First Delinquency for negative reporting": ["date_of_first_delinquency"],
+            "Original Creditor": ["original_creditor"],
+            "Creditor Classification / Collection Agency Type": ["creditor_classification", "collector_or_debt_buyer"],
+            "Special Comment / Remarks when needed": ["remarks"],
+            "Compliance Condition Code / Dispute Indicator when disputed": ["remarks", "raw_block"],
+        },
+        "validation_notes": [
+            "A collection should identify the original creditor or the basis for ownership/assignment.",
+            "Negative collection reporting should have a supportable Date of First Delinquency timeline.",
+            "If disputed, the report should show an appropriate dispute notation or compliance condition after notice.",
+        ],
+        "dispute_use": "Use for collection ownership, original creditor, balance, DOFD, status, and dispute-notation challenges.",
+    },
+    "charge_off": {
+        "label": "Charge-off account",
+        "required_fields": [
+            "Account Number / Consumer Account Identifier",
+            "Account Type",
+            "Portfolio Type",
+            "ECOA / Responsibility",
+            "Account Status",
+            "Payment Rating / Pay Status",
+            "Current Balance",
+            "Amount Past Due",
+            "Charge-off Amount or High Credit / Original Amount",
+            "Date of First Delinquency",
+            "Date Closed when closed",
+            "Date Reported / Date Updated",
+            "Date Last Payment / Date Last Activity when available",
+            "Payment History Profile",
+            "Special Comment / Remarks",
+            "Compliance Condition Code / Dispute Indicator when disputed",
+        ],
+        "field_map": {
+            "Account Number / Consumer Account Identifier": ["account_number_masked"],
+            "Account Type": ["account_type"],
+            "Portfolio Type": ["portfolio_type"],
+            "ECOA / Responsibility": ["responsibility"],
+            "Account Status": ["status"],
+            "Payment Rating / Pay Status": ["pay_status", "status"],
+            "Current Balance": ["balance"],
+            "Amount Past Due": ["past_due"],
+            "Charge-off Amount or High Credit / Original Amount": ["high_credit_or_original_amount"],
+            "Date of First Delinquency": ["date_of_first_delinquency"],
+            "Date Closed when closed": ["date_closed", "status"],
+            "Date Reported / Date Updated": ["date_reported"],
+            "Date Last Payment / Date Last Activity when available": ["date_last_payment", "date_last_activity"],
+            "Payment History Profile": ["payment_history_summary", "raw_block"],
+            "Special Comment / Remarks": ["remarks"],
+            "Compliance Condition Code / Dispute Indicator when disputed": ["remarks", "raw_block"],
+        },
+        "validation_notes": [
+            "Charge-off status, payment rating, balance, and past-due amount should not contradict each other.",
+            "DOFD drives the reporting-age review and should not be missing from negative charge-off reporting.",
+            "If sold or transferred, the balance and ownership/status should match the current reporting party's records.",
+        ],
+        "dispute_use": "Use for charge-off balance, status, payment rating, DOFD, sold/transferred, and obsolescence challenges.",
+    },
+    "closed_sold_transferred": {
+        "label": "Closed, sold, transferred, or assigned account",
+        "required_fields": [
+            "Account Number / Consumer Account Identifier",
+            "Account Type",
+            "Account Status",
+            "Current Balance",
+            "Amount Past Due",
+            "Date Closed",
+            "Date Reported / Date Updated",
+            "Date of First Delinquency if negative",
+            "Special Comment / Sold-Transferred Remark",
+            "Current Owner / Original Creditor context when applicable",
+        ],
+        "field_map": {
+            "Account Number / Consumer Account Identifier": ["account_number_masked"],
+            "Account Type": ["account_type"],
+            "Account Status": ["status", "pay_status"],
+            "Current Balance": ["balance"],
+            "Amount Past Due": ["past_due"],
+            "Date Closed": ["date_closed", "status"],
+            "Date Reported / Date Updated": ["date_reported"],
+            "Date of First Delinquency if negative": ["date_of_first_delinquency", "status"],
+            "Special Comment / Sold-Transferred Remark": ["remarks", "status"],
+            "Current Owner / Original Creditor context when applicable": ["original_creditor", "collector_or_debt_buyer", "remarks"],
+        },
+        "validation_notes": [
+            "A sold or transferred account with a nonzero balance needs ownership and balance support.",
+            "Original creditor and collector reporting should not create duplicate active debt reporting.",
+            "Closed/transferred status should match date closed, balance, and remarks.",
+        ],
+        "dispute_use": "Use for sold/transferred balance, duplicate ownership, closed-date, and status challenges.",
+    },
+    "installment_late_payment": {
+        "label": "Installment or late-payment account",
+        "required_fields": [
+            "Account Number / Consumer Account Identifier",
+            "Account Type",
+            "Portfolio Type",
+            "ECOA / Responsibility",
+            "Account Status",
+            "Payment Rating / Pay Status",
+            "Current Balance",
+            "Amount Past Due",
+            "High Credit / Original Amount",
+            "Terms or Scheduled Payment Amount when available",
+            "Date Opened",
+            "Date Reported / Date Updated",
+            "Date Last Payment / Date Last Activity",
+            "Date of First Delinquency if negative",
+            "Payment History Profile",
+        ],
+        "field_map": {
+            "Account Number / Consumer Account Identifier": ["account_number_masked"],
+            "Account Type": ["account_type"],
+            "Portfolio Type": ["portfolio_type"],
+            "ECOA / Responsibility": ["responsibility"],
+            "Account Status": ["status"],
+            "Payment Rating / Pay Status": ["pay_status", "status"],
+            "Current Balance": ["balance"],
+            "Amount Past Due": ["past_due"],
+            "High Credit / Original Amount": ["high_credit_or_original_amount"],
+            "Terms or Scheduled Payment Amount when available": ["raw_block"],
+            "Date Opened": ["date_opened"],
+            "Date Reported / Date Updated": ["date_reported"],
+            "Date Last Payment / Date Last Activity": ["date_last_payment", "date_last_activity"],
+            "Date of First Delinquency if negative": ["date_of_first_delinquency", "status"],
+            "Payment History Profile": ["payment_history_summary", "raw_block"],
+        },
+        "validation_notes": [
+            "Late-payment sequence should make sense against payment history and reported status.",
+            "A current/paid account should not still show a materially contradictory late or past-due condition.",
+            "DOFD is needed when negative reporting can affect reporting age.",
+        ],
+        "dispute_use": "Use for late-payment, payment history, balance, date, and pay-status challenges.",
+    },
+    "revolving": {
+        "label": "Revolving account",
+        "required_fields": [
+            "Account Number / Consumer Account Identifier",
+            "Account Type",
+            "Portfolio Type",
+            "ECOA / Responsibility",
+            "Account Status",
+            "Payment Rating / Pay Status",
+            "Current Balance",
+            "Credit Limit",
+            "High Credit",
+            "Amount Past Due",
+            "Date Opened",
+            "Date Reported / Date Updated",
+            "Date Last Payment / Date Last Activity",
+            "Date of First Delinquency if negative",
+            "Payment History Profile",
+        ],
+        "field_map": {
+            "Account Number / Consumer Account Identifier": ["account_number_masked"],
+            "Account Type": ["account_type"],
+            "Portfolio Type": ["portfolio_type"],
+            "ECOA / Responsibility": ["responsibility"],
+            "Account Status": ["status"],
+            "Payment Rating / Pay Status": ["pay_status", "status"],
+            "Current Balance": ["balance"],
+            "Credit Limit": ["credit_limit"],
+            "High Credit": ["high_credit_or_original_amount"],
+            "Amount Past Due": ["past_due"],
+            "Date Opened": ["date_opened"],
+            "Date Reported / Date Updated": ["date_reported"],
+            "Date Last Payment / Date Last Activity": ["date_last_payment", "date_last_activity"],
+            "Date of First Delinquency if negative": ["date_of_first_delinquency", "status"],
+            "Payment History Profile": ["payment_history_summary", "raw_block"],
+        },
+        "validation_notes": [
+            "Revolving balance, limit, high credit, past due, and payment rating should tell the same story.",
+            "A negative revolving account needs a supportable delinquency timeline.",
+            "Closed, transferred, or charged-off revolving accounts need status and balance support.",
+        ],
+        "dispute_use": "Use for balance, limit, utilization, late-payment, status, and DOFD challenges.",
+    },
+    "generic": {
+        "label": "General tradeline",
+        "required_fields": [
+            "Account Number / Consumer Account Identifier",
+            "Account Type",
+            "Account Status",
+            "Current Balance",
+            "Date Opened",
+            "Date Reported / Date Updated",
+            "Date of First Delinquency if negative",
+            "Special Comment / Remarks when needed",
+        ],
+        "field_map": {
+            "Account Number / Consumer Account Identifier": ["account_number_masked"],
+            "Account Type": ["account_type"],
+            "Account Status": ["status", "pay_status"],
+            "Current Balance": ["balance"],
+            "Date Opened": ["date_opened"],
+            "Date Reported / Date Updated": ["date_reported"],
+            "Date of First Delinquency if negative": ["date_of_first_delinquency", "status"],
+            "Special Comment / Remarks when needed": ["remarks"],
+        },
+        "validation_notes": [
+            "At minimum, the account should identify who reported it, what it is, current status, balance, and key dates.",
+            "Negative items need a supportable delinquency timeline and should be marked disputed when applicable.",
+        ],
+        "dispute_use": "Use as a general accuracy, completeness, and verifiability checklist.",
+    },
+}
+
+
+def _tradeline_profile(tradeline: dict) -> str:
+    text = " ".join(
+        str(tradeline.get(field, ""))
+        for field in [
+            "account_name",
+            "account_type",
+            "portfolio_type",
+            "status",
+            "pay_status",
+            "remarks",
+            "raw_block",
+        ]
+    ).lower()
+    if "collection" in text or "collector" in text or "debt buyer" in text:
+        return "collection"
+    if "charge" in text and "off" in text:
+        return "charge_off"
+    if any(term in text for term in ["sold", "transferred", "assigned", "purchased by another lender"]):
+        return "closed_sold_transferred"
+    if any(term in text for term in ["credit card", "revolving", "bankcard", "charge card"]):
+        return "revolving"
+    if any(term in text for term in ["installment", "auto", "student", "mortgage", "loan", "late", "past due"]):
+        return "installment_late_payment"
+    return "generic"
+
+
+def _has_any_field(tradeline: dict, field_names: List[str]) -> bool:
+    for field_name in field_names:
+        value = str(tradeline.get(field_name, "") or "").strip()
+        if not value:
+            continue
+        if field_name == "raw_block" and len(value) < 12:
+            continue
+        return True
+    return False
+
+
+def _metro2_presence(tradeline: dict, requirement: dict) -> Tuple[List[str], List[str]]:
+    present = []
+    missing = []
+    field_map = requirement.get("field_map", {})
+    for field_label in requirement.get("required_fields", []):
+        if _has_any_field(tradeline, field_map.get(field_label, [])):
+            present.append(field_label)
+        else:
+            missing.append(field_label)
+    return present, missing
+
+
+def _metro2_warning_flags(tradeline: dict, profile: str, missing_fields: List[str]) -> List[str]:
+    flags = []
+    status_text = " ".join([
+        str(tradeline.get("status", "") or ""),
+        str(tradeline.get("pay_status", "") or ""),
+        str(tradeline.get("remarks", "") or ""),
+    ]).lower()
+    balance_number = money_to_number(str(tradeline.get("balance", "") or ""))
+
+    if "Date of First Delinquency" in " ".join(missing_fields) and any(
+        term in status_text for term in ["collection", "charge", "delinquent", "past due", "late"]
+    ):
+        flags.append("Missing DOFD on negative reporting candidate")
+    if profile == "collection" and "Original Creditor" in missing_fields:
+        flags.append("Collection missing original creditor field")
+    if profile == "charge_off" and "Payment Rating / Pay Status" in missing_fields:
+        flags.append("Charge-off missing payment rating/pay status support")
+    if profile == "closed_sold_transferred" and balance_number and balance_number > 0:
+        flags.append("Sold/transferred/closed account reports nonzero balance")
+    if "dispute" not in status_text and "Compliance Condition Code / Dispute Indicator when disputed" in missing_fields:
+        flags.append("If customer disputes this item, track dispute notation after notice")
+    if not flags and missing_fields:
+        flags.append("Admin should validate missing fields against raw PDF")
+    if not flags:
+        flags.append("No immediate required-field warning detected")
+    return flags
+
+
+def build_metro2_requirement_review(tradelines: List[dict]) -> List[dict]:
+    rows = []
+    for tradeline in tradelines:
+        profile_key = _tradeline_profile(tradeline)
+        requirement = METRO2_FIELD_REQUIREMENTS[profile_key]
+        present, missing = _metro2_presence(tradeline, requirement)
+        rows.append({
+            "tradeline_id": tradeline.get("id", ""),
+            "bureau": tradeline.get("bureau", ""),
+            "account_name": tradeline.get("account_name", ""),
+            "account_type": tradeline.get("account_type", ""),
+            "status": tradeline.get("status") or tradeline.get("pay_status") or "",
+            "metro2_profile": requirement["label"],
+            "required_core_fields": requirement["required_fields"],
+            "present_fields": present,
+            "missing_or_needs_validation": missing,
+            "warning_flags": _metro2_warning_flags(tradeline, profile_key, missing),
+            "validation_notes": requirement["validation_notes"],
+            "dispute_use": requirement["dispute_use"],
+            "production_note": "Credit Vivo checklist. Validate against official licensed CDIA Metro 2 CRRG before production/certification.",
+        })
+    return rows
+
+
 def result_to_dict(result: ParseResult) -> dict:
+    tradelines = [asdict(t) for t in result.tradelines]
     return {
         "engine": result.engine,
         "version": result.version,
         "paid_ai_used": result.paid_ai_used,
         "files": result.files,
-        "tradelines": [asdict(t) for t in result.tradelines],
+        "tradelines": tradelines,
         "issues": [asdict(i) for i in result.issues],
         "cross_bureau_groups": result.cross_bureau_groups,
         "customer_summary": result.customer_summary,
@@ -1380,6 +1719,7 @@ def result_to_dict(result: ParseResult) -> dict:
         "recommended_letter_queue": build_recommended_letter_queue(result.issues),
         "fcra_review": build_fcra_review(result.issues),
         "metro2_fcra_review": build_metro2_fcra_review(result.issues),
+        "metro2_requirement_review": build_metro2_requirement_review(tradelines),
     }
 
 
@@ -1824,6 +2164,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     errors = wb.create_sheet("Detected Errors")
     items = wb.create_sheet("Review Items")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
+    metro2_requirements = wb.create_sheet("Metro 2 Requirements")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
     dispute_methods = wb.create_sheet("Dispute Methods")
     dispute_sop = wb.create_sheet("Dispute SOP")
@@ -1917,6 +2258,42 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
                 "Yes" if row.get("customer_approval_required") else "No",
             ]
             for row in data.get("metro2_fcra_review", [])
+        ],
+    ])
+
+    _write_workbook_sheet(metro2_requirements, [
+        [
+            "Tradeline ID",
+            "Bureau",
+            "Account Name",
+            "Account Type",
+            "Status",
+            "Metro 2 Profile",
+            "Required/Core Fields",
+            "Present Fields",
+            "Missing / Needs Validation",
+            "Warning Flags",
+            "Validation Notes",
+            "Dispute Use",
+            "Production Note",
+        ],
+        *[
+            [
+                row.get("tradeline_id", ""),
+                row.get("bureau", ""),
+                row.get("account_name", ""),
+                row.get("account_type", ""),
+                row.get("status", ""),
+                row.get("metro2_profile", ""),
+                row.get("required_core_fields", []),
+                row.get("present_fields", []),
+                row.get("missing_or_needs_validation", []),
+                row.get("warning_flags", []),
+                row.get("validation_notes", []),
+                row.get("dispute_use", ""),
+                row.get("production_note", ""),
+            ]
+            for row in data.get("metro2_requirement_review", [])
         ],
     ])
 

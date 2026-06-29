@@ -106,6 +106,21 @@ def test_parse_sample_report(tmp_path):
     assert "Current Balance" in metro2_fields
     assert "Date of First Delinquency" in metro2_fields
     assert any("FCRA 611" in section for row in data["metro2_fcra_review"] for section in row["fcra_sections"])
+    assert data["metro2_requirement_review"]
+    requirement_profiles = {row["metro2_profile"] for row in data["metro2_requirement_review"]}
+    assert "Collection account" in requirement_profiles
+    assert "Charge-off account" in requirement_profiles or "Closed, sold, transferred, or assigned account" in requirement_profiles
+    requirement_text = " ".join(
+        " ".join(row["required_core_fields"]) + " " +
+        " ".join(row["missing_or_needs_validation"]) + " " +
+        " ".join(row["warning_flags"])
+        for row in data["metro2_requirement_review"]
+    )
+    assert "Date of First Delinquency" in requirement_text
+    assert "Original Creditor" in requirement_text
+    assert "Validate against official licensed CDIA Metro 2 CRRG" in " ".join(
+        row["production_note"] for row in data["metro2_requirement_review"]
+    )
     cross_labels = {x["customer_label"] for x in data["issues"] if x["issue_type"].startswith("cross_bureau")}
     assert "Balance differs across bureaus" in cross_labels
     assert "Status differs across bureaus" in cross_labels
@@ -124,6 +139,7 @@ def test_parse_sample_report(tmp_path):
         "Detected Errors",
         "Review Items",
         "Metro 2 + FCRA Review",
+        "Metro 2 Requirements",
         "FCRA Notice Rules",
         "Dispute Methods",
         "Dispute SOP",
@@ -219,6 +235,19 @@ def test_parse_sample_report(tmp_path):
     expert_headers = [expert.cell(row=1, column=column).value for column in range(1, expert.max_column + 1)]
     assert "Metro 2 Fields To Review" in expert_headers
     assert "FCRA Sections / Duties" in expert_headers
+    requirements = workbook["Metro 2 Requirements"]
+    requirement_headers = [requirements.cell(row=1, column=column).value for column in range(1, requirements.max_column + 1)]
+    assert "Metro 2 Profile" in requirement_headers
+    assert "Required/Core Fields" in requirement_headers
+    assert "Missing / Needs Validation" in requirement_headers
+    requirements_text = " ".join(
+        str(requirements.cell(row=row, column=column).value or "")
+        for row in range(2, requirements.max_row + 1)
+        for column in range(1, requirements.max_column + 1)
+    )
+    assert "Collection account" in requirements_text
+    assert "Date of First Delinquency" in requirements_text
+    assert "official licensed CDIA Metro 2 CRRG" in requirements_text
     notice_rules = workbook["FCRA Notice Rules"]
     notice_rule_text = " ".join(
         str(notice_rules.cell(row=row, column=2).value or "")
