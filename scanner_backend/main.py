@@ -50,6 +50,7 @@ try:
     from .growth_ads_ai import build_ad_plan
     from .growth_ai_sources import build_growth_source_brief
     from .growth_codex_capabilities import build_codex_like_growth_brief
+    from .growth_forensic_search import build_forensic_search_brief, run_forensic_search
     from .growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -76,6 +77,7 @@ except ImportError:
     from growth_ads_ai import build_ad_plan
     from growth_ai_sources import build_growth_source_brief
     from growth_codex_capabilities import build_codex_like_growth_brief
+    from growth_forensic_search import build_forensic_search_brief, run_forensic_search
     from growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -380,6 +382,19 @@ async def growth_ai_solve(payload: Dict[str, object]):
 @app.get("/api/growth-ai/codex-like-capabilities")
 def growth_ai_codex_like_capabilities():
     return JSONResponse(build_codex_like_growth_brief())
+
+
+@app.get("/growth-ai/forensic-search")
+@app.get("/api/growth-ai/forensic-search")
+def growth_ai_forensic_search():
+    return JSONResponse(build_forensic_search_brief())
+
+
+@app.post("/growth-ai/forensic-search/run")
+@app.post("/api/growth-ai/forensic-search/run")
+async def growth_ai_forensic_search_run(payload: Dict[str, object]):
+    query = str(payload.get("query", "Find the strongest growth opportunity for Credit Vivo")).strip()
+    return JSONResponse(run_forensic_search(query))
 
 
 @app.get("/operator-ai/brief")
