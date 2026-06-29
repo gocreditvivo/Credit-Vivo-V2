@@ -36,6 +36,7 @@ try:
         result_to_dict,
         write_outputs,
     )
+    from .codex_advisor_ai import build_codex_advisor_brief
     from .event_collector import (
         append_event,
         build_event,
@@ -59,6 +60,7 @@ except ImportError:
         result_to_dict,
         write_outputs,
     )
+    from codex_advisor_ai import build_codex_advisor_brief
     from event_collector import (
         append_event,
         build_event,
@@ -324,6 +326,35 @@ def growth_ai_sources():
 @app.get("/api/growth-ai/ad-plan")
 def growth_ai_ad_plan():
     return JSONResponse(build_ad_plan())
+
+
+@app.get("/growth-ai/codex-advisor")
+@app.get("/api/growth-ai/codex-advisor")
+def growth_ai_codex_advisor(
+    question: str = "What should Growth AI do next to bring Credit Vivo customers?",
+    focus: str = "growth_strategy_review",
+    visitors: int = 0,
+    leads: int = 0,
+    free_scans_started: int = 0,
+    free_scans_completed: int = 0,
+    paid_customers: int = 0,
+    monthly_recurring_revenue: float = 0.0,
+    cancellations: int = 0,
+    ad_spend: float = 0.0,
+    referral_signups: int = 0,
+):
+    snapshot = GrowthSnapshot(
+        visitors=visitors,
+        leads=leads,
+        free_scans_started=free_scans_started,
+        free_scans_completed=free_scans_completed,
+        paid_customers=paid_customers,
+        monthly_recurring_revenue=monthly_recurring_revenue,
+        cancellations=cancellations,
+        ad_spend=ad_spend,
+        referral_signups=referral_signups,
+    )
+    return JSONResponse(build_codex_advisor_brief(question=question, snapshot=snapshot, focus=focus))
 
 
 @app.get("/operator-ai/brief")
