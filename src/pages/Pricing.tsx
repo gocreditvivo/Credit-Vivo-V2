@@ -22,9 +22,9 @@ const plans = [
   {
     badge: 'Popular',
     name: 'AI Guided',
-    price: '$29',
+    price: '$69',
     cadence: '/mo',
-    description: 'For customers who want guided support after the free scan, including tracking and draft dispute prep.',
+    description: 'For customers who want guided support after the free scan, with clearer findings, tracking, and draft dispute prep.',
     cta: 'Choose AI Guided',
     to: '/join',
     featured: true,
@@ -39,7 +39,7 @@ const plans = [
   {
     badge: 'Full workflow',
     name: 'Vivo Plus',
-    price: '$59',
+    price: '$95',
     cadence: '/mo',
     description: 'For customers who want a fuller workflow for bureau, furnisher, tracking, and escalation preparation.',
     cta: 'Choose Vivo Plus',
@@ -51,6 +51,23 @@ const plans = [
       'Attorney-ready evidence packet',
       'CFPB and state complaint prep',
       'Priority file organization',
+    ],
+  },
+  {
+    badge: 'Escalation prep',
+    name: 'Attorney Access Prep',
+    price: '$119',
+    cadence: '/mo',
+    description: 'For serious files that may need attorney-ready organization and optional legal access review.',
+    cta: 'Choose Attorney Prep',
+    to: '/join',
+    featured: false,
+    features: [
+      'Everything in Vivo Plus',
+      'Attorney-ready file summary',
+      'Evidence timeline organization',
+      'Escalation checklist',
+      'Optional legal access handoff prep',
     ],
   },
 ];
@@ -87,10 +104,10 @@ export default function Pricing() {
             Pricing
           </div>
           <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Start free. Attorney support when needed.
+            Start free. Add premium support when needed.
           </h1>
           <p className="text-[15px] text-navy-500 max-w-xl mx-auto">
-            Credit Vivo gives you a free Credit Check-In first. Paid plans add guided support, tracking, and preparation for attorney review when the situation calls for it.
+            Credit Vivo gives you a free Credit Check-In first. Paid plans add AI-guided support, tracking, dispute preparation, and attorney-ready escalation prep when the situation calls for it.
           </p>
         </div>
       </section>
@@ -112,7 +129,7 @@ export default function Pricing() {
             </Link>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {plans.map((plan) => (
               <article
                 key={plan.name}
@@ -161,8 +178,8 @@ export default function Pricing() {
           </div>
 
           <div className="mt-8 rounded-2xl border border-amber-100 bg-amber-50 p-5">
-            <p className="text-xs leading-relaxed text-amber-900">
-              <strong>Launch note:</strong> Pricing shown is planned founding package positioning. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes. Customers review and approve next steps before anything is sent or escalated. LegalShield, IDShield, attorney services, credit monitoring, mail, report access, and third-party costs are separate unless a written plan says otherwise.
+              <p className="text-xs leading-relaxed text-amber-900">
+              <strong>Launch note:</strong> Pricing is positioned below traditional high-touch credit repair services while keeping Credit Vivo premium. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes. Customers review and approve next steps before anything is sent or escalated. LegalShield, IDShield, attorney services, credit monitoring, mail, report access, and third-party costs are separate unless a written plan says otherwise.
             </p>
           </div>
         </div>

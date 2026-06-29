@@ -131,21 +131,21 @@ export const growthMetrics: OpsMetric[] = [
 export const millionMonthlyRevenueTargets: RevenueTarget[] = [
   {
     scenario: 'AI Guided only',
-    monthlyPrice: '$29/mo',
-    customersNeeded: '34,483',
-    meaning: 'This is the highest customer-count path because the price is lower.',
+    monthlyPrice: '$69/mo',
+    customersNeeded: '14,493',
+    meaning: 'This is the highest customer-count path because it is the lower paid plan.',
   },
   {
     scenario: 'Vivo Plus only',
-    monthlyPrice: '$59/mo',
-    customersNeeded: '16,950',
+    monthlyPrice: '$95/mo',
+    customersNeeded: '10,527',
     meaning: 'This needs fewer customers, but the product must deliver stronger value.',
   },
   {
     scenario: 'Blended average',
-    monthlyPrice: '$45/mo',
-    customersNeeded: '22,223',
-    meaning: 'A realistic planning target if customers split across paid plans.',
+    monthlyPrice: '$95/mo',
+    customersNeeded: '10,527',
+    meaning: 'A planning target if customers split across AI Guided, Vivo Plus, and Attorney Access Prep.',
   },
 ];
 

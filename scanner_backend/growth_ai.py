@@ -135,7 +135,7 @@ def recommend_growth_actions(snapshot: GrowthSnapshot) -> List[Dict[str, str]]:
 
 def build_growth_brief(snapshot: GrowthSnapshot) -> Dict[str, object]:
     million_goal = 1000000
-    blended_arpu = 45
+    blended_arpu = 95
     paid_needed = (million_goal + blended_arpu - 1) // blended_arpu
     current_gap = max(int(paid_needed - snapshot.paid_customers), 0)
 

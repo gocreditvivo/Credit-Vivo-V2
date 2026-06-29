@@ -117,7 +117,7 @@ type DashboardData = {
 
 const fallbackData: DashboardData = {
   command: {
-    revenue_goal: { monthly_target: 1000000, current_mrr: 0, paid_customer_gap: 22223 },
+    revenue_goal: { monthly_target: 1000000, current_mrr: 0, paid_customer_gap: 10527 },
     growth_brief: {
       snapshot: {
         visitors: 0,
@@ -131,9 +131,9 @@ const fallbackData: DashboardData = {
       },
       million_month_target: {
         monthly_goal: 1000000,
-        paid_customers_needed: 22223,
-        paid_customer_gap: 22223,
-        blended_arpu: 45,
+        paid_customers_needed: 10527,
+        paid_customer_gap: 10527,
+        blended_arpu: 95,
       },
       recommended_actions: [
         {
@@ -310,7 +310,7 @@ export default function OwnerAICommand() {
   const goal = data.command?.growth_brief?.million_month_target;
   const currentMrr = data.command?.revenue_goal?.current_mrr ?? snapshot?.monthly_recurring_revenue ?? 0;
   const monthlyGoal = data.command?.revenue_goal?.monthly_target ?? goal?.monthly_goal ?? 1000000;
-  const paidGap = data.command?.revenue_goal?.paid_customer_gap ?? goal?.paid_customer_gap ?? 22223;
+  const paidGap = data.command?.revenue_goal?.paid_customer_gap ?? goal?.paid_customer_gap ?? 10527;
   const percentToGoal = monthlyGoal > 0 ? Math.min(100, Math.round((currentMrr / monthlyGoal) * 10000) / 100) : 0;
   const topActions = data.command?.top_actions ?? [];
   const growthActions = data.command?.growth_brief?.recommended_actions ?? [];
@@ -424,7 +424,7 @@ export default function OwnerAICommand() {
           <p className="text-2xl font-extrabold text-navy-900">{formatNumber(paidGap)}</p>
           <p className="mt-1 text-[11px] text-navy-500">paid customers still needed</p>
           <p className="mt-4 text-[11px] leading-relaxed text-navy-400">
-            Based on the current planning average of about {formatMoney(goal?.blended_arpu ?? 45)} per paid customer.
+            Based on the current planning average of about {formatMoney(goal?.blended_arpu ?? 95)} per paid customer.
           </p>
         </div>
 

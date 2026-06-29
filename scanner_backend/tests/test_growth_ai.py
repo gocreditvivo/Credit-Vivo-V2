@@ -39,7 +39,7 @@ def test_growth_brief_recommends_tracking_when_no_traffic():
 
     assert brief["ok"] is True
     assert brief["mode"] == "rule_based_foundation"
-    assert brief["million_month_target"]["paid_customers_needed"] == 22223
+    assert brief["million_month_target"]["paid_customers_needed"] == 10527
     assert brief["recommended_actions"][0]["issue"] == "No traffic data yet"
     assert "Join Free clicks" in brief["next_data_to_connect"]
 

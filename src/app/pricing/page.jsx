@@ -14,8 +14,8 @@ export default function PricingPage() {
       <Header />
       <section className="page-hero center-hero">
         <span className="section-label">Simple pricing preview</span>
-        <h1>Start free. Upgrade when the customer is ready.</h1>
-        <p>These cards make the site look complete while leaving room to adjust final pricing before payments are connected.</p>
+        <h1>Start free. Add premium support when needed.</h1>
+        <p>Credit Vivo starts with a free Check-In, then offers paid AI guidance, tracking, and attorney-ready escalation prep.</p>
       </section>
 
       <section className="pricing-grid section-block no-top-pad">
@@ -35,8 +35,8 @@ export default function PricingPage() {
 
         <article className="price-card featured-price">
           <span className="eyebrow">Most Useful</span>
-          <h2>Review Plus</h2>
-          <div className="price">$29<span>/mo</span></div>
+          <h2>AI Guided</h2>
+          <div className="price">$69<span>/mo</span></div>
           <p>For customers who want organized review notes, document checklists, and progress tracking.</p>
           <ul>
             <li>Bureau review workflow</li>
@@ -49,8 +49,8 @@ export default function PricingPage() {
 
         <article className="price-card">
           <span className="eyebrow">Pro</span>
-          <h2>Credit Vivo Pro</h2>
-          <div className="price">$79<span>/mo</span></div>
+          <h2>Vivo Plus</h2>
+          <div className="price">$95<span>/mo</span></div>
           <p>For deeper review, more tracking, and stronger escalation organization.</p>
           <ul>
             <li>Priority review queue</li>
@@ -62,10 +62,10 @@ export default function PricingPage() {
         </article>
 
         <article className="price-card muted-card">
-          <span className="eyebrow">Add-on</span>
-          <h2>Attorney Escalation</h2>
-          <div className="price">Soon</div>
-          <p>Future optional path for qualified legal review or attorney-supported escalation.</p>
+          <span className="eyebrow">Escalation Prep</span>
+          <h2>Attorney Access Prep</h2>
+          <div className="price">$119<span>/mo</span></div>
+          <p>For serious files that may need attorney-ready organization and optional legal access review.</p>
           <ul>
             <li>Attorney review request</li>
             <li>Evidence packet</li>
