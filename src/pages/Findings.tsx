@@ -49,6 +49,23 @@ function formatLabel(value: string) {
 export default function Findings() {
   const result = getLastScanResult();
 
+  async function downloadScannerFile(href: string, filename: string) {
+    const response = await fetch(href);
+    if (!response.ok) {
+      throw new Error(`Download failed with status ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
   if (!result) {
     return (
       <div>
@@ -90,16 +107,19 @@ export default function Findings() {
       label: 'Download errors worksheet',
       detail: 'CSV opens in Excel and shows each scanner review point.',
       href: getScannerOutputDownloadUrl(result.job_id, 'issues.csv'),
+      filename: 'credit-vivo-errors-worksheet.csv',
     },
     {
       label: 'Download tradelines',
       detail: 'CSV list of accounts and report details found by the scanner.',
       href: getScannerOutputDownloadUrl(result.job_id, 'tradelines.csv'),
+      filename: 'credit-vivo-tradelines.csv',
     },
     {
       label: 'Download draft letters',
       detail: 'Plain-text packet of draft dispute letters for review.',
       href: getScannerOutputDownloadUrl(result.job_id, 'letters.txt'),
+      filename: 'credit-vivo-draft-dispute-letters.txt',
     },
   ];
   const scenarioCards = [
@@ -166,10 +186,11 @@ export default function Findings() {
         <div className="grid md:grid-cols-3 gap-3">
           {downloads.map((download) => (
             download.href ? (
-              <a
+              <button
                 key={download.label}
-                href={download.href}
-                className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50 hover:border-sky-200 hover:bg-sky-50/40 transition"
+                type="button"
+                onClick={() => void downloadScannerFile(download.href, download.filename)}
+                className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50 text-left hover:border-sky-200 hover:bg-sky-50/40 transition"
               >
                 <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-800">
                   <Download size={14} className="text-sky-600" />
@@ -178,7 +199,7 @@ export default function Findings() {
                 <span className="block text-[11px] text-navy-500 mt-1 leading-relaxed">
                   {download.detail}
                 </span>
-              </a>
+              </button>
             ) : (
               <div
                 key={download.label}
