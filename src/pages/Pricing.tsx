@@ -118,7 +118,7 @@ export default function Pricing() {
           <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Free entry point</p>
-              <h2 className="mt-1 text-base font-bold text-navy-900">AI Credit Help + Optional Attorney Access</h2>
+              <h2 className="mt-1 text-base font-bold text-navy-900">AI Credit Boost + Attorney Access</h2>
               <p className="mt-1 text-xs text-navy-500">
                 Start with the scanner first. Upgrade only if you want guided support, tracking, or attorney-ready escalation preparation.
               </p>
