@@ -59,4 +59,5 @@ def test_operator_brief_includes_fcra_rights_reference():
     brief = build_operator_brief([])
 
     assert "state Attorney General" in brief["fcra_rights_reference"]["plain_english_note"]
+    assert "Maryland consumers" in brief["fcra_rights_reference"]["maryland_rights_summary"]
     assert any("regulator contacts" in rule for rule in brief["fcra_rights_reference"]["ai_rules"])

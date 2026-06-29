@@ -223,6 +223,8 @@ def build_ai_operating_system_brief() -> Dict[str, object]:
         "fcra_rights_reference": {
             "source_notes": fcra_rights["source_notes"],
             "ai_rules": fcra_rights["ai_rules"],
+            "federal_consumer_rights_count": len(fcra_rights["federal_consumer_rights"]),
+            "maryland_rights_summary": fcra_rights["maryland_consumer_rights"]["plain_english_summary"],
             "federal_contact_categories": [item["category"] for item in fcra_rights["federal_contacts"]],
             "federal_agencies": [
                 contact["agency"]

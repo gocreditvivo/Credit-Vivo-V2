@@ -42,3 +42,5 @@ def test_ai_operating_system_includes_fcra_rights_reference():
     assert "Bureau of Consumer Financial Protection" in " ".join(reference["federal_agencies"])
     assert "Virginia" in reference["state_notice_states"]
     assert any("state rights" in rule for rule in reference["ai_rules"])
+    assert reference["federal_consumer_rights_count"] >= 10
+    assert "Maryland consumers" in reference["maryland_rights_summary"]

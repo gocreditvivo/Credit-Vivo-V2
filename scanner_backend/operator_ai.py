@@ -125,6 +125,7 @@ def build_operator_brief(events: List[OperatorEvent]) -> Dict[str, object]:
         "actions": actions,
         "fcra_rights_reference": {
             "plain_english_note": fcra_rights["source_notes"]["plain_english_note"],
+            "maryland_rights_summary": fcra_rights["maryland_consumer_rights"]["plain_english_summary"],
             "ai_rules": fcra_rights["ai_rules"],
         },
         "auto_safe_count": sum(1 for action in actions if action["approval_level"] == ApprovalLevel.AUTO_SAFE.value),

@@ -3440,6 +3440,47 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
         ["Source", "Primary Reference", source_notes.get("primary_reference", ""), source_notes.get("primary_url", ""), source_notes.get("plain_english_note", "")],
         ["Source", "Agency Contact Update", source_notes.get("agency_contact_update_reference", ""), source_notes.get("agency_contact_update_url", ""), source_notes.get("compliance_note", "")],
     ]
+    for right in rights_reference.get("federal_consumer_rights", []):
+        rights_rows.append([
+            "Federal Consumer Right",
+            "FCRA",
+            right.get("right", ""),
+            right.get("plain_english", ""),
+            right.get("scanner_use", ""),
+        ])
+    maryland_rights = rights_reference.get("maryland_consumer_rights", {})
+    if maryland_rights:
+        rights_rows.append([
+            "State Consumer Right",
+            maryland_rights.get("state", "Maryland"),
+            maryland_rights.get("legal_reference", ""),
+            maryland_rights.get("plain_english_summary", ""),
+            "",
+        ])
+        for right in maryland_rights.get("consumer_rights", []):
+            rights_rows.append([
+                "State Consumer Right",
+                maryland_rights.get("state", "Maryland"),
+                "Maryland consumer reporting right",
+                right,
+                "",
+            ])
+        contact = maryland_rights.get("complaint_contact", {})
+        rights_rows.append([
+            "State Complaint Contact",
+            maryland_rights.get("state", "Maryland"),
+            contact.get("agency", ""),
+            contact.get("address", ""),
+            contact.get("phone", ""),
+        ])
+        for use in maryland_rights.get("scanner_use", []):
+            rights_rows.append([
+                "State Scanner Rule",
+                maryland_rights.get("state", "Maryland"),
+                "Credit Vivo workflow",
+                "",
+                use,
+            ])
     for contact_group in rights_reference.get("federal_contacts", []):
         for contact in contact_group.get("contacts", []):
             rights_rows.append([

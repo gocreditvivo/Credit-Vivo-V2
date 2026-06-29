@@ -160,6 +160,8 @@ def build_credit_domain_expertise_brief() -> Dict[str, object]:
         "topics": [topic_to_dict(topic) for topic in CREDIT_DOMAIN_TOPICS],
         "fcra_rights_reference": {
             "plain_english_note": fcra_rights["source_notes"]["plain_english_note"],
+            "federal_consumer_rights_count": len(fcra_rights["federal_consumer_rights"]),
+            "maryland_rights_summary": fcra_rights["maryland_consumer_rights"]["plain_english_summary"],
             "state_notice_states": [item["state"] for item in fcra_rights["state_notice_links"]],
             "federal_contact_categories": [item["category"] for item in fcra_rights["federal_contacts"]],
         },

@@ -52,4 +52,6 @@ def test_command_brief_includes_fcra_rights_reference():
 
     assert reference["source"] == "CFPB Regulation V Appendix K - Summary of Consumer Rights"
     assert reference["state_notice_count"] >= 20
+    assert reference["federal_consumer_rights_count"] >= 10
+    assert "Maryland consumers" in reference["maryland_rights_summary"]
     assert any("state rights" in rule for rule in reference["ai_rules"])

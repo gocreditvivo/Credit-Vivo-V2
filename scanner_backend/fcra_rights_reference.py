@@ -138,6 +138,116 @@ FCRA_FEDERAL_CONTACTS: List[Dict[str, object]] = [
 ]
 
 
+FCRA_FEDERAL_CONSUMER_RIGHTS: List[Dict[str, str]] = [
+    {
+        "right": "Adverse action notice",
+        "plain_english": "A consumer must be told when information in a consumer report is used against them, such as a denial or worse terms.",
+        "scanner_use": "Ask for or track adverse-action notices after auto, mortgage, apartment, insurance, employment, or credit denials.",
+    },
+    {
+        "right": "File disclosure",
+        "plain_english": "A consumer has the right to know what is in their consumer reporting file after proper identification.",
+        "scanner_use": "Route the customer to obtain the full report or specialty report when scanner data is incomplete.",
+    },
+    {
+        "right": "Free report situations",
+        "plain_english": "A consumer may qualify for a free file disclosure after adverse action, fraud alert/identity theft, fraud-related inaccuracy, public assistance, or unemployment with expected job search.",
+        "scanner_use": "Use in intake questions and customer education before asking the customer to pay for duplicate data.",
+    },
+    {
+        "right": "Credit score disclosure",
+        "plain_english": "A consumer may ask for a credit score from reporting agencies that create or distribute scores, and may receive score information in certain mortgage transactions.",
+        "scanner_use": "Explain that score data and report data are related but not the same thing.",
+    },
+    {
+        "right": "Dispute incomplete or inaccurate information",
+        "plain_english": "A consumer can dispute information that appears incomplete or inaccurate, and the consumer reporting agency must investigate unless the dispute is frivolous.",
+        "scanner_use": "Convert findings into specific dispute reasons, fields, evidence, and requested corrections.",
+    },
+    {
+        "right": "Correction or deletion",
+        "plain_english": "Inaccurate, incomplete, or unverifiable information must be corrected or deleted, usually within 30 days, though verified accurate information may remain.",
+        "scanner_use": "Set customer expectations: correction/deletion is not guaranteed if the information is verified as accurate.",
+    },
+    {
+        "right": "Outdated negative information",
+        "plain_english": "Most negative information cannot be reported after seven years, and bankruptcies generally cannot be reported after ten years.",
+        "scanner_use": "Flag possible obsolete reporting and DOFD/removal-date issues.",
+    },
+    {
+        "right": "Limited access",
+        "plain_english": "Consumer reports may only be provided to parties with a permissible purpose.",
+        "scanner_use": "Flag suspicious inquiry/access questions for customer review.",
+    },
+    {
+        "right": "Employment consent",
+        "plain_english": "A report generally cannot be provided to an employer or potential employer without written consent.",
+        "scanner_use": "Route employment-screening issues separately from ordinary credit disputes.",
+    },
+    {
+        "right": "Prescreened offer opt-out",
+        "plain_english": "Consumers may limit prescreened credit and insurance offers by opting out through the nationwide bureaus.",
+        "scanner_use": "Offer as education, not as a dispute or repair action.",
+    },
+    {
+        "right": "Security freeze",
+        "plain_english": "A consumer can place a security freeze to restrict release of their credit report without express authorization.",
+        "scanner_use": "Recommend as an education topic for identity theft, fraud, or unauthorized-account concerns.",
+    },
+    {
+        "right": "Fraud alert",
+        "plain_english": "A consumer can place an initial fraud alert, and identity-theft victims may qualify for an extended fraud alert.",
+        "scanner_use": "Route identity theft and not-mine accounts to fraud-alert and identity-theft workflows.",
+    },
+    {
+        "right": "Potential damages",
+        "plain_english": "If a consumer reporting agency, user, or furnisher violates the FCRA, a consumer may be able to seek damages in state or federal court.",
+        "scanner_use": "Escalate serious repeated failures, damages, denials, mixed files, or identity theft to attorney-review prep.",
+    },
+    {
+        "right": "Identity theft and active duty rights",
+        "plain_english": "Identity theft victims and active duty military personnel have additional rights.",
+        "scanner_use": "Ask intake questions that identify these special workflows and protect sensitive documents.",
+    },
+]
+
+
+MARYLAND_CONSUMER_REPORTING_RIGHTS: Dict[str, object] = {
+    "state": "Maryland",
+    "legal_reference": "Annotated Code of Maryland, Commercial Law Article, Title 14, Subtitle 12",
+    "plain_english_summary": (
+        "Maryland consumers have state consumer reporting rights in addition to federal FCRA rights, "
+        "including file access, dispute, correction, statement, and complaint rights."
+    ),
+    "consumer_rights": [
+        "Request in writing that a consumer reporting agency restrict sale or transfer of file information to mail-service, marketing, or similar organizations.",
+        "Receive an exact copy of the credit file with an explanation of codes or trade language after request and proper identification.",
+        "Receive file disclosure in person, by telephone after written request, or in writing after proper identification.",
+        "Be accompanied by one chosen person during disclosure if proper permission and identification are provided.",
+        "Dispute completeness or accuracy of credit-file information.",
+        "Receive reinvestigation within 30 days for a written dispute unless the dispute is frivolous or irrelevant.",
+        "Have inaccurate or unverifiable information deleted and receive written notice of correction.",
+        "Receive written notice if disputed information is verified as accurate.",
+        "Pay no charge for handling disputed information or corrected reports from that handling.",
+        "Within 60 days after notice of correction or findings, request names, addresses, and telephone numbers of creditors contacted during reinvestigation.",
+        "File a brief statement of dispute of not more than 100 words if reinvestigation does not resolve the dispute.",
+        "Request notice of deleted information or dispute statement to prior recipients: past two years for employment purposes or past one year for other purposes.",
+        "Request one free copy of the file within a 12-month period, with later copies subject to stated fee limits.",
+    ],
+    "complaint_contact": {
+        "agency": "Maryland Office of Financial Regulation - Complaint Unit",
+        "address": "500 N. Calvert Street, Suite 402, Baltimore, MD 21202",
+        "phone": "(410) 230-6077",
+    },
+    "scanner_use": [
+        "For Maryland residents, show Maryland rights alongside federal FCRA rights.",
+        "Track written dispute date, 30-day reinvestigation deadline, response, correction/deletion notice, and creditor-contact request window.",
+        "Offer a 100-word statement-of-dispute workflow when reinvestigation does not resolve the item.",
+        "Route unresolved Maryland issues to state complaint/attorney-review prep only after customer approval.",
+    ],
+}
+
+
 FCRA_STATE_NOTICE_LINKS: List[Dict[str, str]] = [
     {"state": "California Fraud State Notice", "url": "https://www.experian.com/blogs/ask-experian/california-fraud-state-notice-of-rights/"},
     {"state": "California", "url": "https://www.experian.com/blogs/ask-experian/credit-education/report-basics/fair-credit-reporting-act-fcra/california/"},
@@ -165,6 +275,8 @@ FCRA_STATE_NOTICE_LINKS: List[Dict[str, str]] = [
 def build_fcra_rights_reference() -> Dict[str, object]:
     return {
         "source_notes": FCRA_RIGHTS_SOURCE_NOTES,
+        "federal_consumer_rights": FCRA_FEDERAL_CONSUMER_RIGHTS,
+        "maryland_consumer_rights": MARYLAND_CONSUMER_REPORTING_RIGHTS,
         "federal_contacts": FCRA_FEDERAL_CONTACTS,
         "state_notice_links": FCRA_STATE_NOTICE_LINKS,
         "ai_rules": [
@@ -172,5 +284,6 @@ def build_fcra_rights_reference() -> Dict[str, object]:
             "Route unresolved serious issues to CFPB/state/attorney-review workflows only after customer approval.",
             "Use federal regulator contacts as a routing guide, not as legal advice.",
             "State notice links are references; confirm current state-law requirements before production disclosure use.",
+            "For Maryland consumers, track state dispute rights, the 30-day reinvestigation expectation, and state complaint routing.",
         ],
     }

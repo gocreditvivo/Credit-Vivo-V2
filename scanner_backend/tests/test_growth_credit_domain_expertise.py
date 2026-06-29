@@ -36,3 +36,5 @@ def test_credit_domain_expertise_includes_state_rights_reference():
 
     assert "state Attorney General" in reference["plain_english_note"]
     assert "Texas" in reference["state_notice_states"]
+    assert reference["federal_consumer_rights_count"] >= 10
+    assert "Maryland consumers" in reference["maryland_rights_summary"]

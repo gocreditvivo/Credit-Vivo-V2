@@ -432,6 +432,10 @@ def test_parse_sample_report(tmp_path):
     assert "Federal Trade Commission Consumer Response Center" in fcra_rights_text
     assert "state Attorney General" in fcra_rights_text
     assert "Virginia" in fcra_rights_text
+    assert "Security freeze" in fcra_rights_text
+    assert "Adverse action notice" in fcra_rights_text
+    assert "Maryland Office of Financial Regulation" in fcra_rights_text
+    assert "100 words" in fcra_rights_text
     field_compliance = workbook["Field Compliance Audit"]
     field_headers = [field_compliance.cell(row=1, column=column).value for column in range(1, field_compliance.max_column + 1)]
     assert "Metro 2 Concept" in field_headers

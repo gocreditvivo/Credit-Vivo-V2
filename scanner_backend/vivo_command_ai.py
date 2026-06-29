@@ -148,6 +148,8 @@ def build_command_brief(
         "fcra_rights_reference": {
             "plain_english_note": fcra_rights["source_notes"]["plain_english_note"],
             "source": fcra_rights["source_notes"]["primary_reference"],
+            "federal_consumer_rights_count": len(fcra_rights["federal_consumer_rights"]),
+            "maryland_rights_summary": fcra_rights["maryland_consumer_rights"]["plain_english_summary"],
             "state_notice_count": len(fcra_rights["state_notice_links"]),
             "federal_contact_count": len(fcra_rights["federal_contacts"]),
             "ai_rules": fcra_rights["ai_rules"],
