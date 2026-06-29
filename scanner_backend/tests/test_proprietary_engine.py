@@ -68,6 +68,75 @@ Account types is good for your credit.
 The company must give you the name, address, and phone number of the furnisher.
 """
 
+REALISTIC_EQUIFAX = """
+--- PAGE 1 ---
+Equifax Credit Report
+
+CREDIT ONE BANK
+PO Box 98873, Las Vegas, NV 89193-8873 | (877) 825-3242 Date Reported: 03/11/2026 | Balance: $488
+Account Number: *6902 | Owner: Individual Account Credit Limit: $500 | High Credit: $696
+Loan/Account Type: Credit Card | Status: Pays As Agreed
+
+Date Opened: 12/27/2022 Date of 1st Delinquency: Terms Frequency: Monthly
+Date of Last Activity: 03/11/2026 Date Major Delinquency 1st Reported: Months Reviewed: 38
+Scheduled Payment Amount: $30 Amount Past Due: $60
+Actual Payment Amount: Charge Off Amount: Balloon Payment Amount:
+Date of Last Payment: 02/11/2026 Date Closed: Balloon Payment Date:
+"""
+
+REALISTIC_EXPERIAN = """
+--- PAGE 1 ---
+Experian Credit Report
+
+Account information disputed by consumer (Meets requirement
+of the Fair Credit Reporting Act).
+CREDIT ONE BANK
+POTENTIALLY NEGATIVE
+Account Info
+Account Name CREDIT ONE BANK
+Account Number 444796XXXXXXXXXX
+Account Type Credit card
+Responsibility Individual
+Date Opened 12/27/2022
+Status Open.
+Status Updated Sep 2023
+Balance $488
+Balance Updated 03/11/2026
+Recent Payment -
+Monthly Payment $30
+Credit Limit $500
+Highest Balance $696
+Terms -
+Payment History
+30 days past due as of Aug 2023
+By Apr 2030, this account is scheduled to go to a positive status.
+"""
+
+REALISTIC_TRANSUNION = """
+--- PAGE 1 ---
+TransUnion Credit Report
+
+CREDIT ONE BANK
+444796268171****
+Account Information
+Address PO BOX 98872 LAS VEGAS, NV 89193-8872
+Monthly Payment $30
+Date Opened 12/27/2022
+Responsibility Individual Account
+Account Type Revolving Account
+Loan Type CREDIT CARD
+Balance $488
+Date Updated 03/11/2026
+Payment Received $0
+Last Payment Made 02/11/2026
+Pay Status Current Account
+Terms $30 per month; paid Monthly
+High Balance (Hist.)
+High balance of $696 from 10/2023 to 03/2026
+Credit Limit (Hist.)
+Credit limit of $500 from 10/2023 to 03/2026
+"""
+
 def test_parse_sample_report(tmp_path):
     result = parse_reports({
         "experian.pdf": {"text": SAMPLE, "bureau": "Experian"},
@@ -320,3 +389,37 @@ def test_boilerplate_disclosure_text_is_not_a_tradeline():
     data = result_to_dict(result)
     assert data["tradelines"] == []
     assert data["issues"] == []
+
+
+def test_parser_fills_columns_from_realistic_bureau_snippets():
+    result = parse_reports({
+        "equifax_realistic.pdf": {"text": REALISTIC_EQUIFAX, "bureau": "Equifax"},
+        "experian_realistic.pdf": {"text": REALISTIC_EXPERIAN, "bureau": "Experian"},
+        "transunion_realistic.pdf": {"text": REALISTIC_TRANSUNION, "bureau": "TransUnion"},
+    })
+    data = result_to_dict(result)
+    by_bureau = {item["bureau"]: item for item in data["tradelines"]}
+
+    assert by_bureau["Equifax"]["account_name"] == "CREDIT ONE BANK"
+    assert by_bureau["Equifax"]["account_type"] == "Credit Card"
+    assert by_bureau["Equifax"]["responsibility"] == "Individual"
+    assert by_bureau["Equifax"]["credit_limit"] == "$500"
+    assert by_bureau["Equifax"]["high_credit_or_original_amount"] == "$696"
+    assert by_bureau["Equifax"]["past_due"] == "$60"
+    assert by_bureau["Equifax"]["date_last_payment"] == "02/11/2026"
+
+    assert by_bureau["Experian"]["account_name"] == "CREDIT ONE BANK"
+    assert by_bureau["Experian"]["balance"] == "$488"
+    assert by_bureau["Experian"]["date_reported"] == "03/11/2026"
+    assert by_bureau["Experian"]["credit_limit"] == "$500"
+    assert by_bureau["Experian"]["high_credit_or_original_amount"] == "$696"
+    assert "disputed by consumer" in by_bureau["Experian"]["remarks"].lower()
+
+    assert by_bureau["TransUnion"]["account_name"] == "CREDIT ONE BANK"
+    assert by_bureau["TransUnion"]["account_number_masked"].endswith("8171")
+    assert by_bureau["TransUnion"]["account_type"] == "Revolving Account"
+    assert by_bureau["TransUnion"]["status"] == "Current Account"
+    assert by_bureau["TransUnion"]["date_reported"] == "03/11/2026"
+    assert by_bureau["TransUnion"]["date_last_payment"] == "02/11/2026"
+    assert by_bureau["TransUnion"]["credit_limit"] == "$500"
+    assert by_bureau["TransUnion"]["high_credit_or_original_amount"] == "$696"

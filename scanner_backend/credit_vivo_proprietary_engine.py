@@ -207,9 +207,10 @@ MONEY = r"\$?\s?[0-9]{1,3}(?:,[0-9]{3})*(?:\.\d{2})?|\$?\s?[0-9]+(?:\.\d{2})?"
 COMMON_FIELD_PATTERNS: Dict[str, List[str]] = {
     "account_number_masked": [
         r"(?:account\s*(?:#|number|no\.?)|acct\s*(?:#|number|no\.?))\s*[:\-]?\s*([A-Za-z0-9\*\-xX]{3,32})",
+        r"^\s*([A-Za-z0-9]{4,}\*{2,}[A-Za-z0-9\*]*)\s*$",
     ],
     "account_type": [
-        r"(?:account type|type of account|loan type|type)\s*[:\-]?\s*([A-Za-z0-9 /&-]{3,60})",
+        r"(?:loan/account type|account type|type of account|loan type|type)\s*[:\-]?\s*([A-Za-z0-9 /&-]{3,80})",
     ],
     "portfolio_type": [
         r"(?:portfolio type|portfolio)\s*[:\-]?\s*([A-Za-z0-9 /&-]{3,60})",
@@ -218,16 +219,18 @@ COMMON_FIELD_PATTERNS: Dict[str, List[str]] = {
         r"(?:responsibility|account holder|owner)\s*[:\-]?\s*([A-Za-z0-9 /&-]{3,60})",
     ],
     "status": [
-        r"(?:account status|status)\s*[:\-]?\s*([A-Za-z0-9 /&.,'-]{3,100})",
+        r"(?:account status|status)\s*[:\-]?\s*([A-Za-z0-9 /&.,'$-]{3,140})",
+        r"(?:pay status)\s*[:\-]?\s*([A-Za-z0-9 /&.,'$-]{3,140})",
     ],
     "pay_status": [
-        r"(?:payment status|pay status|payment\s*condition)\s*[:\-]?\s*([A-Za-z0-9 /&.,'-]{3,120})",
+        r"(?:payment status|pay status|payment\s*condition)\s*[:\-]?\s*([A-Za-z0-9 /&.,'$-]{3,140})",
     ],
     "balance": [
         r"(?:current balance|balance)\s*[:\-]?\s*(" + MONEY + r")",
     ],
     "past_due": [
         r"(?:past due|amount past due)\s*[:\-]?\s*(" + MONEY + r")",
+        r"(" + MONEY + r")\s+past due",
     ],
     "high_credit_or_original_amount": [
         r"(?:high credit|original amount|original balance|loan amount)\s*[:\-]?\s*(" + MONEY + r")",
@@ -242,19 +245,21 @@ COMMON_FIELD_PATTERNS: Dict[str, List[str]] = {
         r"(?:date closed|closed)\s*[:\-]?\s*(" + DATE + r")",
     ],
     "date_reported": [
-        r"(?:date reported|last reported|reported|updated|date updated)\s*[:\-]?\s*(" + DATE + r")",
+        r"(?:date reported|last reported|balance updated|date updated)\s*[:\-]?\s*(" + DATE + r")",
+        r"\breported\s*[:\-]?\s*(" + DATE + r")",
     ],
     "date_last_activity": [
         r"(?:date of last activity|last activity|date last active)\s*[:\-]?\s*(" + DATE + r")",
     ],
     "date_last_payment": [
-        r"(?:date of last payment|last payment|date last payment)\s*[:\-]?\s*(" + DATE + r")",
+        r"(?:date of last payment|last payment made|last payment|date last payment)\s*[:\-]?\s*(" + DATE + r")",
     ],
     "date_of_first_delinquency": [
         r"(?:date of first delinquency|first delinquency|dofd|first reported delinquency)\s*[:\-]?\s*(" + DATE + r")",
     ],
     "estimated_removal_date": [
         r"(?:on record until|estimated month and year this item will be removed|estimated removal|scheduled to continue on record until)\s*[:\-]?\s*(" + DATE + r")",
+        r"(?:by\s+(" + DATE + r"),?\s+this account is scheduled)",
     ],
     "original_creditor": [
         r"(?:original creditor|original lender|original account)\s*[:\-]?\s*([A-Za-z0-9 &.,'()/\-]{3,90})",
@@ -267,8 +272,46 @@ COMMON_FIELD_PATTERNS: Dict[str, List[str]] = {
     ],
     "remarks": [
         r"(?:remarks|comments|comment|account information)\s*[:\-]?\s*([A-Za-z0-9 &.,'()/\-]{5,220})",
+        r"(account information disputed by consumer[^\n]{0,180})",
     ],
 }
+
+FIELD_STOP_LABELS = [
+    "Account Number",
+    "Owner",
+    "Responsibility",
+    "Account Type",
+    "Loan Type",
+    "Loan/Account Type",
+    "Status",
+    "Pay Status",
+    "Status Updated",
+    "Balance",
+    "Balance Updated",
+    "Date Opened",
+    "Date Reported",
+    "Date Updated",
+    "Date of Last Activity",
+    "Last Payment Made",
+    "Date of Last Payment",
+    "Date of 1st Delinquency",
+    "Date of First Delinquency",
+    "Date Major Delinquency",
+    "Terms",
+    "High Credit",
+    "High Balance",
+    "Credit Limit",
+    "Scheduled Payment Amount",
+    "Amount Past Due",
+    "Actual Payment Amount",
+    "Charge Off Amount",
+    "Balloon Payment",
+    "Term Duration",
+    "Payment History",
+    "On Record Until",
+    "Recent Payment",
+    "Monthly Payment",
+]
 
 BUREAU_SIGNATURES = {
     "Experian": ["experian", "experian credit report", "experian information solutions"],
@@ -370,10 +413,23 @@ def candidate_blocks(text: str) -> List[Tuple[Optional[int], str]]:
             if len(c) < 20:
                 continue
             lower = c.lower()
+            continuation = lower.startswith((
+                "date opened",
+                "date of last activity",
+                "date of last payment",
+                "scheduled payment",
+                "actual payment",
+                "amount past due",
+                "payment history",
+                "terms",
+                "high balance",
+                "credit limit",
+                "by ",
+            ))
             starts = (
-                any(label in lower for label in ["account number", "account #", "date opened", "payment status", "account status"])
+                any(label in lower for label in ["account number", "account #", "payment status", "account status", "account name"])
                 or any(term in lower for term in NEGATIVE_TERMS)
-            )
+            ) and not continuation
             if starts and buffer:
                 block = "\n".join(buffer)
                 if len(block) > 80:
@@ -430,8 +486,104 @@ def first_match(patterns: List[str], text: str) -> str:
     return ""
 
 
+def trim_embedded_labels(value: str, field_name: str) -> str:
+    value = clean_text(value).strip(" :-|")
+    if not value:
+        return ""
+
+    protected = {
+        "account_type": {"Account"},
+        "status": set(),
+        "pay_status": set(),
+        "remarks": set(),
+    }.get(field_name, set())
+
+    for label in FIELD_STOP_LABELS:
+        if label in protected:
+            continue
+        pattern = r"(?:\s+\|\s+|\s+\|\s*|\s{1,})(?=" + re.escape(label) + r"\b\s*:?)"
+        parts = re.split(pattern, value, maxsplit=1, flags=re.I)
+        if len(parts) > 1 and parts[0].strip():
+            value = parts[0].strip(" :-|")
+
+    if field_name in {"status", "pay_status"}:
+        value = re.split(
+            r"\s+(?:Status Updated|Balance Updated|Balance|Recent Payment|Monthly Payment|Credit Limit|Highest Balance|Terms|Payment History)\b",
+            value,
+            maxsplit=1,
+            flags=re.I,
+        )[0].strip(" :-|")
+
+    if field_name == "account_type":
+        value = re.split(r"\s+\|\s+|\s+Status\s*:", value, maxsplit=1, flags=re.I)[0].strip(" :-|")
+
+    if field_name == "responsibility":
+        m = re.search(r"\b(Individual|Joint|Authorized User|Co-signer|Terminated|Undesignated)\b", value, flags=re.I)
+        if m:
+            value = clean_text(m.group(1)).title()
+
+    return value[:240]
+
+
+def infer_missing_fields_from_block(t: NormalizedTradeline) -> None:
+    block = t.raw_block
+    lower = block.lower()
+
+    if not t.past_due:
+        m = re.search(r"(" + MONEY + r")\s+past due\b", block, flags=re.I)
+        if m:
+            t.past_due = normalize_money(m.group(1))
+
+    if not t.pay_status:
+        m = re.search(r"\bPay Status\s*[:\-]?\s*([A-Za-z0-9 /&.,'$-]{3,120})", block, flags=re.I)
+        if m:
+            t.pay_status = trim_embedded_labels(m.group(1), "pay_status")
+
+    if not t.status and t.pay_status:
+        t.status = t.pay_status
+
+    if not t.date_reported:
+        m = re.search(r"\b(?:Balance Updated|Date Updated)\s*[:\-]?\s*(" + DATE + r")", block, flags=re.I)
+        if m:
+            t.date_reported = normalize_date(m.group(1))
+
+    if not t.date_last_payment:
+        m = re.search(r"\b(?:Last Payment Made|Date of Last Payment|Last Payment)\s*[:\-]?\s*(" + DATE + r")", block, flags=re.I)
+        if m:
+            t.date_last_payment = normalize_date(m.group(1))
+
+    if not t.responsibility:
+        m = re.search(r"\b(?:Owner|Responsibility)\s*[:\-]?\s*(Individual|Joint|Authorized User|Co-signer|Terminated|Undesignated)", block, flags=re.I)
+        if m:
+            t.responsibility = clean_text(m.group(1)).title()
+
+    if not t.account_type:
+        m = re.search(r"\bLoan Type\s*[:\-]?\s*([A-Za-z0-9 /&-]{3,80})", block, flags=re.I)
+        if m:
+            t.account_type = trim_embedded_labels(m.group(1), "account_type")
+
+    if not t.credit_limit:
+        m = re.search(r"\bCredit Limit(?:\s*\(Hist\.\))?\s*(?:[:\-]|of)?\s*(" + MONEY + r")", block, flags=re.I)
+        if m:
+            t.credit_limit = normalize_money(m.group(1))
+
+    if not t.high_credit_or_original_amount:
+        m = re.search(r"\b(?:High Balance|Highest Balance|Original Balance|High Credit)(?:\s*\(Hist\.\))?\s*(?:[:\-]|of)?\s*(" + MONEY + r")", block, flags=re.I)
+        if m:
+            t.high_credit_or_original_amount = normalize_money(m.group(1))
+
+    if not t.estimated_removal_date:
+        m = re.search(r"\bOn Record Until\s*[:\-]?\s*(" + DATE + r")", block, flags=re.I)
+        if m:
+            t.estimated_removal_date = normalize_date(m.group(1))
+
+    if not t.remarks and "account information disputed by consumer" in lower:
+        t.remarks = "Account information disputed by consumer"
+
+
 def extract_field(field_name: str, block: str) -> str:
     value = first_match(COMMON_FIELD_PATTERNS.get(field_name, []), block)
+    value = trim_embedded_labels(value, field_name)
     if field_name in {"balance", "past_due", "high_credit_or_original_amount", "credit_limit"}:
         return normalize_money(value)
     if "date" in field_name:
@@ -666,6 +818,7 @@ def parse_tradelines_for_bureau(bureau: str, filename: str, text: str) -> List[N
             raw_block=block[:2500],
             page_start=page_num,
         )
+        infer_missing_fields_from_block(t)
         t.confidence_score = score_confidence(t)
         t.confidence = confidence_label(t.confidence_score)
         t.needs_admin_review = t.confidence != "high"
