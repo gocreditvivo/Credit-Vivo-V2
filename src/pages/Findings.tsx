@@ -270,7 +270,7 @@ export default function Findings() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-sm font-semibold text-navy-800">
-                        {formatLabel(letter.letter_type)}
+                        {letter.letter_subject || formatLabel(letter.letter_type)}
                       </p>
                       <p className="text-xs text-navy-500 mt-1">{letter.round}</p>
                     </div>
@@ -281,6 +281,16 @@ export default function Findings() {
                   <p className="text-[11px] text-navy-400 mt-2">
                     Recipient: {formatLabel(letter.recipient_type)} | Delivery: {formatLabel(letter.delivery_method)}
                   </p>
+                  {letter.draft_letter_body && (
+                    <details className="mt-3 rounded-lg border border-navy-100 bg-white p-3">
+                      <summary className="cursor-pointer text-[11px] font-bold uppercase tracking-wider text-sky-700">
+                        View draft letter
+                      </summary>
+                      <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-navy-50 p-3 text-[11px] leading-relaxed text-navy-700">
+                        {letter.draft_letter_body}
+                      </pre>
+                    </details>
+                  )}
                 </div>
               ))}
             </div>

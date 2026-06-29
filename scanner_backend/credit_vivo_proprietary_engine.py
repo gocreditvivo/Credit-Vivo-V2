@@ -901,6 +901,64 @@ def _next_action_for_issue(issue: ReviewIssue) -> str:
     return "admin_review_before_letter"
 
 
+def _draft_letter_subject(letter_type: str, issue: ReviewIssue) -> str:
+    if letter_type == "furnisher_direct_dispute":
+        return f"Direct Dispute of Account Reporting - {issue.customer_label}"
+    if letter_type == "bureau_dispute":
+        return f"Credit Report Dispute - {issue.customer_label}"
+    return f"Admin Review Required - {issue.customer_label}"
+
+
+def _draft_letter_body(letter_type: str, recipient_type: str, issue: ReviewIssue) -> str:
+    if letter_type == "admin_review_hold":
+        return (
+            "DRAFT HOLD - ADMIN REVIEW REQUIRED\n\n"
+            f"Issue: {issue.customer_label}\n"
+            f"Reason: {issue.customer_explanation}\n\n"
+            "Credit Vivo did not generate a send-ready letter for this item because it needs "
+            "manual review before any dispute path is selected."
+        )
+
+    recipient_line = "Credit Bureau" if recipient_type == "credit_bureau" else "Furnisher / Collector"
+    requested_action = (
+        "Please investigate this item, correct any inaccurate or incomplete information, "
+        "delete any information that cannot be verified, and send the investigation results in writing."
+        if letter_type == "bureau_dispute"
+        else
+        "Please provide the basis for your reporting, including records supporting ownership, "
+        "balance, status, payment history, date of first delinquency, and authority to report this account."
+    )
+    evidence_note = "Evidence from the Credit Vivo scanner is attached for customer/admin review."
+    if issue.evidence:
+        snippet = issue.evidence[0].snippet[:450]
+        evidence_note = f"Scanner evidence excerpt for review: {snippet}"
+
+    return (
+        "DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n"
+        "DO NOT SEND UNTIL CUSTOMER AUTHORIZATION IS VERIFIED\n\n"
+        "[Customer Name]\n"
+        "[Customer Mailing Address]\n"
+        "[City, State ZIP]\n\n"
+        "[Date]\n\n"
+        f"To: {recipient_line}\n"
+        "[Recipient Address]\n\n"
+        f"Re: {issue.customer_label}\n\n"
+        "To Whom It May Concern:\n\n"
+        "I am disputing the accuracy, completeness, or verifiability of the credit reporting item "
+        "identified below. Please treat this letter as my formal notice of dispute.\n\n"
+        f"Disputed issue: {issue.customer_label}\n"
+        f"Reason for dispute: {issue.customer_explanation}\n"
+        f"Review round: {issue.suggested_round}\n\n"
+        f"{FCRA_NOTICE_OF_DISPUTE}\n\n"
+        f"{requested_action}\n\n"
+        f"{evidence_note}\n\n"
+        "Please send your written response to the mailing address above.\n\n"
+        "Sincerely,\n\n"
+        "[Customer Signature]\n"
+        "[Customer Printed Name]\n"
+    )
+
+
 def build_letter_workflow() -> dict:
     return {
         "draft_only": True,
@@ -1017,6 +1075,8 @@ def build_recommended_letter_queue(issues: List[ReviewIssue]) -> List[dict]:
             "issue_id": issue.id,
             "issue_type": issue.issue_type,
             "letter_type": letter_type,
+            "letter_subject": _draft_letter_subject(letter_type, issue),
+            "draft_letter_body": _draft_letter_body(letter_type, recipient_type, issue),
             "round": issue.suggested_round,
             "recipient_type": recipient_type,
             "responsible_party": responsible_party,

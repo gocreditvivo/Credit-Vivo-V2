@@ -58,6 +58,8 @@ export type ScannerLetterQueueItem = {
   issue_id: string;
   issue_type: string;
   letter_type: string;
+  letter_subject?: string;
+  draft_letter_body?: string;
   round: string;
   recipient_type: string;
   responsible_party: string;

@@ -37,5 +37,9 @@ def test_parse_sample_report():
     assert data["recommended_letter_queue"]
     assert data["recommended_letter_queue"][0]["tracking_status"] == "draft_not_sent"
     assert data["recommended_letter_queue"][0]["customer_approval_required"] is True
+    assert data["recommended_letter_queue"][0]["letter_subject"]
+    assert "DRAFT" in data["recommended_letter_queue"][0]["draft_letter_body"]
+    assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in data["recommended_letter_queue"][0]["draft_letter_body"]
+    assert "FCRA" in data["recommended_letter_queue"][0]["draft_letter_body"]
     assert data["fcra_review"]
     assert data["fcra_review"][0]["dispute_history_complete"] is False
