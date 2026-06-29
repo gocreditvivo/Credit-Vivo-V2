@@ -1491,6 +1491,85 @@ DISPUTE_SOP_ROWS = [
 ]
 
 
+DISPUTE_METHODS = [
+    {
+        "method": "FCRA Bureau Dispute",
+        "legal_basis": "FCRA 611 / 15 USC 1681i",
+        "when_to_use": "Use when the consumer disputes accuracy or completeness of an item on a credit report, including cross-bureau balance, status, date, duplicate, not-mine, or missing DOFD issues.",
+        "recipient": "Experian, Equifax, TransUnion, or other consumer reporting agency",
+        "send_channel": "Mail/tracked mail preferred for important disputes; online bureau portal may be used when customer chooses it; phone only for limited simple issues.",
+        "required_notice": "Formal notice of dispute identifying the item, specific disputed information, basis for dispute, and supporting documents.",
+        "required_packet": "customer-approved letter, FCRA notice, highlighted report item, targeted proof, ID/proof of address when needed, delivery tracking plan",
+        "tracking": "sent date, delivery date, tracking number, response due date, written results, corrected report, next round decision",
+        "next_escalation": "Round 2 furnisher dispute or Round 3 MOV/process audit if verified, incomplete, no response, or still inaccurate.",
+    },
+    {
+        "method": "FCRA / Regulation V Direct Furnisher Dispute",
+        "legal_basis": "12 CFR 1022.43 direct dispute; FCRA furnisher duties",
+        "when_to_use": "Use when the issue concerns account liability, terms, balance, credit limit, payment status, payment history, dates opened/closed, or other account information furnished by a creditor, collector, or debt buyer.",
+        "recipient": "Furnisher, creditor, collector, debt buyer, or servicer",
+        "send_channel": "Mail/tracked mail to the furnisher address on the report or another proper direct-dispute address.",
+        "required_notice": "Direct dispute identifying the account, the specific disputed information, the basis for dispute, and all supporting evidence available.",
+        "required_packet": "customer-approved direct dispute, bureau comparison, report excerpt, prior bureau response if any, proof/evidence, requested records list",
+        "tracking": "sent date, delivery date, tracking number, response due date, response type, correction/deletion/verified result, next round decision",
+        "next_escalation": "Round 3 MOV/process audit, CFPB/state packet, or attorney-ready packet if reporting remains unsupported or contradictory.",
+    },
+    {
+        "method": "MOV / Process Audit",
+        "legal_basis": "FCRA 611(a)(6)-(7) results and method-of-verification style follow-up",
+        "when_to_use": "Use after a bureau verifies an item but the response does not explain or resolve the evidence-backed dispute.",
+        "recipient": "Credit bureau",
+        "send_channel": "Mail/tracked mail preferred, with prior dispute history attached.",
+        "required_notice": "Request the method used to verify the disputed item and ask why the consumer evidence did not change the result.",
+        "required_packet": "prior dispute, proof of delivery, bureau response, furnisher response if any, current report excerpt, dispute history summary",
+        "tracking": "MOV request date, response due date, method received, unresolved verification gaps, escalation decision",
+        "next_escalation": "CFPB/state complaint packet or attorney-ready review when verification remains weak or contradictory.",
+    },
+    {
+        "method": "CFPB / CFPA Complaint Escalation",
+        "legal_basis": "CFPB complaint process; Consumer Financial Protection Act unfair/deceptive/abusive practice review where appropriate",
+        "when_to_use": "Use only after ordinary dispute channels are no longer pending or enough time has passed, and there is unresolved inaccurate reporting, no meaningful response, repeated verification, or failure to correct/mark disputed.",
+        "recipient": "CFPB complaint portal; optionally state attorney general or state regulator depending on issue",
+        "send_channel": "CFPB complaint portal or approved state/regulator complaint channel.",
+        "required_notice": "Complaint narrative explaining the timeline, disputed item, company response, remaining harm, and requested resolution.",
+        "required_packet": "full dispute history, credit reports before/after, notices, responses, delivery proofs, evidence, denial/adverse-action or damages proof if available",
+        "tracking": "complaint date, portal/reference number, company response due date, response received, customer review, escalation outcome",
+        "next_escalation": "Attorney-ready packet when damages, repeated noncompliance, mixed file, identity theft, or other serious unresolved harm exists.",
+    },
+    {
+        "method": "Metro 2 Field-Level Dispute",
+        "legal_basis": "Metro 2 reporting field analysis used as factual dispute support; FCRA/Reg V provide dispute framework",
+        "when_to_use": "Use when the scanner identifies specific field contradictions such as balance, current status, payment rating, DOFD, date reported, account type, original creditor, ownership, charge-off/sold status, or missing/obsolete dates.",
+        "recipient": "Bureau and/or furnisher depending on which party controls or reports the field",
+        "send_channel": "Include Metro 2 field table inside bureau/furnisher dispute package.",
+        "required_notice": "Identify each field being challenged and why the value appears inaccurate, incomplete, unverifiable, obsolete, or materially misleading.",
+        "required_packet": "3-bureau comparison, tradeline field table, raw evidence excerpt, supporting documents, requested field corrections",
+        "tracking": "field challenged, bureau values, furnisher values, requested correction, response result, updated report value",
+        "next_escalation": "MOV/process audit if field is verified without support; CFPB/state/attorney-ready packet if unresolved after dispute history.",
+    },
+]
+
+
+def dispute_methods_for_comparison(flags: List[str], missing: List[str], has_cross_issue: bool) -> dict:
+    methods = ["FCRA Bureau Dispute", "Metro 2 Field-Level Dispute"]
+    if has_cross_issue or flags or missing:
+        methods.append("FCRA / Regulation V Direct Furnisher Dispute")
+    if any("verified" in flag.lower() for flag in flags):
+        methods.append("MOV / Process Audit")
+    return {
+        "primary": methods[0],
+        "secondary": "; ".join(methods[1:]),
+        "cfpb_cfpa_trigger": (
+            "Use CFPB/CFPA escalation only after normal dispute path is no longer pending or 45 days have passed, and the issue remains unresolved."
+        ),
+        "metro2_focus": "; ".join(
+            focus
+            for focus in ["Current Balance", "Account Status", "Date Reported", "Date of First Delinquency", "Account Type", "Original Creditor"]
+            if flags or missing or has_cross_issue
+        ) or "Hold for admin field validation",
+    }
+
+
 def sop_for_comparison(flags: List[str], missing: List[str], has_cross_issue: bool) -> dict:
     if has_cross_issue or flags or missing:
         return {
@@ -1545,6 +1624,10 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         "Errors",
         "Findings",
         "Dispute Targets",
+        "Primary Dispute Method",
+        "Secondary Dispute Methods",
+        "Metro 2 Field Focus",
+        "CFPB/CFPA Escalation Trigger",
         "Bureau Dispute Draft",
         "Furnisher Dispute Draft",
         "SOP Round",
@@ -1586,6 +1669,7 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
 
         has_cross_issue = any(item.get("id") in cross_issue_ids for item in items)
         sop = sop_for_comparison([flag for flag in flags if flag], missing, has_cross_issue)
+        methods = dispute_methods_for_comparison([flag for flag in flags if flag], missing, has_cross_issue)
         suggested_review = (
             "Review and dispute field-level mismatch if inaccurate or unverifiable."
             if has_cross_issue or any(flags)
@@ -1631,6 +1715,10 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             error_text,
             suggested_review,
             dispute_targets,
+            methods["primary"],
+            methods["secondary"],
+            methods["metro2_focus"],
+            methods["cfpb_cfpa_trigger"],
             bureau_letter,
             furnisher_letter,
             sop["round"],
@@ -1695,6 +1783,36 @@ def build_dispute_sop_rows() -> List[List[object]]:
     ]
 
 
+def build_dispute_method_rows() -> List[List[object]]:
+    return [
+        [
+            "Method",
+            "Legal / Rule Basis",
+            "When To Use",
+            "Recipient",
+            "Send Channel",
+            "Required Notice",
+            "Required Packet",
+            "Tracking",
+            "Next Escalation",
+        ],
+        *[
+            [
+                row["method"],
+                row["legal_basis"],
+                row["when_to_use"],
+                row["recipient"],
+                row["send_channel"],
+                row["required_notice"],
+                row["required_packet"],
+                row["tracking"],
+                row["next_escalation"],
+            ]
+            for row in DISPUTE_METHODS
+        ],
+    ]
+
+
 def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     if Workbook is None:
         return
@@ -1707,6 +1825,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     items = wb.create_sheet("Review Items")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
+    dispute_methods = wb.create_sheet("Dispute Methods")
     dispute_sop = wb.create_sheet("Dispute SOP")
     letters = wb.create_sheet("Draft Letters")
     fcra = wb.create_sheet("FCRA Review")
@@ -1807,6 +1926,8 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
         for control in controls:
             notice_rows.append([label, control])
     _write_workbook_sheet(fcra_notice_rules, notice_rows)
+
+    _write_workbook_sheet(dispute_methods, build_dispute_method_rows())
 
     _write_workbook_sheet(dispute_sop, build_dispute_sop_rows())
 

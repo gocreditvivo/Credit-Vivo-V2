@@ -125,6 +125,7 @@ def test_parse_sample_report(tmp_path):
         "Review Items",
         "Metro 2 + FCRA Review",
         "FCRA Notice Rules",
+        "Dispute Methods",
         "Dispute SOP",
         "Draft Letters",
         "FCRA Review",
@@ -140,10 +141,14 @@ def test_parse_sample_report(tmp_path):
     assert "Experian Raw Evidence" in headers
     assert "Equifax Balance" in headers
     assert "TransUnion Balance" in headers
-    assert headers[-16:] == [
+    assert headers[-20:] == [
         "Errors",
         "Findings",
         "Dispute Targets",
+        "Primary Dispute Method",
+        "Secondary Dispute Methods",
+        "Metro 2 Field Focus",
+        "CFPB/CFPA Escalation Trigger",
         "Bureau Dispute Draft",
         "Furnisher Dispute Draft",
         "SOP Round",
@@ -161,6 +166,9 @@ def test_parse_sample_report(tmp_path):
     errors_column = headers.index("Errors") + 1
     bureau_letter_column = headers.index("Bureau Dispute Draft") + 1
     furnisher_letter_column = headers.index("Furnisher Dispute Draft") + 1
+    primary_method_column = headers.index("Primary Dispute Method") + 1
+    secondary_method_column = headers.index("Secondary Dispute Methods") + 1
+    metro2_focus_column = headers.index("Metro 2 Field Focus") + 1
     sop_round_column = headers.index("SOP Round") + 1
     sop_tracking_column = headers.index("SOP Tracking Checklist") + 1
     comparison_flags = " ".join(
@@ -182,6 +190,21 @@ def test_parse_sample_report(tmp_path):
     assert "forward all relevant dispute information to the furnisher" in bureau_letters
     assert "To: Furnisher / Collector" in furnisher_letters
     assert "basis for reporting" in furnisher_letters
+    primary_methods = " ".join(
+        str(comparison.cell(row=row, column=primary_method_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    secondary_methods = " ".join(
+        str(comparison.cell(row=row, column=secondary_method_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    metro2_focus = " ".join(
+        str(comparison.cell(row=row, column=metro2_focus_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    assert "FCRA Bureau Dispute" in primary_methods
+    assert "Direct Furnisher Dispute" in secondary_methods
+    assert "Current Balance" in metro2_focus
     sop_rounds = " ".join(
         str(comparison.cell(row=row, column=sop_round_column).value or "")
         for row in range(2, comparison.max_row + 1)
@@ -203,6 +226,16 @@ def test_parse_sample_report(tmp_path):
     )
     assert "customer approval required" in notice_rule_text
     assert "written reinvestigation results" in notice_rule_text
+    dispute_methods = workbook["Dispute Methods"]
+    method_text = " ".join(
+        str(dispute_methods.cell(row=row, column=1).value or "") + " " +
+        str(dispute_methods.cell(row=row, column=2).value or "")
+        for row in range(2, dispute_methods.max_row + 1)
+    )
+    assert "FCRA Bureau Dispute" in method_text
+    assert "Direct Furnisher Dispute" in method_text
+    assert "CFPB / CFPA Complaint Escalation" in method_text
+    assert "Metro 2 Field-Level Dispute" in method_text
     dispute_sop = workbook["Dispute SOP"]
     sop_text = " ".join(
         str(dispute_sop.cell(row=row, column=1).value or "") + " " +
