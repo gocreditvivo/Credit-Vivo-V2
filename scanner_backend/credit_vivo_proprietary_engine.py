@@ -496,14 +496,6 @@ def candidate_blocks(text: str) -> List[Tuple[Optional[int], str]]:
             if len(block) > 80:
                 blocks.append((page_num, block))
 
-        # Secondary sliding windows for negative terms
-        lower_page = page_text.lower()
-        for term in NEGATIVE_TERMS:
-            for m in re.finditer(re.escape(term), lower_page):
-                start = max(0, m.start() - 800)
-                end = min(len(page_text), m.end() + 1300)
-                blocks.append((page_num, page_text[start:end]))
-
     return dedupe_blocks(blocks)
 
 
@@ -562,6 +554,12 @@ def trim_embedded_labels(value: str, field_name: str) -> str:
             maxsplit=1,
             flags=re.I,
         )[0].strip(" :-|")
+        if re.match(
+            r"^(?:Date Opened|Date Reported|Date Updated|Date of|Terms|Frequency|Months Reviewed|Scheduled Payment|Amount Past Due)\b",
+            value,
+            flags=re.I,
+        ):
+            value = ""
 
     if field_name == "account_type":
         value = re.split(r"\s+\|\s+|\s+Status\s*:", value, maxsplit=1, flags=re.I)[0].strip(" :-|")
@@ -662,12 +660,76 @@ def is_bad_account_name(name: str) -> bool:
     return False
 
 
+def account_name_quality(name: str) -> float:
+    cleaned = clean_text(name).strip(" .;:,|-")
+    lower = cleaned.lower()
+    if is_bad_account_name(cleaned):
+        return -10.0
+
+    score = 0.0
+    words = re.findall(r"[A-Za-z0-9&']+", cleaned)
+    if 1 <= len(words) <= 5:
+        score += 2.0
+    if len(words) > 5:
+        score -= 1.0
+    if re.search(r"\b(bank|credit|capital|midland|ford|federal|jpm|jpmcb|caine|jefferson|systems?|management|services?|financial|portfolio|synchrony|citibank|northwest|firstpoint|resources|funding|lvnv|resurgent|macys|cbna)\b", lower, flags=re.I):
+        score += 2.0
+    if any(x in lower for x in [
+        "prepared for",
+        "date:",
+        "date reported",
+        "balance:",
+        "loan/account type",
+        "account type:",
+        "account type ",
+        "loan type",
+        "pay status",
+        "credit limit",
+        "high credit",
+        "status:",
+        "term duration",
+        "terms paid",
+        "minimum payment",
+        "confirmation #",
+        "responsibility relationship",
+    ]):
+        score -= 5.0
+    if re.search(r"\d{2}/\d{2}/\d{4}|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)\s+\d{4}\b|\b20\d{2}\s+(?:CO|OK|C|30|60|90|120|150|CLS|ND)(?:\s+(?:CO|OK|C|30|60|90|120|150|CLS|ND))*\b|\$\d", cleaned, flags=re.I):
+        score -= 4.0
+    if "|" in cleaned or ":" in cleaned:
+        score -= 2.0
+    return score
+
+
+def tradeline_quality_score(t: NormalizedTradeline) -> float:
+    score = t.confidence_score * 10
+    score += account_name_quality(t.account_name)
+    if t.account_number_masked:
+        score += 4
+    if t.balance:
+        score += 1
+    if t.account_type:
+        score += 1
+    if t.date_opened:
+        score += 1
+    if t.date_reported:
+        score += 1
+    if t.original_creditor:
+        score += 1
+    if t.status and t.status.lower() not in {"date opened", "account information"}:
+        score += 1
+    if len(t.raw_block) > 3200:
+        score -= 1
+    return score
+
+
 def guess_account_name(block: str) -> str:
     lines = [clean_text(x).strip(" :-") for x in block.splitlines() if clean_text(x)]
     bad = (
         "account number", "account #", "balance", "date ", "status", "payment",
         "remarks", "comments", "address", "phone", "page ", "experian", "equifax",
-        "transunion", "trans union", "credit report", "report number", "summary"
+        "transunion", "trans union", "credit report", "report number", "summary",
+        "prepared for", "confirmation #", "account type", "loan type", "pay status", "responsibility relationship"
     )
 
     labeled = first_match([
@@ -676,17 +738,38 @@ def guess_account_name(block: str) -> str:
     if labeled:
         return labeled if not is_bad_account_name(labeled) else "Review Item"
 
-    for line in lines[:14]:
+    candidates = []
+    for line in lines[:26]:
         lower = line.lower()
         if any(lower.startswith(x) for x in bad):
             continue
+        if re.match(r"^date\s*:", lower):
+            continue
+        if re.match(r"^(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$", lower):
+            continue
+        if re.match(r"^20\d{2}\s+(?:co|ok|c|30|60|90|120|150|cls|nd)(?:\s+(?:co|ok|c|30|60|90|120|150|cls|nd))*$", lower):
+            continue
+        if lower.startswith(("responsibility relationship", "total months", "rating", "ok", "date opened", "terms paid", "minimum payment", "pay status")):
+            continue
+        if lower.endswith("minimum payment.") or "credit scoring model" in lower:
+            continue
+        if lower in {"collections", "satisfactory accounts", "potentially negative", "account information"}:
+            continue
+        if re.fullmatch(r"[A-Z][A-Z ]{1,30}", line) and len(line.split()) <= 4:
+            # Skip consumer-name header lines in bureau PDFs. Creditor names
+            # usually appear near account fields and score higher below.
+            if not re.search(r"\b(BANK|CREDIT|CAPITAL|MIDLAND|FORD|FEDERAL|JPM|JPMCB|CAINE|JEFFERSON|RESURGENT|LVNV|MACYS|CBNA|MOTOR|FUNDING|SYSTEM|SYSTEMS|MANAGEMENT|SERVICES|FIRSTPOINT|RESOURCES)\b", line):
+                continue
         if len(line) < 3 or len(line) > 85:
             continue
         if not re.search(r"[A-Za-z]", line):
             continue
         # Avoid long report sentences
         if len(line.split()) <= 9 and not is_bad_account_name(line):
-            return line
+            candidates.append(line)
+
+    if candidates:
+        return max(candidates, key=account_name_quality)
 
     return "Review Item"
 
@@ -893,14 +976,34 @@ def parse_tradelines_for_bureau(bureau: str, filename: str, text: str) -> List[N
 
 
 def dedupe_tradelines(items: List[NormalizedTradeline]) -> List[NormalizedTradeline]:
-    out = []
-    seen = set()
+    best_by_key: Dict[Tuple[str, str], NormalizedTradeline] = {}
+    no_number: List[NormalizedTradeline] = []
+
     for t in items:
-        key = (
+        if t.account_number_masked:
+            key = (t.bureau, t.account_number_masked)
+            current = best_by_key.get(key)
+            if current is None or tradeline_quality_score(t) > tradeline_quality_score(current):
+                best_by_key[key] = t
+            continue
+        no_number.append(t)
+
+    out = list(best_by_key.values())
+    seen = {
+        (
             t.bureau,
             compact_key(t.account_name)[:35],
             t.account_number_masked,
-            t.page_start,
+            compact_key(t.balance),
+            compact_key(t.status or t.pay_status)[:25],
+        )
+        for t in out
+    }
+
+    for t in no_number:
+        key = (
+            t.bureau,
+            compact_key(t.account_name)[:35],
             compact_key(t.balance),
             compact_key(t.status or t.pay_status)[:25],
         )

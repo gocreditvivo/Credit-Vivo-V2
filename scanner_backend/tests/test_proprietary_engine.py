@@ -163,6 +163,28 @@ Date of 1st Delinquency: 07/07/2021
 Amount Past Due: $1,473
 """
 
+EQUIFAX_DUPLICATE_ACCOUNT_WINDOWS = """
+--- PAGE 1 ---
+Equifax Credit Report
+
+MIDLAND CREDIT MANAGEMENT - Closed
+320 E BIG BEAVER RD STE 300, TROY, MI 48083-1271 | (877) 822-0381
+Date Reported: 06/25/2026 | Balance: $1,473
+Account Number: *8933 | Owner: Individual Account Credit Limit: | High Credit: $1,127
+Loan/Account Type: Debt Buyer Account | Status: Collection
+Date Opened: 02/17/2022 Date of 1st Delinquency: 07/07/2021
+Amount Past Due: $1,473
+
+Loan/Account Type: Debt Buyer Account | Status:
+Date Opened: 02/17/2022 Date of 1st Delinquency: 07/07/2021
+Amount Past Due: $1,473
+
+Prepared for: TIM K DO Date: June 29, 2026 Confirmation # 6180577433
+MIDLAND CREDIT MANAGEMENT - Closed
+Date Reported: 06/25/2026 | Balance: $1,473
+Account Number: *8933
+"""
+
 def test_parse_sample_report(tmp_path):
     result = parse_reports({
         "experian.pdf": {"text": SAMPLE, "bureau": "Experian"},
@@ -571,6 +593,21 @@ def test_equifax_help_text_does_not_become_account():
     assert not any("consumer added notices" in name.lower() for name in account_names)
     assert not any("equifax.com/personal/help" in name.lower() for name in account_names)
     assert not any("see if an account is open" in name.lower() for name in account_names)
+
+
+def test_equifax_duplicate_fragments_collapse_to_best_account_name():
+    result = parse_reports({
+        "equifax june 29 2026.pdf": {
+            "text": EQUIFAX_DUPLICATE_ACCOUNT_WINDOWS,
+            "bureau": "Equifax",
+        },
+    })
+    data = result_to_dict(result)
+    account_names = [item["account_name"] for item in data["tradelines"]]
+
+    assert account_names == ["MIDLAND CREDIT MANAGEMENT - Closed"]
+    assert not any(name == "Prepared for" for name in account_names)
+    assert not any("Loan/Account Type" in name for name in account_names)
 
 
 def test_boilerplate_disclosure_text_is_not_a_tradeline():
