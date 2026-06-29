@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { AlertCircle, ArrowRight, CheckCircle, FileSearch, ShieldCheck } from 'lucide-react';
+import { AlertCircle, ArrowRight, CheckCircle, Clock, FileSearch, MailCheck, Route, ShieldCheck } from 'lucide-react';
 import { getLastScanResult } from '../lib/scanStorage';
 
 const categoryNames = [
@@ -78,6 +78,36 @@ export default function Findings() {
     { val: String(result.issues_count || result.issues_preview?.length || 0), label: 'review points' },
     { val: String(result.cross_bureau_groups?.length || 0), label: 'bureau matches' },
     { val: '0', label: 'hard pulls' },
+  ];
+  const letterQueue = result.recommended_letter_queue || [];
+  const scenarioCards = [
+    {
+      title: 'Bureau dispute',
+      body: 'Used when the report shows wrong balance, status, date, duplicate item, or bureau mismatch.',
+      next: 'Draft bureau letter, include FCRA notice, wait for response.',
+    },
+    {
+      title: 'Furnisher dispute',
+      body: 'Used when the creditor, collector, or debt buyer needs to prove what they are reporting.',
+      next: 'Ask for basis of reporting, balance support, payment history, and ownership records.',
+    },
+    {
+      title: 'MOV escalation',
+      body: 'Used when the bureau says Verified but the scanner still sees a flaw.',
+      next: 'Request method of verification and prepare Strategy B follow-up.',
+    },
+    {
+      title: 'Attorney review',
+      body: 'Used for stronger files with repeated verification, strong evidence, or unresolved reporting harm.',
+      next: 'Prepare history, delivery proof, responses, and evidence packet.',
+    },
+  ];
+  const trackingSteps = [
+    ['Drafted', 'Scanner created draft review items', true],
+    ['Customer review', 'Customer approval and authorization required', false],
+    ['Mailed', 'Certified tracking number saved after mailing', false],
+    ['Waiting', 'Response deadline and follow-up dates tracked', false],
+    ['Escalation', 'MOV, CFPB/state, or attorney review if needed', false],
   ];
 
   return (
@@ -206,6 +236,74 @@ export default function Findings() {
           </Link>
         </div>
       )}
+
+      <div className="grid lg:grid-cols-2 gap-5 mt-5">
+        <section className="bg-white rounded-xl p-5 border border-navy-100/60">
+          <div className="flex items-center gap-2 mb-4">
+            <Route size={16} className="text-sky-600" />
+            <h2 className="text-sm font-bold text-navy-900">Dispute scenarios</h2>
+          </div>
+          <div className="grid gap-3">
+            {scenarioCards.map((scenario) => (
+              <div key={scenario.title} className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50">
+                <p className="text-sm font-semibold text-navy-800">{scenario.title}</p>
+                <p className="text-xs text-navy-500 mt-1 leading-relaxed">{scenario.body}</p>
+                <p className="text-[11px] text-sky-700 mt-2 font-semibold">{scenario.next}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="bg-white rounded-xl p-5 border border-navy-100/60">
+          <div className="flex items-center gap-2 mb-4">
+            <MailCheck size={16} className="text-sky-600" />
+            <h2 className="text-sm font-bold text-navy-900">Draft dispute letters</h2>
+          </div>
+          {letterQueue.length ? (
+            <div className="space-y-3">
+              {letterQueue.slice(0, 4).map((letter) => (
+                <div key={letter.letter_id} className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-navy-800">
+                        {letter.letter_type.replaceAll('_', ' ')}
+                      </p>
+                      <p className="text-xs text-navy-500 mt-1">{letter.round}</p>
+                    </div>
+                    <span className="rounded-lg bg-white px-2 py-1 text-[10px] font-bold uppercase text-navy-500">
+                      {letter.tracking_status.replaceAll('_', ' ')}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-navy-400 mt-2">
+                    Recipient: {letter.recipient_type.replaceAll('_', ' ')} | Delivery: {letter.delivery_method.replaceAll('_', ' ')}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-navy-500">No draft letters are queued yet.</p>
+          )}
+        </section>
+      </div>
+
+      <section className="bg-white rounded-xl p-5 border border-navy-100/60 mt-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Clock size={16} className="text-sky-600" />
+          <h2 className="text-sm font-bold text-navy-900">Customer tracking</h2>
+        </div>
+        <div className="grid md:grid-cols-5 gap-3">
+          {trackingSteps.map(([title, detail, done]) => (
+            <div key={title} className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50">
+              <CheckCircle size={15} className={done ? 'text-mint-600' : 'text-navy-300'} />
+              <p className="text-sm font-semibold text-navy-800 mt-2">{title}</p>
+              <p className="text-[11px] text-navy-500 mt-1 leading-relaxed">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-[11px] text-navy-400 mt-4">
+          Nothing is mailed, disputed, or escalated automatically. Approval and review are required first.
+        </p>
+      </section>
     </div>
   );
 }
