@@ -1432,6 +1432,87 @@ def _comparison_flag(values: List[str], label: str) -> str:
     return ""
 
 
+DISPUTE_SOP_ROWS = [
+    {
+        "round": "Round 0",
+        "status": "intake_review",
+        "purpose": "Scan report, organize evidence, identify possible errors, and create draft queues before sending anything.",
+        "timing": "Day 0-3",
+        "recipient": "Internal/customer review",
+        "packet": "uploaded report, customer goal, identity/proof docs if needed, prior letters/responses, scanner findings, evidence notes",
+        "tracking": "intake date, report date/source, findings count, evidence needed, draft queue created, approval pending",
+        "approval_gate": "Customer authorizes Credit Vivo to prepare drafts. Nothing is sent.",
+        "next_step": "Round 1 bureau dispute if issue is specific, evidence-backed, and customer approved.",
+    },
+    {
+        "round": "Round 1",
+        "status": "round_1_bureau_draft -> round_1_customer_approval -> round_1_sent -> awaiting_bureau_response",
+        "purpose": "Short, specific bureau dispute for inaccurate, incomplete, unverifiable, or cross-bureau mismatched reporting.",
+        "timing": "Day 3-7 after intake; response review around Day 30-45 after delivery",
+        "recipient": "Credit bureau",
+        "packet": "customer-approved letter, FCRA notice of dispute, highlighted report item, targeted proof, ID/proof of address when needed, delivery tracking plan",
+        "tracking": "sent date, delivery date, tracking number, response due date, day 15 check, day 35 follow-up, response received",
+        "approval_gate": "Customer approves specific disputed item, reason, evidence attachments, and delivery method.",
+        "next_step": "Response review. If unresolved, prepare Round 2 furnisher/direct dispute or evidence-backed bureau follow-up.",
+    },
+    {
+        "round": "Round 2",
+        "status": "round_2_furnisher_draft -> round_2_customer_approval -> round_2_sent -> awaiting_furnisher_response",
+        "purpose": "Detailed field-level furnisher/collector dispute when bureau response does not resolve the item or records need direct support.",
+        "timing": "Day 45-55 after response review or no meaningful resolution",
+        "recipient": "Furnisher, creditor, collector, or debt buyer",
+        "packet": "customer-approved furnisher dispute, prior bureau dispute if useful, bureau response, report excerpt, evidence, requested records list",
+        "tracking": "sent date, delivery date, tracking number, response due date, response received, correction/deletion/verified outcome",
+        "approval_gate": "Customer approves direct furnisher dispute and confirms the factual basis is truthful.",
+        "next_step": "Round 3 MOV/process audit if verified, unsupported, contradictory, or still reporting wrong.",
+    },
+    {
+        "round": "Round 3",
+        "status": "round_3_mov_draft -> round_3_customer_approval -> round_3_sent -> awaiting_mov_response",
+        "purpose": "Method of verification/process audit when the bureau says verified but the response does not address the evidence.",
+        "timing": "Day 80-95 after prior dispute history",
+        "recipient": "Credit bureau",
+        "packet": "prior dispute letter, proof of delivery, bureau response, furnisher response if any, current report excerpt, dispute history summary",
+        "tracking": "MOV request date, response due date, method received, verification gaps, next escalation decision",
+        "approval_gate": "Customer approves escalation based on prior dispute history and unresolved issue.",
+        "next_step": "Round 4+ CFPB/state/attorney-ready packet if justified by unresolved harm, no response, repeated verification, or failure to mark disputed.",
+    },
+    {
+        "round": "Round 4+",
+        "status": "cfpb_state_packet / attorney_ready_packet",
+        "purpose": "Escalation review after ordinary dispute paths, repeated verification, no response, or serious unresolved harm.",
+        "timing": "Day 120+ when dispute history is complete and escalation is justified",
+        "recipient": "CFPB, state attorney general/regulator, or attorney review",
+        "packet": "full dispute history, reports before/after, notices, responses, delivery proofs, evidence, damages/adverse action proof if available",
+        "tracking": "escalation packet date, complaint/reference number, response dates, attorney review status, resolution",
+        "approval_gate": "Owner/compliance and customer approval required. Attorney/legal review required when appropriate.",
+        "next_step": "Submit approved packet or hold for attorney/compliance review.",
+    },
+]
+
+
+def sop_for_comparison(flags: List[str], missing: List[str], has_cross_issue: bool) -> dict:
+    if has_cross_issue or flags or missing:
+        return {
+            "round": "Round 1 bureau dispute, then Round 2 furnisher/direct dispute if unresolved",
+            "status": "round_1_bureau_draft",
+            "timing": "Day 3-7 after intake; review response Day 30-45",
+            "packet": "customer-approved letter; FCRA notice of dispute; highlighted bureau comparison; targeted proof; ID/proof of address if needed; tracking plan",
+            "tracking": "sent date; delivery date; tracking number; response due date; day 15 check; day 35 follow-up; response received; next action",
+            "approval": "Do not send. Customer must approve the specific item, reason, evidence, and delivery method.",
+            "escalation": "If verified/no response/contradictory response: Round 2 furnisher dispute, Round 3 MOV, then CFPB/state/attorney-ready packet if justified.",
+        }
+    return {
+        "round": "Round 0 intake review",
+        "status": "intake_review",
+        "timing": "Hold until a specific, evidence-backed issue is confirmed",
+        "packet": "raw report excerpt; admin validation; customer explanation",
+        "tracking": "admin review status; evidence needed; approval pending",
+        "approval": "No dispute recommended until a specific issue is confirmed and customer approves.",
+        "escalation": "No escalation until dispute history exists.",
+    }
+
+
 def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
     tradelines_by_id = {item.get("id"): item for item in data.get("tradelines", [])}
     bureau_order = ["Equifax", "Experian", "TransUnion"]
@@ -1466,6 +1547,13 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         "Dispute Targets",
         "Bureau Dispute Draft",
         "Furnisher Dispute Draft",
+        "SOP Round",
+        "SOP Status",
+        "SOP Timing",
+        "SOP Required Packet",
+        "SOP Tracking Checklist",
+        "SOP Approval Gate",
+        "SOP Escalation Rule",
         "Tracking Status",
         "Missing Bureaus",
         "Matched Bureaus",
@@ -1497,6 +1585,7 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             flags.append("Missing on " + ", ".join(missing))
 
         has_cross_issue = any(item.get("id") in cross_issue_ids for item in items)
+        sop = sop_for_comparison([flag for flag in flags if flag], missing, has_cross_issue)
         suggested_review = (
             "Review and dispute field-level mismatch if inaccurate or unverifiable."
             if has_cross_issue or any(flags)
@@ -1544,6 +1633,13 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             dispute_targets,
             bureau_letter,
             furnisher_letter,
+            sop["round"],
+            sop["status"],
+            sop["timing"],
+            sop["packet"],
+            sop["tracking"],
+            sop["approval"],
+            sop["escalation"],
             "draft_not_sent_customer_approval_required",
             ", ".join(missing),
             ", ".join(sorted(by_bureau.keys())),
@@ -1569,6 +1665,36 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
     return rows
 
 
+def build_dispute_sop_rows() -> List[List[object]]:
+    return [
+        [
+            "Round",
+            "Status / State Flow",
+            "Purpose",
+            "Timing",
+            "Recipient",
+            "Required Packet",
+            "Tracking Fields",
+            "Approval Gate",
+            "Next Step",
+        ],
+        *[
+            [
+                row["round"],
+                row["status"],
+                row["purpose"],
+                row["timing"],
+                row["recipient"],
+                row["packet"],
+                row["tracking"],
+                row["approval_gate"],
+                row["next_step"],
+            ]
+            for row in DISPUTE_SOP_ROWS
+        ],
+    ]
+
+
 def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     if Workbook is None:
         return
@@ -1581,6 +1707,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     items = wb.create_sheet("Review Items")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
+    dispute_sop = wb.create_sheet("Dispute SOP")
     letters = wb.create_sheet("Draft Letters")
     fcra = wb.create_sheet("FCRA Review")
 
@@ -1680,6 +1807,8 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
         for control in controls:
             notice_rows.append([label, control])
     _write_workbook_sheet(fcra_notice_rules, notice_rows)
+
+    _write_workbook_sheet(dispute_sop, build_dispute_sop_rows())
 
     _write_workbook_sheet(letters, [
         ["Letter ID", "Issue ID", "Subject", "Letter Type", "Round", "Recipient Type", "Delivery Method", "FCRA Notice Included", "Customer Approval Required", "Tracking Status", "Recommended Next Action", "Draft Letter Body"],

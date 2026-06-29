@@ -125,6 +125,7 @@ def test_parse_sample_report(tmp_path):
         "Review Items",
         "Metro 2 + FCRA Review",
         "FCRA Notice Rules",
+        "Dispute SOP",
         "Draft Letters",
         "FCRA Review",
     ]
@@ -139,12 +140,19 @@ def test_parse_sample_report(tmp_path):
     assert "Experian Raw Evidence" in headers
     assert "Equifax Balance" in headers
     assert "TransUnion Balance" in headers
-    assert headers[-9:] == [
+    assert headers[-16:] == [
         "Errors",
         "Findings",
         "Dispute Targets",
         "Bureau Dispute Draft",
         "Furnisher Dispute Draft",
+        "SOP Round",
+        "SOP Status",
+        "SOP Timing",
+        "SOP Required Packet",
+        "SOP Tracking Checklist",
+        "SOP Approval Gate",
+        "SOP Escalation Rule",
         "Tracking Status",
         "Missing Bureaus",
         "Matched Bureaus",
@@ -153,6 +161,8 @@ def test_parse_sample_report(tmp_path):
     errors_column = headers.index("Errors") + 1
     bureau_letter_column = headers.index("Bureau Dispute Draft") + 1
     furnisher_letter_column = headers.index("Furnisher Dispute Draft") + 1
+    sop_round_column = headers.index("SOP Round") + 1
+    sop_tracking_column = headers.index("SOP Tracking Checklist") + 1
     comparison_flags = " ".join(
         str(comparison.cell(row=row, column=errors_column).value or "")
         for row in range(2, comparison.max_row + 1)
@@ -172,6 +182,16 @@ def test_parse_sample_report(tmp_path):
     assert "forward all relevant dispute information to the furnisher" in bureau_letters
     assert "To: Furnisher / Collector" in furnisher_letters
     assert "basis for reporting" in furnisher_letters
+    sop_rounds = " ".join(
+        str(comparison.cell(row=row, column=sop_round_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    sop_tracking = " ".join(
+        str(comparison.cell(row=row, column=sop_tracking_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    assert "Round 1 bureau dispute" in sop_rounds
+    assert "tracking number" in sop_tracking
     expert = workbook["Metro 2 + FCRA Review"]
     expert_headers = [expert.cell(row=1, column=column).value for column in range(1, expert.max_column + 1)]
     assert "Metro 2 Fields To Review" in expert_headers
@@ -183,6 +203,17 @@ def test_parse_sample_report(tmp_path):
     )
     assert "customer approval required" in notice_rule_text
     assert "written reinvestigation results" in notice_rule_text
+    dispute_sop = workbook["Dispute SOP"]
+    sop_text = " ".join(
+        str(dispute_sop.cell(row=row, column=1).value or "") + " " +
+        str(dispute_sop.cell(row=row, column=2).value or "") + " " +
+        str(dispute_sop.cell(row=row, column=9).value or "")
+        for row in range(2, dispute_sop.max_row + 1)
+    )
+    assert "Round 1" in sop_text
+    assert "Round 2" in sop_text
+    assert "Round 3" in sop_text
+    assert "CFPB" in sop_text
     draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
     assert "DRAFT" in draft_letters
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters
