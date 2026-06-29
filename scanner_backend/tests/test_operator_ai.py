@@ -33,9 +33,10 @@ def test_compliance_letter_requires_approval():
 
     action = recommend_operator_action(event)
 
-    assert action["recommended_action_type"] == "send_dispute_letter"
+    assert action["recommended_action_type"] == "prepare_fcra_regulator_routing"
     assert action["approval_required"] is True
     assert action["approval_level"] == ApprovalLevel.COMPLIANCE_APPROVAL.value
+    assert "CFPB/FTC/state" in action["recommended_action"]
 
 
 def test_unknown_action_defaults_to_founder_approval():
@@ -52,3 +53,10 @@ def test_operator_brief_prioritizes_high_risk_events():
     assert brief["events_reviewed"] == 2
     assert brief["actions"][0]["area"] == "security"
     assert brief["approval_required_count"] >= 1
+
+
+def test_operator_brief_includes_fcra_rights_reference():
+    brief = build_operator_brief([])
+
+    assert "state Attorney General" in brief["fcra_rights_reference"]["plain_english_note"]
+    assert any("regulator contacts" in rule for rule in brief["fcra_rights_reference"]["ai_rules"])

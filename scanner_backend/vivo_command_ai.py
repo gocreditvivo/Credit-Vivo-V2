@@ -5,10 +5,12 @@ from typing import Dict, List
 
 try:
     from .ai_operating_system import build_ai_operating_system_brief
+    from .fcra_rights_reference import build_fcra_rights_reference
     from .growth_ai import GrowthSnapshot, build_growth_brief
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
 except ImportError:
     from ai_operating_system import build_ai_operating_system_brief
+    from fcra_rights_reference import build_fcra_rights_reference
     from growth_ai import GrowthSnapshot, build_growth_brief
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
 
@@ -87,6 +89,7 @@ def build_command_brief(
     growth = build_growth_brief(snapshot)
     operator = build_operator_brief(events)
     ai_system = build_ai_operating_system_brief()
+    fcra_rights = build_fcra_rights_reference()
 
     top_actions = []
     for action in growth["recommended_actions"][:3]:
@@ -138,8 +141,16 @@ def build_command_brief(
                 "change pricing",
                 "change legal/compliance language",
                 "submit CFPB/state complaints",
+                "route FCRA federal regulator or state Attorney General complaints",
                 "refer to attorney/legal provider",
             ],
+        },
+        "fcra_rights_reference": {
+            "plain_english_note": fcra_rights["source_notes"]["plain_english_note"],
+            "source": fcra_rights["source_notes"]["primary_reference"],
+            "state_notice_count": len(fcra_rights["state_notice_links"]),
+            "federal_contact_count": len(fcra_rights["federal_contacts"]),
+            "ai_rules": fcra_rights["ai_rules"],
         },
         "growth_brief": growth,
         "operator_brief": operator,

@@ -32,6 +32,11 @@ import csv
 from pathlib import Path
 
 try:
+    from .fcra_rights_reference import build_fcra_rights_reference
+except ImportError:
+    from fcra_rights_reference import build_fcra_rights_reference
+
+try:
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
     from openpyxl.utils import get_column_letter
@@ -2557,6 +2562,7 @@ def result_to_dict(result: ParseResult) -> dict:
         "metro2_public_guide_notes": METRO2_PUBLIC_GUIDE_NOTES,
         "metro2_requirement_review": metro2_requirement_review,
         "fcra_compliance_review": build_fcra_compliance_review(tradelines, issues, metro2_requirement_review),
+        "fcra_rights_reference": build_fcra_rights_reference(),
         "field_compliance_audit": field_compliance_audit,
         "eoscar_public_facts": EOSCAR_PUBLIC_FACTS,
         "eoscar_packaging_review": eoscar_packaging_review,
@@ -3176,6 +3182,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     metro2_requirements = wb.create_sheet("Metro 2 Requirements")
     metro2_guide_notes = wb.create_sheet("Metro 2 Guide Notes")
     fcra_compliance = wb.create_sheet("FCRA Compliance Review")
+    fcra_rights = wb.create_sheet("FCRA Rights Regulators")
     field_compliance = wb.create_sheet("Field Compliance Audit")
     eoscar_packaging = wb.create_sheet("e-OSCAR Packaging Review")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
@@ -3425,6 +3432,34 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
             for row in data.get("fcra_compliance_review", [])
         ],
     ])
+
+    rights_reference = data.get("fcra_rights_reference", {})
+    source_notes = rights_reference.get("source_notes", {})
+    rights_rows = [
+        ["Section", "Category / State", "Agency / Item", "Address / URL", "Phone / Note"],
+        ["Source", "Primary Reference", source_notes.get("primary_reference", ""), source_notes.get("primary_url", ""), source_notes.get("plain_english_note", "")],
+        ["Source", "Agency Contact Update", source_notes.get("agency_contact_update_reference", ""), source_notes.get("agency_contact_update_url", ""), source_notes.get("compliance_note", "")],
+    ]
+    for contact_group in rights_reference.get("federal_contacts", []):
+        for contact in contact_group.get("contacts", []):
+            rights_rows.append([
+                "Federal Contact",
+                contact_group.get("category", ""),
+                contact.get("agency", ""),
+                contact.get("address", ""),
+                contact.get("phone") or contact.get("use_when", ""),
+            ])
+    for state_link in rights_reference.get("state_notice_links", []):
+        rights_rows.append([
+            "State Notice Link",
+            state_link.get("state", ""),
+            "State consumer reporting rights reference",
+            state_link.get("url", ""),
+            "Confirm current state-law requirements before production disclosure use.",
+        ])
+    for rule in rights_reference.get("ai_rules", []):
+        rights_rows.append(["AI Rule", "All AI engines", "FCRA rights routing rule", "", rule])
+    _write_workbook_sheet(fcra_rights, rights_rows)
 
     _write_workbook_sheet(field_compliance, [
         [

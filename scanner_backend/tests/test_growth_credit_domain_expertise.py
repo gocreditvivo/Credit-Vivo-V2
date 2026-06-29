@@ -9,6 +9,7 @@ def test_credit_domain_expertise_includes_required_topics():
     assert "FACTA" in topics
     assert "Metro 2" in topics
     assert "Credit report dispute process" in topics
+    assert "FCRA federal and state rights routing" in topics
     assert "Soft pull vs hard pull" in topics
 
 
@@ -27,3 +28,11 @@ def test_credit_domain_expertise_has_customer_angles():
 
     assert any("Collection" in angle for angle in brief["example_customer_angles"])
     assert any("auto loan" in angle for angle in brief["example_customer_angles"])
+
+
+def test_credit_domain_expertise_includes_state_rights_reference():
+    brief = build_credit_domain_expertise_brief()
+    reference = brief["fcra_rights_reference"]
+
+    assert "state Attorney General" in reference["plain_english_note"]
+    assert "Texas" in reference["state_notice_states"]

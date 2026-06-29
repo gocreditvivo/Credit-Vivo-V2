@@ -4,6 +4,11 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List
 
+try:
+    from .fcra_rights_reference import build_fcra_rights_reference
+except ImportError:
+    from fcra_rights_reference import build_fcra_rights_reference
+
 
 class ApprovalLevel(str, Enum):
     AUTO_SAFE = "auto_safe"
@@ -34,6 +39,8 @@ AUTOMATION_POLICY: Dict[str, ApprovalLevel] = {
     "send_dispute_letter": ApprovalLevel.COMPLIANCE_APPROVAL,
     "send_furnisher_letter": ApprovalLevel.COMPLIANCE_APPROVAL,
     "submit_cfpb_complaint": ApprovalLevel.COMPLIANCE_APPROVAL,
+    "submit_state_consumer_complaint": ApprovalLevel.COMPLIANCE_APPROVAL,
+    "prepare_fcra_regulator_routing": ApprovalLevel.COMPLIANCE_APPROVAL,
     "change_legal_disclosure": ApprovalLevel.ATTORNEY_APPROVAL,
     "refer_to_attorney": ApprovalLevel.ATTORNEY_APPROVAL,
 }
@@ -82,8 +89,8 @@ def recommend_operator_action(event: OperatorEvent) -> Dict[str, object]:
         action_type = "draft_growth_campaign"
         action = "Draft a campaign test with audience, offer, channel, and success metric."
     elif event.area == "compliance":
-        action_type = "send_dispute_letter"
-        action = "Prepare compliance review package before any letter or complaint is sent."
+        action_type = "prepare_fcra_regulator_routing"
+        action = "Prepare FCRA rights, regulator, CFPB/FTC/state, and approval review package before any letter or complaint is sent."
     elif event.area == "security":
         action_type = "security_review"
         action = "Create urgent security task and block automated customer-facing actions."
@@ -107,6 +114,7 @@ def recommend_operator_action(event: OperatorEvent) -> Dict[str, object]:
 def build_operator_brief(events: List[OperatorEvent]) -> Dict[str, object]:
     actions = [recommend_operator_action(event) for event in events]
     actions.sort(key=lambda item: item["priority_score"], reverse=True)
+    fcra_rights = build_fcra_rights_reference()
 
     return {
         "ok": True,
@@ -115,6 +123,10 @@ def build_operator_brief(events: List[OperatorEvent]) -> Dict[str, object]:
         "automation_rule": "AI may monitor, draft, and create safe internal tasks. Customer-facing, payment, dispute, compliance, and attorney actions require approval.",
         "events_reviewed": len(events),
         "actions": actions,
+        "fcra_rights_reference": {
+            "plain_english_note": fcra_rights["source_notes"]["plain_english_note"],
+            "ai_rules": fcra_rights["ai_rules"],
+        },
         "auto_safe_count": sum(1 for action in actions if action["approval_level"] == ApprovalLevel.AUTO_SAFE.value),
         "approval_required_count": sum(1 for action in actions if action["approval_required"]),
     }

@@ -42,4 +42,14 @@ def test_command_brief_keeps_sensitive_actions_approval_gated():
     assert "send customer messages" in approval_required
     assert "send dispute letters" in approval_required
     assert "issue refunds" in approval_required
+    assert "route FCRA federal regulator or state Attorney General complaints" in approval_required
     assert "refer to attorney/legal provider" in approval_required
+
+
+def test_command_brief_includes_fcra_rights_reference():
+    brief = build_command_brief()
+    reference = brief["fcra_rights_reference"]
+
+    assert reference["source"] == "CFPB Regulation V Appendix K - Summary of Consumer Rights"
+    assert reference["state_notice_count"] >= 20
+    assert any("state rights" in rule for rule in reference["ai_rules"])

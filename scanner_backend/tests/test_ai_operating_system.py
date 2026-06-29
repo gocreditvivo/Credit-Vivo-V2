@@ -33,3 +33,12 @@ def test_ai_operating_system_requires_verification_and_private_data_protection()
     assert "Verify after action" in principles
     assert "Private data protection" in principles
     assert brief["standard"] == "mission_oriented_verify_after_action_approval_gated"
+
+
+def test_ai_operating_system_includes_fcra_rights_reference():
+    brief = build_ai_operating_system_brief()
+    reference = brief["fcra_rights_reference"]
+
+    assert "Bureau of Consumer Financial Protection" in " ".join(reference["federal_agencies"])
+    assert "Virginia" in reference["state_notice_states"]
+    assert any("state rights" in rule for rule in reference["ai_rules"])

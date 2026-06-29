@@ -3,6 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List
 
+try:
+    from .fcra_rights_reference import build_fcra_rights_reference
+except ImportError:
+    from fcra_rights_reference import build_fcra_rights_reference
+
 
 @dataclass(frozen=True)
 class CreditDomainTopic:
@@ -84,6 +89,18 @@ CREDIT_DOMAIN_TOPICS: List[CreditDomainTopic] = [
         caution="Credit Vivo should keep customer approval before anything is sent or escalated.",
     ),
     CreditDomainTopic(
+        topic="FCRA federal and state rights routing",
+        plain_english_meaning="Federal agencies enforce different parts of the FCRA, and states may enforce the FCRA or provide extra consumer reporting rights.",
+        why_growth_ai_needs_it="Credit Vivo content and escalation workflows should explain that customers may contact CFPB, FTC, another federal regulator, a state consumer protection agency, or a state Attorney General depending on the issue.",
+        growth_use=[
+            "write accurate education about federal and state dispute rights",
+            "route unresolved scanner findings to the right escalation review",
+            "avoid making state-law promises in ads or customer messages",
+            "prepare owner/compliance review notes before state or federal complaints",
+        ],
+        caution="Growth AI should not decide legal rights, file complaints automatically, or claim a state-law outcome without qualified review.",
+    ),
+    CreditDomainTopic(
         topic="Debt collection reporting",
         plain_english_meaning="Collection accounts may appear on reports when a debt is placed or sold to a collector.",
         why_growth_ai_needs_it="Collections are a high-intent customer problem and a strong campaign wedge.",
@@ -135,11 +152,17 @@ def topic_to_dict(topic: CreditDomainTopic) -> Dict[str, object]:
 
 
 def build_credit_domain_expertise_brief() -> Dict[str, object]:
+    fcra_rights = build_fcra_rights_reference()
     return {
         "ok": True,
         "service": "credit-vivo-growth-credit-domain-expertise",
         "plain_english_summary": "Growth AI understands the credit repair domain enough to create better education, campaigns, scanner positioning, dispute routing, and customer explanations. Legal decisions still need qualified review.",
         "topics": [topic_to_dict(topic) for topic in CREDIT_DOMAIN_TOPICS],
+        "fcra_rights_reference": {
+            "plain_english_note": fcra_rights["source_notes"]["plain_english_note"],
+            "state_notice_states": [item["state"] for item in fcra_rights["state_notice_links"]],
+            "federal_contact_categories": [item["category"] for item in fcra_rights["federal_contacts"]],
+        },
         "how_growth_ai_uses_this": [
             "turn technical credit terms into simple customer-facing language",
             "write more accurate ads and landing pages",

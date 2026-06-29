@@ -3,6 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List
 
+try:
+    from .fcra_rights_reference import build_fcra_rights_reference
+except ImportError:
+    from fcra_rights_reference import build_fcra_rights_reference
+
 
 @dataclass(frozen=True)
 class AiStandard:
@@ -41,7 +46,7 @@ AI_OPERATING_STANDARDS: List[AiStandard] = [
     AiStandard(
         principle="Compliance guardrails",
         plain_english_rule="Do not overpromise, pressure, or act like a law firm.",
-        required_behavior="Flag guarantee language, missing consent, unsupported claims, and attorney/legal wording that needs review.",
+        required_behavior="Flag guarantee language, missing consent, unsupported claims, attorney/legal wording, and FCRA/state-rights routing that needs review.",
     ),
     AiStandard(
         principle="Private data protection",
@@ -111,6 +116,7 @@ AI_ROLE_CAPABILITIES: List[AiRoleCapability] = [
             "summarize evidence",
             "track dispute rounds",
             "recommend next escalation path",
+            "prepare FCRA federal regulator and state-rights routing notes",
         ],
         cannot_do_without_approval=[
             "send bureau letters",
@@ -168,6 +174,7 @@ AI_ROLE_CAPABILITIES: List[AiRoleCapability] = [
             "block unsupported automation",
             "check approval requirements",
             "prepare attorney/compliance review notes",
+            "check FCRA regulator/state-rights references before escalation workflows",
         ],
         cannot_do_without_approval=[
             "approve legal disclosures",
@@ -201,6 +208,7 @@ def role_capability_to_dict(role: AiRoleCapability) -> Dict[str, object]:
 
 
 def build_ai_operating_system_brief() -> Dict[str, object]:
+    fcra_rights = build_fcra_rights_reference()
     return {
         "ok": True,
         "service": "credit-vivo-ai-operating-system",
@@ -212,6 +220,17 @@ def build_ai_operating_system_brief() -> Dict[str, object]:
         ),
         "standards": [standard_to_dict(standard) for standard in AI_OPERATING_STANDARDS],
         "roles": [role_capability_to_dict(role) for role in AI_ROLE_CAPABILITIES],
+        "fcra_rights_reference": {
+            "source_notes": fcra_rights["source_notes"],
+            "ai_rules": fcra_rights["ai_rules"],
+            "federal_contact_categories": [item["category"] for item in fcra_rights["federal_contacts"]],
+            "federal_agencies": [
+                contact["agency"]
+                for item in fcra_rights["federal_contacts"]
+                for contact in item["contacts"]
+            ],
+            "state_notice_states": [item["state"] for item in fcra_rights["state_notice_links"]],
+        },
         "highest_priority_next_connections": [
             "real analytics events",
             "secure customer profile database",
