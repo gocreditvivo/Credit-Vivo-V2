@@ -7,6 +7,7 @@ import {
   Server,
   ShieldCheck,
   Users,
+  Brain,
 } from 'lucide-react';
 
 const healthCards = [
@@ -73,6 +74,37 @@ const moneyMetrics = [
   { label: 'refunds', today: '$0', week: '$0', month: '$0', note: 'Money returned to customers.' },
   { label: 'failed payments', today: '0', week: '0', month: '0', note: 'Cards or payments that did not go through.' },
   { label: 'outside costs', today: '$0', week: '$0', month: '$0', note: 'Mail, report access, ID checks, or partner costs.' },
+];
+
+const retentionSignals = [
+  {
+    title: 'Customers likely to cancel',
+    value: '0',
+    detail: 'AI should flag customers who stopped logging in, did not finish a scan, had a failed payment, or opened repeated support issues.',
+  },
+  {
+    title: 'Customers needing attention',
+    value: '0',
+    detail: 'AI should flag customers waiting on findings, stuck at approval, confused by next steps, or needing a human check-in.',
+  },
+  {
+    title: 'Upsell-ready customers',
+    value: '0',
+    detail: 'AI should flag customers who completed the free Check-In, reviewed findings, and may be ready for AI Guided or Vivo Plus.',
+  },
+  {
+    title: 'Legal-access candidates',
+    value: '0',
+    detail: 'AI should flag customers with repeated unresolved issues who may want optional attorney/legal access through a separate provider.',
+  },
+];
+
+const retentionActions = [
+  'Send a plain-English progress update before the customer feels stuck.',
+  'Offer a human review when scan results look confusing or high-stress.',
+  'Remind customers what step is waiting on them before cancellation risk rises.',
+  'Suggest AI Guided or Vivo Plus only when the customer has a clear next-step reason.',
+  'Offer optional legal access only as a separate customer choice, not pressure.',
 ];
 
 function toneClass(tone: string) {
@@ -161,6 +193,42 @@ export default function FounderHealth() {
               ))}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section className="mb-5 rounded-xl border border-sky-100 bg-sky-50/50 p-5">
+        <div className="mb-4 flex items-start gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
+            <Brain size={18} className="text-sky-700" />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-navy-900">AI retention insights</h2>
+            <p className="mt-1 text-xs leading-relaxed text-navy-500">
+              This will help the founder see which customers may cancel, who needs attention, and who may be ready for the next plan.
+            </p>
+          </div>
+        </div>
+
+        <div className="mb-5 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+          {retentionSignals.map((signal) => (
+            <div key={signal.title} className="rounded-xl border border-sky-100 bg-white p-4">
+              <p className="text-2xl font-bold text-navy-900">{signal.value}</p>
+              <h3 className="mt-1 text-xs font-bold text-navy-800">{signal.title}</h3>
+              <p className="mt-2 text-[11px] leading-relaxed text-navy-400">{signal.detail}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-xl border border-white bg-white/70 p-4">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-700">Recommended retention actions</h3>
+          <div className="grid gap-2 md:grid-cols-2">
+            {retentionActions.map((action) => (
+              <div key={action} className="flex gap-2 text-xs text-navy-600">
+                <CheckCircle size={13} className="mt-0.5 flex-shrink-0 text-sky-700" />
+                <span>{action}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
