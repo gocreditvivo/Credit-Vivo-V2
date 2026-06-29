@@ -130,13 +130,19 @@ def test_parse_sample_report(tmp_path):
     ]
     comparison = workbook["3 Bureau Comparison"]
     headers = [comparison.cell(row=1, column=column).value for column in range(1, comparison.max_column + 1)]
+    assert headers[0] == "Account Name"
+    assert headers[1].startswith("Equifax ")
+    assert "Equifax Balance" in headers
+    assert "Equifax Raw Evidence" in headers
     assert "Experian Balance" in headers
     assert "Experian Account #" in headers
     assert "Experian Raw Evidence" in headers
     assert "Equifax Balance" in headers
     assert "TransUnion Balance" in headers
+    assert headers[-5:] == ["Errors", "Findings", "Missing Bureaus", "Matched Bureaus", "Group ID"]
+    errors_column = headers.index("Errors") + 1
     comparison_flags = " ".join(
-        str(comparison.cell(row=row, column=4).value or "")
+        str(comparison.cell(row=row, column=errors_column).value or "")
         for row in range(2, comparison.max_row + 1)
     )
     assert "Balance differs" in comparison_flags

@@ -1434,7 +1434,7 @@ def _comparison_flag(values: List[str], label: str) -> str:
 
 def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
     tradelines_by_id = {item.get("id"): item for item in data.get("tradelines", [])}
-    bureau_order = ["Experian", "Equifax", "TransUnion"]
+    bureau_order = ["Equifax", "Experian", "TransUnion"]
     cross_issue_ids = set()
     per_bureau_fields = [
         ("Source", "source_filename"),
@@ -1457,16 +1457,16 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         if str(issue.get("issue_type", "")).startswith("cross_bureau"):
             cross_issue_ids.update(issue.get("related_tradeline_ids", []))
 
-    rows = [[
-        "Group ID",
-        "Account Name",
-        "Matched Bureaus",
-        "Error Flags",
-        "Missing Bureaus",
-        "Suggested Review",
-    ]]
+    rows = [["Account Name"]]
     for bureau in bureau_order:
         rows[0].extend([f"{bureau} {label}" for label, _field in per_bureau_fields])
+    rows[0].extend([
+        "Errors",
+        "Findings",
+        "Missing Bureaus",
+        "Matched Bureaus",
+        "Group ID",
+    ])
 
     for group in data.get("cross_bureau_groups", []):
         items = [tradelines_by_id.get(item_id) for item_id in group.get("tradeline_ids", [])]
@@ -1500,14 +1500,7 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             "Matched across bureaus. No mismatch flag detected."
         )
 
-        row = [
-            group.get("group_id", ""),
-            "; ".join(sorted({name for name in account_names if name})),
-            ", ".join(sorted(by_bureau.keys())),
-            "; ".join(flag for flag in flags if flag),
-            ", ".join(missing),
-            suggested_review,
-        ]
+        row = ["; ".join(sorted({name for name in account_names if name}))]
 
         for bureau in bureau_order:
             item = by_bureau.get(bureau, {})
@@ -1518,17 +1511,24 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
                 if field == "raw_block":
                     value = clean_text(str(value))[:650]
                 row.append(value)
+        row.extend([
+            "; ".join(flag for flag in flags if flag),
+            suggested_review,
+            ", ".join(missing),
+            ", ".join(sorted(by_bureau.keys())),
+            group.get("group_id", ""),
+        ])
         rows.append(row)
 
     if len(rows) == 1:
         rows.append([
             "No matched cross-bureau accounts",
-            "",
-            "",
-            "No 3-bureau comparison could be created from the uploaded report set.",
-            "",
-            "Upload reports from at least two bureaus to compare the same account side by side.",
             *["" for _ in range(len(bureau_order) * len(per_bureau_fields))],
+            "No 3-bureau comparison could be created from the uploaded report set.",
+            "Upload reports from at least two bureaus to compare the same account side by side.",
+            "",
+            "",
+            "",
         ])
 
     return rows
