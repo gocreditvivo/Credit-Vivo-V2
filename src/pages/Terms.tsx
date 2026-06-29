@@ -16,6 +16,18 @@ const terms = [
     body: 'Credit Vivo does not guarantee deletion of accounts, removal of accurate information, loan approval, credit score increases, or a specific timeline. Accurate negative information may remain on a credit report.',
   },
   {
+    title: 'Credit report access and consent',
+    body: 'Credit Vivo may only access, request, import, or analyze a credit report with your clear permission. Any soft-pull or report-provider connection must be shown to you before use and must explain what bureau or provider is used, what data is collected, and whether any third-party fee applies.',
+  },
+  {
+    title: 'AI review limits',
+    body: 'AI scanner results are draft educational findings. They may identify possible errors, missing details, or inconsistencies, but they are not final credit bureau decisions, legal advice, or a promise that a dispute will succeed. You should review all findings before relying on them.',
+  },
+  {
+    title: 'Disputes, letters, and tracking',
+    body: 'Credit Vivo may help prepare draft dispute letters, notices, summaries, and tracking records. Credit Vivo does not automatically send disputes, bureau letters, furnisher letters, CFPB complaints, state complaints, or attorney requests without a separate customer approval flow.',
+  },
+  {
     title: 'Customer responsibilities',
     body: 'You agree to provide truthful information, review documents before they are sent, keep login information secure, and notify Credit Vivo about bureau or furnisher responses you receive.',
   },
@@ -29,11 +41,15 @@ const terms = [
   },
   {
     title: 'Attorney services',
-    body: 'Attorney backup or escalation is available only when offered through a separate compliant arrangement. Credit Vivo does not provide legal advice unless an attorney-client relationship is separately created.',
+    body: 'Attorney backup or escalation is available only for eligible matters and only through a separate compliant arrangement. Credit Vivo does not provide legal advice unless an attorney-client relationship is separately created with the attorney or law firm.',
   },
   {
     title: 'Cancellation',
     body: 'If paid services are introduced later, service agreements should include cancellation rights required by federal and state law, including any applicable 3-business-day right to cancel without penalty. Credit Vivo should not charge for credit repair services before legally permitted under the applicable agreement.',
+  },
+  {
+    title: 'State and federal requirements',
+    body: 'Credit Vivo launch documents, pricing, advertising, call scripts, onboarding, payments, credit-report access, cancellation rights, and attorney escalation must be reviewed for federal law and each state where customers are accepted before paid launch.',
   },
 ];
 

@@ -12,6 +12,10 @@ const disclosures = [
     body: 'Credit Vivo may identify possible issues and organize next steps, but it cannot guarantee that any credit bureau or furnisher will delete, update, or change an account.',
   },
   {
+    title: 'Credit report permission',
+    body: 'Credit Vivo should only pull, import, or analyze a credit report after you give clear permission. A soft-pull check-in should not affect your credit score, but the provider, bureau, data collected, and any cost should be disclosed before use.',
+  },
+  {
     title: 'Accurate information',
     body: 'Accurate, verifiable negative information may legally remain on a credit report for the allowed reporting period.',
   },
@@ -24,6 +28,10 @@ const disclosures = [
     body: 'Scanner output may help organize data, find inconsistencies, and draft plain-English explanations. It is not a credit bureau decision, legal advice, or a substitute for customer review.',
   },
   {
+    title: 'Customer approval before sending',
+    body: 'Draft dispute letters, bureau notices, furnisher notices, CFPB complaints, state complaints, and attorney escalation requests should not be sent automatically. Customers should review and approve what is sent.',
+  },
+  {
     title: 'Attorney escalation',
     body: 'Attorney backup is reserved for eligible cases and requires a separate compliant relationship. It should be used after ordinary dispute and escalation steps when appropriate.',
   },
@@ -34,6 +42,10 @@ const disclosures = [
   {
     title: 'Virginia-first launch',
     body: 'Before any paid launch, Credit Vivo should verify federal requirements and Virginia, Maryland, and DC business, credit services, bond or license, cancellation, advertising, and consumer protection rules.',
+  },
+  {
+    title: 'Paid-service contract rights',
+    body: 'Before paid credit-repair-style services are introduced, Credit Vivo should provide the required written agreement, legal-rights disclosure, total cost, timing, and cancellation form required by federal and state law.',
   },
 ];
 
