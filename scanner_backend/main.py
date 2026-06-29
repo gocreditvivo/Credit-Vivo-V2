@@ -49,6 +49,7 @@ try:
     from .growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from .growth_ads_ai import build_ad_plan
     from .growth_ai_sources import build_growth_source_brief
+    from .growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
     from .outreach_ai import build_outreach_plan
@@ -73,6 +74,7 @@ except ImportError:
     from growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from growth_ads_ai import build_ad_plan
     from growth_ai_sources import build_growth_source_brief
+    from growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
     from outreach_ai import build_outreach_plan
@@ -355,6 +357,21 @@ def growth_ai_codex_advisor(
         referral_signups=referral_signups,
     )
     return JSONResponse(build_codex_advisor_brief(question=question, snapshot=snapshot, focus=focus))
+
+
+@app.get("/growth-ai/problem-solver")
+@app.get("/api/growth-ai/problem-solver")
+def growth_ai_problem_solver():
+    return JSONResponse(build_problem_solver_brief())
+
+
+@app.post("/growth-ai/solve")
+@app.post("/api/growth-ai/solve")
+async def growth_ai_solve(payload: Dict[str, object]):
+    question = str(payload.get("question", "")).strip()
+    if not question:
+        raise HTTPException(status_code=400, detail="question is required.")
+    return JSONResponse(solve_growth_problem(question))
 
 
 @app.get("/operator-ai/brief")
