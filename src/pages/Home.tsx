@@ -26,7 +26,7 @@ function HeroCard() {
         {[
           { label: 'AI scan completed', done: true },
           { label: 'Errors prioritized', done: true },
-          { label: 'Attorney escalation checked', done: false },
+          { label: 'Attorney help checked', done: false },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2.5 rounded-lg bg-navy-50/70 px-3 py-2">
             <div className={`flex h-5 w-5 items-center justify-center rounded-full ${item.done ? 'bg-emerald-600' : 'bg-rose-200'}`}>
@@ -58,7 +58,7 @@ function HeroVisual() {
         <div className="mt-2 grid gap-1.5 text-[11px] font-semibold text-navy-700">
           <span>Soft report pull</span>
           <span>Raw report parsing</span>
-          <span>Attorney-ready file</span>
+          <span>File ready for review</span>
         </div>
       </div>
       <div className="overflow-hidden rounded-2xl border border-white/70 bg-white shadow-2xl shadow-navy-900/18">
@@ -89,17 +89,17 @@ export default function Home() {
             <div className="relative z-10">
               <div className="mb-5 inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-white/85 px-4 py-2 text-sm font-bold text-emerald-800 shadow-sm shadow-emerald-900/5">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                AI Scanner + Attorney Escalation
+                Smart Credit Review + Attorney Help
               </div>
 
               <p className="text-[17px] text-navy-500 leading-relaxed mb-6 max-w-xl">
-                <strong className="text-navy-700">Credit Vivo combines AI-powered report analysis with attorney-reviewed escalation options.</strong>{' '}
-                Start with a no-hard-pull Credit Check-In to identify potential errors in plain English, then seamlessly transition qualified files toward bureau disputes, furnisher disputes, CFPB/state escalation, or direct attorney review.
+                <strong className="text-navy-700">Credit Vivo helps you understand what may be wrong on your credit report.</strong>{' '}
+                Start with a no-hard-pull Credit Check-In, see possible errors in plain English, and get clear next steps. If the problem is serious, we help prepare the file for attorney review.
               </p>
 
               <div className="mb-8 flex flex-wrap gap-3">
                 <Link to="/join" className="btn-primary text-sm py-3 px-6">
-                  Start AI Credit Check-In
+                  Start Free Credit Check-In
                   <ArrowRight size={15} />
                 </Link>
                 <Link to="/why" className="btn-outline text-sm py-3 px-6">
@@ -108,7 +108,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                {['AI parser', 'Attorney escalation', 'No hard pull to start'].map((t) => (
+                {['Plain-English review', 'Attorney help available', 'No hard pull to start'].map((t) => (
                   <span key={t} className="flex items-center gap-1.5 text-[12px] text-navy-500">
                     <CheckCircle size={13} className="text-emerald-700" />
                     {t}
@@ -117,10 +117,10 @@ export default function Home() {
               </div>
               <div className="mt-6 rounded-xl border border-emerald-100 bg-white/85 p-4 shadow-sm shadow-emerald-900/5 lg:hidden">
                 <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">
-                  AI scanner path
+                  What happens next
                 </p>
                 <p className="mt-1 text-xs font-semibold text-navy-700">
-                  Soft report pull, raw parsing, attorney-ready review file
+                  Check your report, understand issues, choose next steps
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function Home() {
       <section className="border-y border-navy-100/70 bg-white py-7">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['AI Scanner', 'Attorney Review', 'Bureau Disputes', 'Furnisher Disputes', 'Escalation Tracking'].map((item) => (
+            {['Free Check-In', 'Plain English', 'Review Options', 'Attorney Help', 'Progress Tracking'].map((item) => (
               <div key={item} className="lively-trust-pill text-center py-2">
                 <span className="text-xs font-semibold text-navy-600">{item}</span>
               </div>
@@ -148,20 +148,20 @@ export default function Home() {
       {/* Vision section */}
       <section className="bg-gradient-to-br from-navy-950 via-navy-900 to-emerald-950 py-14">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-emerald-200">AI first, attorney-ready when needed</p>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-emerald-200">Simple credit help</p>
           <h2 className="mb-3 text-[22px] font-semibold text-white sm:text-[26px]">
-            Credit repair needs more than templates. <span className="text-amber-300">It needs evidence.</span>
+            Know what is wrong. <span className="text-amber-300">Know what to do next.</span>
           </h2>
           <p className="text-sm text-navy-300 max-w-lg mx-auto mb-10">
-            Credit Vivo pairs AI-powered report analysis with attorney-reviewed escalation options, so potential errors can move from plain-English findings into the right dispute or review path.
+            Credit Vivo reviews your report, explains possible problems in normal language, and helps organize the next step if something needs to be challenged.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { title: 'AI analysis', desc: 'Identify potential credit report errors in plain English by account, bureau, and issue type.' },
-              { title: 'Evidence file', desc: 'Keep snippets, dates, bureau differences, and tracking fields ready for review.' },
-              { title: 'Attorney escalation', desc: 'Transition qualified files toward attorney review when the hard issues need human judgment.' },
-              { title: 'Tracked action', desc: 'Follow letters, deadlines, responses, and next steps without losing the paper trail.' },
+              { title: 'Check', desc: 'Look for possible report problems without a hard pull.' },
+              { title: 'Explain', desc: 'Show the issues in plain English, not credit bureau jargon.' },
+              { title: 'Prepare', desc: 'Organize documents and draft next steps before anything is sent.' },
+              { title: 'Track', desc: 'Follow what happened, what is waiting, and what comes next.' },
             ].map((g) => (
               <div key={g.title} className="lively-dark-card rounded-xl border border-white/10 bg-white/[0.04] p-5 text-left">
                 <h3 className="text-sm font-bold text-white mb-1">{g.title}</h3>
@@ -178,16 +178,16 @@ export default function Home() {
           <div className="text-center mb-12">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">How it works</p>
             <h2 className="text-[22px] font-semibold text-navy-900 sm:text-[26px]">
-              From AI Credit Check-In to attorney-reviewed escalation.
+              From free check-in to clear next steps.
             </h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { num: '01', title: 'Start with a no-hard-pull Check-In', desc: 'Upload or connect a report so AI can begin the review without affecting the score.', icon: BrainCircuit },
-              { num: '02', title: 'Identify potential errors', desc: 'AI organizes bureau differences, collections, dates, balances, and reporting issues in plain English.', icon: FileSearch },
-              { num: '03', title: 'Build the dispute path', desc: 'Qualified files move toward bureau disputes, furnisher disputes, CFPB/state escalation, or direct attorney review.', icon: Calendar },
-              { num: '04', title: 'Escalate the hard ones', desc: 'Attorney-reviewed escalation options help with stronger files, repeated verification, or unresolved reporting harm.', icon: Scale },
+              { num: '01', title: 'Start your free Check-In', desc: 'Upload or connect a report without affecting your score.', icon: BrainCircuit },
+              { num: '02', title: 'See possible problems', desc: 'Credit Vivo points out items that may need a closer look.', icon: FileSearch },
+              { num: '03', title: 'Review your options', desc: 'See what can be disputed, what needs proof, and what should wait.', icon: Calendar },
+              { num: '04', title: 'Get help if it is serious', desc: 'Hard cases can be prepared for attorney review when appropriate.', icon: Scale },
             ].map(({ num, title, desc, icon: Icon }) => (
               <div key={num} className="lively-step-card rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/50">
                 <div className="flex items-center gap-3 mb-3">
@@ -210,7 +210,7 @@ export default function Home() {
           <div className="text-center mb-12">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">What we help with</p>
             <h2 className="text-[22px] font-semibold text-navy-900 sm:text-[26px]">
-              AI speed with human escalation.
+              Smart review with human help.
             </h2>
           </div>
 
@@ -225,13 +225,13 @@ export default function Home() {
               {
                 icon: Sparkles,
                 title: 'Dispute workflow',
-                desc: 'Prepare draft bureau and furnisher dispute workflows, FCRA notice language, evidence packets, and certified-mail tracking fields.',
+                desc: 'Prepare draft letters, supporting notes, evidence packets, and tracking details before anything is sent.',
                 color: 'bg-rose-100 text-rose-600',
               },
               {
                 icon: Scale,
-                title: 'Attorney escalation',
-                desc: 'When the file shows stronger dispute history or repeated reporting problems, Credit Vivo can prepare it for attorney or regulator review.',
+                title: 'Attorney help',
+                desc: 'When the issue is more serious, Credit Vivo can help prepare the file for attorney review.',
                 color: 'bg-amber-100 text-amber-700',
               },
             ].map(({ icon: Icon, title, desc, color }) => (
@@ -291,7 +291,7 @@ export default function Home() {
             Start with the AI Credit Check-In.
           </h2>
           <p className="text-sm text-navy-300 mb-6">
-            See possible report errors first. Upgrade later if you want guided disputes or attorney escalation.
+            See possible report errors first. Upgrade later if you want guided next steps or attorney help.
           </p>
           <Link to="/join" className="btn-mint text-sm py-3 px-7">
             Join Free
