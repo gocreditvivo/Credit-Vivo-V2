@@ -292,6 +292,25 @@ def test_parse_sample_report(tmp_path):
     assert "specific field" in eoscar_text or "field-specific" in eoscar_text
     assert data["eoscar_public_facts"]
     assert any("AUD" in fact["title"] or "AUD" in fact["detail"] for fact in data["eoscar_public_facts"])
+    assert data["dates_found_audit"]
+    date_audit_text = " ".join(
+        row["field_title"] + " " +
+        row["raw_date"] + " " +
+        row["normalized_date"] + " " +
+        row["context"]
+        for row in data["dates_found_audit"]
+    )
+    assert "Date Opened" in date_audit_text
+    assert "Date of First Delinquency" in date_audit_text
+    assert data["date_issues_to_dispute"]
+    date_issue_text = " ".join(
+        row["severity"] + " " +
+        row["issue_type"] + " " +
+        row["what_found"] + " " +
+        row["next_step"]
+        for row in data["date_issues_to_dispute"]
+    )
+    assert "Date differs across bureaus" in date_issue_text or "Missing date field" in date_issue_text
     cross_labels = {x["customer_label"] for x in data["issues"] if x["issue_type"].startswith("cross_bureau")}
     assert "Balance differs across bureaus" in cross_labels
     assert "Status differs across bureaus" in cross_labels
@@ -301,6 +320,7 @@ def test_parse_sample_report(tmp_path):
     assert (tmp_path / "credit_vivo_parser_result.json").exists()
     assert (tmp_path / "tradelines.csv").exists()
     assert (tmp_path / "review_issues.csv").exists()
+    assert (tmp_path / "dates_found_audit.csv").exists()
     workbook_path = tmp_path / "credit_vivo_desktop_scanner_output.xlsx"
     assert workbook_path.exists()
     workbook = load_workbook(workbook_path, read_only=True)
@@ -312,6 +332,9 @@ def test_parse_sample_report(tmp_path):
         "Desktop Field Matrix",
         "Detected Errors",
         "Review Items",
+        "Raw Tradelines With Dates",
+        "Dates Found Audit",
+        "Date Issues To Dispute",
         "Metro 2 + FCRA Review",
         "Metro 2 Requirements",
         "Metro 2 Guide Notes",
@@ -399,6 +422,25 @@ def test_parse_sample_report(tmp_path):
     )
     assert "Current balance" in matrix_text
     assert "Date reported or updated" in matrix_text
+    raw_dates = workbook["Raw Tradelines With Dates"]
+    raw_date_headers = [raw_dates.cell(row=1, column=column).value for column in range(1, raw_dates.max_column + 1)]
+    assert "date_opened" in raw_date_headers
+    assert "date_of_first_delinquency" in raw_date_headers
+    assert "raw_evidence" in raw_date_headers
+    dates_audit = workbook["Dates Found Audit"]
+    dates_audit_headers = [dates_audit.cell(row=1, column=column).value for column in range(1, dates_audit.max_column + 1)]
+    assert "normalized_date" in dates_audit_headers
+    assert "context" in dates_audit_headers
+    dates_audit_text = " ".join(
+        str(dates_audit.cell(row=row, column=column).value or "")
+        for row in range(2, dates_audit.max_row + 1)
+        for column in range(1, dates_audit.max_column + 1)
+    )
+    assert "Date Opened" in dates_audit_text
+    date_issues = workbook["Date Issues To Dispute"]
+    date_issue_headers = [date_issues.cell(row=1, column=column).value for column in range(1, date_issues.max_column + 1)]
+    assert "Severity" in date_issue_headers
+    assert "What we found in plain English" in date_issue_headers
     bureau_letters = " ".join(
         str(comparison.cell(row=row, column=bureau_letter_column).value or "")
         for row in range(2, comparison.max_row + 1)

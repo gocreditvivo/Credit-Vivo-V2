@@ -2700,6 +2700,187 @@ def build_field_compliance_audit(tradelines: List[dict]) -> List[dict]:
     return rows
 
 
+DATE_FIELD_TITLES = {
+    "date_opened": "Date Opened / Assigned",
+    "date_closed": "Date Closed",
+    "date_reported": "Date Reported / Last Updated",
+    "date_last_activity": "Date of Last Activity",
+    "date_last_payment": "Date of Last Payment",
+    "date_of_first_delinquency": "Date of First Delinquency / DOFD",
+    "estimated_removal_date": "Estimated Removal / On Record Until",
+}
+
+
+DATE_LABEL_PATTERNS = {
+    "date_opened": ["date opened", "opened"],
+    "date_closed": ["date closed", "closed"],
+    "date_reported": ["date reported", "date updated", "balance updated", "last reported", "reported"],
+    "date_last_activity": ["date of last activity", "last activity"],
+    "date_last_payment": ["date of last payment", "last payment made", "last payment"],
+    "date_of_first_delinquency": ["date of first delinquency", "date of 1st delinquency", "first delinquency", "dofd"],
+    "estimated_removal_date": ["on record until", "estimated month and year this item will be removed", "estimated removal"],
+}
+
+
+def _month_number(name: str) -> str:
+    months = {
+        "jan": "01", "january": "01",
+        "feb": "02", "february": "02",
+        "mar": "03", "march": "03",
+        "apr": "04", "april": "04",
+        "may": "05",
+        "jun": "06", "june": "06",
+        "jul": "07", "july": "07",
+        "aug": "08", "august": "08",
+        "sep": "09", "sept": "09", "september": "09",
+        "oct": "10", "october": "10",
+        "nov": "11", "november": "11",
+        "dec": "12", "december": "12",
+    }
+    return months.get(name.lower()[:9], "")
+
+
+def normalize_audit_date(value: str) -> Tuple[str, str]:
+    value = clean_text(value)
+    m = re.search(r"\b(\d{1,2})/(\d{1,2})/(\d{2,4})\b", value)
+    if m:
+        year = m.group(3)
+        if len(year) == 2:
+            year = "20" + year if int(year) <= 40 else "19" + year
+        return f"{int(year):04d}-{int(m.group(1)):02d}-{int(m.group(2)):02d}", "day"
+
+    m = re.search(r"\b([A-Za-z]{3,9})\s+(\d{1,2}),?\s+(\d{4})\b", value)
+    if m and _month_number(m.group(1)):
+        return f"{int(m.group(3)):04d}-{_month_number(m.group(1))}-{int(m.group(2)):02d}", "day"
+
+    m = re.search(r"\b([A-Za-z]{3,9})\s+(\d{4})\b", value)
+    if m and _month_number(m.group(1)):
+        return f"{int(m.group(2)):04d}-{_month_number(m.group(1))}", "month"
+
+    m = re.search(r"\b(\d{4})\b", value)
+    if m:
+        return m.group(1), "year"
+
+    return value, "unknown"
+
+
+def _date_context(raw_block: str, raw_date: str) -> str:
+    text = clean_text(raw_block)
+    idx = text.lower().find(raw_date.lower())
+    if idx < 0:
+        return text[:260]
+    return text[max(0, idx - 120): idx + len(raw_date) + 160]
+
+
+def build_dates_found_audit(tradelines: List[dict]) -> List[dict]:
+    rows = []
+    for tradeline in tradelines:
+        raw_block = str(tradeline.get("raw_block", "") or "")
+        for field_name, field_title in DATE_FIELD_TITLES.items():
+            parsed_value = str(tradeline.get(field_name, "") or "").strip()
+            if parsed_value:
+                normalized, precision = normalize_audit_date(parsed_value)
+                rows.append({
+                    "source_file": tradeline.get("source_filename", ""),
+                    "bureau": tradeline.get("bureau", ""),
+                    "page": tradeline.get("page_start", ""),
+                    "account_key": tradeline.get("id", ""),
+                    "creditor": tradeline.get("account_name", ""),
+                    "field_name": field_name,
+                    "field_title": field_title,
+                    "raw_date": parsed_value,
+                    "normalized_date": normalized,
+                    "precision": precision,
+                    "label_matched": "; ".join(DATE_LABEL_PATTERNS.get(field_name, [])),
+                    "confidence": 92 if precision in {"day", "month"} else 70,
+                    "context": _date_context(raw_block, parsed_value),
+                })
+
+        for m in re.finditer(r"\b(?:\d{1,2}/\d{1,2}/\d{2,4}|[A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4}|[A-Za-z]{3,9}\s+\d{4})\b", raw_block):
+            raw_date = clean_text(m.group(0))
+            normalized, precision = normalize_audit_date(raw_date)
+            if any(row["normalized_date"] == normalized and row["account_key"] == tradeline.get("id", "") for row in rows):
+                continue
+            rows.append({
+                "source_file": tradeline.get("source_filename", ""),
+                "bureau": tradeline.get("bureau", ""),
+                "page": tradeline.get("page_start", ""),
+                "account_key": tradeline.get("id", ""),
+                "creditor": tradeline.get("account_name", ""),
+                "field_name": "unassigned_date_seen",
+                "field_title": "Unassigned Date Seen In Account Block",
+                "raw_date": raw_date,
+                "normalized_date": normalized,
+                "precision": precision,
+                "label_matched": "not assigned - review source line",
+                "confidence": 30,
+                "context": _date_context(raw_block, raw_date),
+            })
+    return rows
+
+
+def _is_negative_or_tracked_account(tradeline: dict) -> bool:
+    text = _account_class_text(tradeline)
+    return any(term in text for term in [
+        "collection",
+        "debt buyer",
+        "factoring",
+        "charge",
+        "charged off",
+        "charge-off",
+        "late",
+        "past due",
+        "delinquent",
+        "settled",
+        "repossession",
+        "foreclosure",
+    ])
+
+
+def build_date_issues_to_dispute(tradelines: List[dict], groups: List[dict]) -> List[dict]:
+    rows = []
+    for tradeline in tradelines:
+        if not _is_negative_or_tracked_account(tradeline):
+            continue
+
+        for field_name, field_title in DATE_FIELD_TITLES.items():
+            value = str(tradeline.get(field_name, "") or "").strip()
+            if not value and field_name in {"date_of_first_delinquency", "date_reported", "date_opened"}:
+                rows.append({
+                    "severity": "High" if field_name == "date_of_first_delinquency" else "Medium",
+                    "account_bureau": f"{tradeline.get('account_name', '')} / {tradeline.get('bureau', '')}",
+                    "issue_type": "Missing date field",
+                    "what_found": f"The scanner found a negative/tracked account, but {field_title} is blank or was not safely parsed.",
+                    "why_matters": "Important date fields help verify accuracy, completeness, obsolescence, and whether the reporting period is correct.",
+                    "next_step": f"Compare the PDF source. If {field_title} is missing or cannot be verified, dispute this specific field and request verification records.",
+                })
+
+    tradelines_by_id = {item.get("id"): item for item in tradelines}
+    for group in groups:
+        items = [tradelines_by_id.get(item_id) for item_id in group.get("tradeline_ids", [])]
+        items = [item for item in items if item]
+        if len(items) < 2:
+            continue
+        for field_name, field_title in DATE_FIELD_TITLES.items():
+            values = {
+                item.get("bureau", ""): item.get(field_name, "")
+                for item in items
+                if item.get(field_name)
+            }
+            normalized = {normalize_audit_date(str(value))[0] for value in values.values() if value}
+            if len(normalized) >= 2:
+                account_name = "; ".join(sorted({item.get("account_name", "") for item in items if item.get("account_name")}))
+                rows.append({
+                    "severity": "High" if field_name == "date_of_first_delinquency" else "Medium",
+                    "account_bureau": account_name,
+                    "issue_type": "Date differs across bureaus",
+                    "what_found": f"{field_title} differs across bureaus: " + "; ".join(f"{k}: {v}" for k, v in values.items()),
+                    "why_matters": "Different dates may affect reporting age, obsolescence, account history, and dispute verification.",
+                    "next_step": f"Dispute the specific {field_title} mismatch with bureau comparison evidence and request the furnisher's source record.",
+                })
+    return rows
+
+
 def _related_issue_types_for_tradeline(tradeline_id: str, issues: List[dict]) -> List[str]:
     return [
         issue.get("issue_type", "")
@@ -2804,6 +2985,8 @@ def result_to_dict(result: ParseResult) -> dict:
     metro2_requirement_review = build_metro2_requirement_review(tradelines)
     field_compliance_audit = build_field_compliance_audit(tradelines)
     eoscar_packaging_review = build_eoscar_packaging_review(issues, tradelines)
+    dates_found_audit = build_dates_found_audit(tradelines)
+    date_issues_to_dispute = build_date_issues_to_dispute(tradelines, result.cross_bureau_groups)
     return {
         "engine": result.engine,
         "version": result.version,
@@ -2823,6 +3006,8 @@ def result_to_dict(result: ParseResult) -> dict:
         "fcra_compliance_review": build_fcra_compliance_review(tradelines, issues, metro2_requirement_review),
         "fcra_rights_reference": build_fcra_rights_reference(),
         "field_compliance_audit": field_compliance_audit,
+        "dates_found_audit": dates_found_audit,
+        "date_issues_to_dispute": date_issues_to_dispute,
         "bureau_debt_collection_reference": build_bureau_debt_collection_reference(),
         "eoscar_public_facts": EOSCAR_PUBLIC_FACTS,
         "eoscar_packaging_review": eoscar_packaging_review,
@@ -3461,6 +3646,9 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     desktop_field_matrix = wb.create_sheet("Desktop Field Matrix")
     errors = wb.create_sheet("Detected Errors")
     items = wb.create_sheet("Review Items")
+    raw_tradelines_dates = wb.create_sheet("Raw Tradelines With Dates")
+    dates_found_audit = wb.create_sheet("Dates Found Audit")
+    date_issues = wb.create_sheet("Date Issues To Dispute")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
     metro2_requirements = wb.create_sheet("Metro 2 Requirements")
     metro2_guide_notes = wb.create_sheet("Metro 2 Guide Notes")
@@ -3597,6 +3785,109 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
                 "Yes" if item.get("needs_admin_review") else "No",
             ]
             for item in data.get("tradelines", [])
+        ],
+    ])
+
+    _write_workbook_sheet(raw_tradelines_dates, [
+        [
+            "source_file",
+            "bureau",
+            "page",
+            "account_group",
+            "creditor",
+            "account_number",
+            "original_creditor",
+            "creditor_classification",
+            "account_type",
+            "account_status",
+            "payment_status",
+            "balance",
+            "past_due",
+            "high_balance",
+            "credit_limit",
+            "date_opened",
+            "collection_assigned_date",
+            "date_reported",
+            "date_updated",
+            "status_updated_date",
+            "date_closed",
+            "date_last_payment",
+            "date_last_activity",
+            "date_of_first_delinquency",
+            "estimated_removal_date",
+            "remarks",
+            "confidence",
+            "raw_evidence",
+        ],
+        *[
+            [
+                item.get("source_filename", ""),
+                item.get("bureau", ""),
+                item.get("page_start", ""),
+                item.get("group_id", "") or item.get("id", ""),
+                item.get("account_name", ""),
+                item.get("account_number", "") or item.get("account_number_masked", ""),
+                item.get("original_creditor", ""),
+                item.get("creditor_classification", ""),
+                item.get("account_type", ""),
+                item.get("status", ""),
+                item.get("pay_status", ""),
+                item.get("balance", ""),
+                item.get("past_due", ""),
+                item.get("high_balance", "") or item.get("high_credit_or_original_amount", ""),
+                item.get("credit_limit", ""),
+                item.get("date_opened", ""),
+                "",
+                item.get("date_reported", ""),
+                item.get("date_reported", ""),
+                "",
+                item.get("date_closed", ""),
+                item.get("date_last_payment", ""),
+                item.get("date_last_activity", ""),
+                item.get("date_of_first_delinquency", ""),
+                item.get("estimated_removal_date", ""),
+                item.get("remarks", ""),
+                item.get("confidence", ""),
+                item.get("raw_block", ""),
+            ]
+            for item in data.get("tradelines", [])
+        ],
+    ])
+
+    _write_workbook_sheet(dates_found_audit, [
+        ["source_file", "bureau", "page", "account_key", "creditor", "field_name", "field_title", "raw_date", "normalized_date", "precision", "label_matched", "confidence", "context"],
+        *[
+            [
+                row.get("source_file", ""),
+                row.get("bureau", ""),
+                row.get("page", ""),
+                row.get("account_key", ""),
+                row.get("creditor", ""),
+                row.get("field_name", ""),
+                row.get("field_title", ""),
+                row.get("raw_date", ""),
+                row.get("normalized_date", ""),
+                row.get("precision", ""),
+                row.get("label_matched", ""),
+                row.get("confidence", ""),
+                row.get("context", ""),
+            ]
+            for row in data.get("dates_found_audit", [])
+        ],
+    ])
+
+    _write_workbook_sheet(date_issues, [
+        ["Severity", "Account/Bureau", "Issue Type", "What we found in plain English", "Why it matters", "What to do next"],
+        *[
+            [
+                row.get("severity", ""),
+                row.get("account_bureau", ""),
+                row.get("issue_type", ""),
+                row.get("what_found", ""),
+                row.get("why_matters", ""),
+                row.get("next_step", ""),
+            ]
+            for row in data.get("date_issues_to_dispute", [])
         ],
     ])
 
@@ -3975,6 +4266,13 @@ def write_outputs(result: ParseResult, out_dir: Path) -> None:
             writer = csv.DictWriter(f, fieldnames=list(issue_rows[0].keys()))
             writer.writeheader()
             writer.writerows(issue_rows)
+
+    date_rows = data.get("dates_found_audit", [])
+    if date_rows:
+        with (out_dir / "dates_found_audit.csv").open("w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=list(date_rows[0].keys()))
+            writer.writeheader()
+            writer.writerows(date_rows)
 
     letter_sections = []
     for letter in data.get("recommended_letter_queue", []):
