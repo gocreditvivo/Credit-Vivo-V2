@@ -223,6 +223,9 @@ def test_parse_sample_report(tmp_path):
     assert workbook.sheetnames == [
         "Summary",
         "3 Bureau Comparison",
+        "Desktop Dashboard",
+        "Desktop Staff Workbox",
+        "Desktop Field Matrix",
         "Detected Errors",
         "Review Items",
         "Metro 2 + FCRA Review",
@@ -282,6 +285,29 @@ def test_parse_sample_report(tmp_path):
     assert "Balance differs" in comparison_flags
     assert "Status differs" in comparison_flags
     assert "DOFD differs" in comparison_flags
+    desktop_dashboard = workbook["Desktop Dashboard"]
+    dashboard_text = " ".join(
+        str(desktop_dashboard.cell(row=row, column=column).value or "")
+        for row in range(1, desktop_dashboard.max_row + 1)
+        for column in range(1, desktop_dashboard.max_column + 1)
+    )
+    assert "Health score" in dashboard_text
+    assert "Findings" in dashboard_text
+    assert "Upload proof" in dashboard_text
+    desktop_workbox = workbook["Desktop Staff Workbox"]
+    workbox_headers = [desktop_workbox.cell(row=1, column=column).value for column in range(1, desktop_workbox.max_column + 1)]
+    assert "Priority Score" in workbox_headers
+    assert "Recommended Letter Types" in workbox_headers
+    desktop_matrix = workbook["Desktop Field Matrix"]
+    matrix_headers = [desktop_matrix.cell(row=1, column=column).value for column in range(1, desktop_matrix.max_column + 1)]
+    assert matrix_headers == ["Account Name", "Field", "Label", "Equifax", "Experian", "TransUnion", "Differs"]
+    matrix_text = " ".join(
+        str(desktop_matrix.cell(row=row, column=column).value or "")
+        for row in range(2, desktop_matrix.max_row + 1)
+        for column in range(1, desktop_matrix.max_column + 1)
+    )
+    assert "Current balance" in matrix_text
+    assert "Date reported or updated" in matrix_text
     bureau_letters = " ".join(
         str(comparison.cell(row=row, column=bureau_letter_column).value or "")
         for row in range(2, comparison.max_row + 1)

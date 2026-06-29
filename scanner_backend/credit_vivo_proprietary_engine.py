@@ -2509,6 +2509,172 @@ def build_dispute_method_rows() -> List[List[object]]:
     ]
 
 
+def _desktop_priority_for_flags(flags: List[str], missing: List[str]) -> Tuple[str, str, int]:
+    flag_text = " ".join(flags).lower()
+    if missing or any(term in flag_text for term in ["balance", "status", "dofd", "missing"]):
+        return "High priority", "critical", 82
+    if flags:
+        return "Review", "medium", 58
+    return "Usually keep", "positive", 20
+
+
+def _desktop_documents_for_flags(flags: List[str], missing: List[str]) -> List[str]:
+    docs = []
+    flag_text = " ".join(flags).lower()
+    if "balance" in flag_text:
+        docs.append("Payment proof, settlement proof, itemization, or account statement if available")
+    if "status" in flag_text or "closed" in flag_text:
+        docs.append("Account statements, closure letters, or proof of transfer if available")
+    if "dofd" in flag_text or "reported date" in flag_text:
+        docs.append("Prior credit reports, delinquency timeline, and payment history if available")
+    if missing:
+        docs.append("All three bureau reports or proof the account is missing from one bureau")
+    if not docs:
+        docs.append("Bank statement or payment confirmation if the customer says the reporting is wrong")
+    return docs
+
+
+def build_desktop_customer_dashboard(data: dict) -> List[dict]:
+    tradelines_by_id = {item.get("id"): item for item in data.get("tradelines", [])}
+    bureau_order = ["Equifax", "Experian", "TransUnion"]
+    findings = []
+    keep_if_correct = []
+
+    for group in data.get("cross_bureau_groups", []):
+        items = [tradelines_by_id.get(item_id) for item_id in group.get("tradeline_ids", [])]
+        items = [item for item in items if item]
+        if not items:
+            continue
+        by_bureau = {item.get("bureau"): item for item in items}
+        flags = [
+            _comparison_flag([item.get("balance", "") for item in items], "Balance"),
+            _comparison_flag([item.get("status") or item.get("pay_status") or "" for item in items], "Status"),
+            _comparison_flag([item.get("date_reported", "") for item in items], "Reported date"),
+            _comparison_flag([item.get("date_of_first_delinquency", "") for item in items], "DOFD"),
+            _comparison_flag([item.get("account_name", "") for item in items], "Account name"),
+        ]
+        flags = [flag for flag in flags if flag]
+        missing = [bureau for bureau in bureau_order if bureau not in by_bureau]
+        priority, tone, _score = _desktop_priority_for_flags(flags, missing)
+        account_name = "; ".join(sorted({item.get("account_name", "") for item in items if item.get("account_name")}))
+        entry = {
+            "id": group.get("group_id", ""),
+            "account_name": account_name,
+            "priority": priority,
+            "tone": tone,
+            "bureaus": sorted(by_bureau.keys()),
+            "simple_issue": (
+                "The same account does not match across every credit report."
+                if flags or missing else
+                "This looks consistent across the uploaded reports."
+            ),
+            "explanation": [
+                "The " + flag.lower() + " across bureaus." for flag in flags
+            ] + ([f"Missing from {', '.join(missing)}."] if missing else []),
+            "recommended_action": (
+                "Upload proof and review the draft dispute package before anything is sent."
+                if flags or missing else
+                "Keep this account if it is correct."
+            ),
+            "documents_needed": _desktop_documents_for_flags(flags, missing),
+        }
+        if priority == "Usually keep":
+            keep_if_correct.append(entry)
+        else:
+            findings.append(entry)
+
+    return [
+        {
+            "section": "summary",
+            "health_score": max(300, 700 - (len(findings) * 28) - (len(data.get("issues", [])) * 7)),
+            "negative_accounts": len(findings),
+            "potential_issues": len(data.get("issues", [])),
+            "active_disputes": 0,
+            "next_best_actions": [
+                "Confirm all three reports are uploaded",
+                "Upload proof for flagged accounts",
+                "Review and approve draft letters",
+                "Prepare attorney/compliance review for high-priority files",
+            ],
+        },
+        {"section": "findings", "items": findings},
+        {"section": "keep_if_correct", "items": keep_if_correct},
+    ]
+
+
+def build_desktop_staff_workbox(data: dict) -> List[dict]:
+    dashboard = build_desktop_customer_dashboard(data)
+    findings = []
+    for section in dashboard:
+        if section.get("section") == "findings":
+            findings = section.get("items", [])
+            break
+    workbox = []
+    for finding in findings:
+        flags = finding.get("explanation", [])
+        priority_score = 84 if finding.get("priority") == "High priority" else 58
+        workbox.append({
+            "account_id": finding.get("id", ""),
+            "account_name": finding.get("account_name", ""),
+            "priority_score": priority_score,
+            "queue": "Attorney Assist prep" if priority_score >= 80 else "Scanner review",
+            "internal_findings": flags,
+            "recommended_letter_types": ["bureau_dispute", "furnisher_dispute", "method_of_verification_followup"],
+            "documents_needed": finding.get("documents_needed", []),
+        })
+    return workbox
+
+
+def build_desktop_bureau_field_matrix(data: dict) -> List[dict]:
+    tradelines_by_id = {item.get("id"): item for item in data.get("tradelines", [])}
+    bureau_order = ["Equifax", "Experian", "TransUnion"]
+    fields = [
+        ("account_number_masked", "Account number"),
+        ("account_type", "Account type"),
+        ("responsibility", "Responsibility"),
+        ("original_creditor", "Original creditor"),
+        ("balance", "Current balance"),
+        ("past_due", "Past due amount"),
+        ("credit_limit", "Credit limit"),
+        ("high_credit_or_original_amount", "High balance or original amount"),
+        ("status", "Status or pay status"),
+        ("date_opened", "Date opened or assigned"),
+        ("date_reported", "Date reported or updated"),
+        ("date_closed", "Date closed"),
+        ("date_last_payment", "Last payment date"),
+        ("date_of_first_delinquency", "Date of first delinquency"),
+        ("estimated_removal_date", "Estimated removal date"),
+        ("remarks", "Remarks"),
+    ]
+    rows = []
+    for group in data.get("cross_bureau_groups", []):
+        items = [tradelines_by_id.get(item_id) for item_id in group.get("tradeline_ids", [])]
+        items = [item for item in items if item]
+        if not items:
+            continue
+        by_bureau = {item.get("bureau"): item for item in items}
+        account_name = "; ".join(sorted({item.get("account_name", "") for item in items if item.get("account_name")}))
+        for field, label in fields:
+            values = {}
+            for bureau in bureau_order:
+                item = by_bureau.get(bureau, {})
+                value = item.get(field, "")
+                if field == "status":
+                    value = item.get("status") or item.get("pay_status") or ""
+                values[bureau] = value or "Not shown"
+            present_values = {_norm_compare(value) for value in values.values() if _norm_compare(value) != "not shown"}
+            rows.append({
+                "account_name": account_name,
+                "field": field,
+                "label": label,
+                "equifax": values["Equifax"],
+                "experian": values["Experian"],
+                "transunion": values["TransUnion"],
+                "differs": len(present_values) >= 2,
+            })
+    return rows
+
+
 def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     if Workbook is None:
         return
@@ -2517,6 +2683,9 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     summary = wb.active
     summary.title = "Summary"
     bureau_comparison = wb.create_sheet("3 Bureau Comparison")
+    desktop_dashboard = wb.create_sheet("Desktop Dashboard")
+    desktop_workbox = wb.create_sheet("Desktop Staff Workbox")
+    desktop_field_matrix = wb.create_sheet("Desktop Field Matrix")
     errors = wb.create_sheet("Detected Errors")
     items = wb.create_sheet("Review Items")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
@@ -2542,6 +2711,75 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     ])
 
     _write_workbook_sheet(bureau_comparison, build_three_bureau_comparison_rows(data))
+
+    dashboard_sections = build_desktop_customer_dashboard(data)
+    dashboard_summary = next((section for section in dashboard_sections if section.get("section") == "summary"), {})
+    dashboard_findings = next((section for section in dashboard_sections if section.get("section") == "findings"), {}).get("items", [])
+    dashboard_keep = next((section for section in dashboard_sections if section.get("section") == "keep_if_correct"), {}).get("items", [])
+    _write_workbook_sheet(desktop_dashboard, [
+        ["Section", "Account Name", "Priority", "Tone", "Bureaus", "Simple Issue", "Recommended Action", "Documents Needed", "Explanation"],
+        ["Summary", "", "", "", "", f"Health score: {dashboard_summary.get('health_score', '')}; Negative accounts: {dashboard_summary.get('negative_accounts', '')}; Potential issues: {dashboard_summary.get('potential_issues', '')}", "; ".join(dashboard_summary.get("next_best_actions", [])), "", ""],
+        *[
+            [
+                "Findings",
+                item.get("account_name", ""),
+                item.get("priority", ""),
+                item.get("tone", ""),
+                item.get("bureaus", []),
+                item.get("simple_issue", ""),
+                item.get("recommended_action", ""),
+                item.get("documents_needed", []),
+                item.get("explanation", []),
+            ]
+            for item in dashboard_findings
+        ],
+        *[
+            [
+                "Keep If Correct",
+                item.get("account_name", ""),
+                item.get("priority", ""),
+                item.get("tone", ""),
+                item.get("bureaus", []),
+                item.get("simple_issue", ""),
+                item.get("recommended_action", ""),
+                item.get("documents_needed", []),
+                item.get("explanation", []),
+            ]
+            for item in dashboard_keep
+        ],
+    ])
+
+    _write_workbook_sheet(desktop_workbox, [
+        ["Account ID", "Account Name", "Priority Score", "Queue", "Internal Findings", "Recommended Letter Types", "Documents Needed"],
+        *[
+            [
+                row.get("account_id", ""),
+                row.get("account_name", ""),
+                row.get("priority_score", ""),
+                row.get("queue", ""),
+                row.get("internal_findings", []),
+                row.get("recommended_letter_types", []),
+                row.get("documents_needed", []),
+            ]
+            for row in build_desktop_staff_workbox(data)
+        ],
+    ])
+
+    _write_workbook_sheet(desktop_field_matrix, [
+        ["Account Name", "Field", "Label", "Equifax", "Experian", "TransUnion", "Differs"],
+        *[
+            [
+                row.get("account_name", ""),
+                row.get("field", ""),
+                row.get("label", ""),
+                row.get("equifax", ""),
+                row.get("experian", ""),
+                row.get("transunion", ""),
+                "Yes" if row.get("differs") else "No",
+            ]
+            for row in build_desktop_bureau_field_matrix(data)
+        ],
+    ])
 
     _write_workbook_sheet(errors, [
         ["Issue ID", "Issue Type", "Severity", "Customer Label", "Customer Explanation", "Admin Explanation", "Suggested Round", "Related Tradeline IDs", "Confidence", "Evidence Count"],
