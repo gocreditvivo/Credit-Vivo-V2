@@ -53,6 +53,7 @@ try:
     from .growth_credit_domain_expertise import build_credit_domain_expertise_brief
     from .growth_cross_ai_directives import build_cross_ai_growth_directives
     from .growth_forensic_search import build_forensic_search_brief, run_forensic_search
+    from .growth_live_access import build_live_access_brief
     from .growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -82,6 +83,7 @@ except ImportError:
     from growth_credit_domain_expertise import build_credit_domain_expertise_brief
     from growth_cross_ai_directives import build_cross_ai_growth_directives
     from growth_forensic_search import build_forensic_search_brief, run_forensic_search
+    from growth_live_access import build_live_access_brief
     from growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -411,6 +413,12 @@ def growth_ai_credit_domain_expertise():
 @app.get("/api/growth-ai/cross-ai-directives")
 def growth_ai_cross_ai_directives():
     return JSONResponse(build_cross_ai_growth_directives())
+
+
+@app.get("/growth-ai/live-access")
+@app.get("/api/growth-ai/live-access")
+def growth_ai_live_access():
+    return JSONResponse(build_live_access_brief())
 
 
 @app.get("/operator-ai/brief")
