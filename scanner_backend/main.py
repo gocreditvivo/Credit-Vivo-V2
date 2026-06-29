@@ -51,6 +51,7 @@ try:
     from .growth_ai_sources import build_growth_source_brief
     from .growth_codex_capabilities import build_codex_like_growth_brief
     from .growth_credit_domain_expertise import build_credit_domain_expertise_brief
+    from .growth_cross_ai_directives import build_cross_ai_growth_directives
     from .growth_forensic_search import build_forensic_search_brief, run_forensic_search
     from .growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
@@ -79,6 +80,7 @@ except ImportError:
     from growth_ai_sources import build_growth_source_brief
     from growth_codex_capabilities import build_codex_like_growth_brief
     from growth_credit_domain_expertise import build_credit_domain_expertise_brief
+    from growth_cross_ai_directives import build_cross_ai_growth_directives
     from growth_forensic_search import build_forensic_search_brief, run_forensic_search
     from growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from lead_capture import append_lead, build_lead, read_leads, summarize_leads
@@ -403,6 +405,12 @@ async def growth_ai_forensic_search_run(payload: Dict[str, object]):
 @app.get("/api/growth-ai/credit-domain-expertise")
 def growth_ai_credit_domain_expertise():
     return JSONResponse(build_credit_domain_expertise_brief())
+
+
+@app.get("/growth-ai/cross-ai-directives")
+@app.get("/api/growth-ai/cross-ai-directives")
+def growth_ai_cross_ai_directives():
+    return JSONResponse(build_cross_ai_growth_directives())
 
 
 @app.get("/operator-ai/brief")
