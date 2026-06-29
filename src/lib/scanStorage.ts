@@ -150,6 +150,9 @@ export function getDemoScanResult(): ScannerParseResult {
         tracking_status: 'draft_not_sent',
         recommended_next_action: 'furnisher_direct_dispute_after_bureau_review',
         escalation_candidate: false,
+        letter_subject: 'Direct Dispute of Account Reporting - Collection review',
+        draft_letter_body:
+          'DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n\nTo whom it may concern:\n\nI dispute the accuracy and completeness of the collection account reporting on my credit file. Please investigate the account under the FCRA and provide the basis for reporting, ownership or assignment records, original creditor information, balance support, and any documents used to verify the account.\n\nIf the account cannot be verified as accurate and complete, please correct or delete the reporting.\n\nThis draft is not sent automatically.',
       },
       {
         letter_id: 'letter_demo_2',
@@ -167,6 +170,9 @@ export function getDemoScanResult(): ScannerParseResult {
         tracking_status: 'draft_not_sent',
         recommended_next_action: 'round_2_bureau_dispute_then_reinvestigation_if_unverified',
         escalation_candidate: true,
+        letter_subject: 'Credit Bureau Dispute - Charge-off review',
+        draft_letter_body:
+          'DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n\nTo whom it may concern:\n\nI dispute the accuracy and completeness of this charge-off reporting. Please conduct a reasonable investigation under the FCRA and verify the balance, status, dates, payment history, ownership, and whether the account was sold or transferred.\n\nIf any reporting cannot be verified as accurate and complete, please correct or delete it.\n\nThis draft is not sent automatically.',
       },
     ],
     fcra_review: [

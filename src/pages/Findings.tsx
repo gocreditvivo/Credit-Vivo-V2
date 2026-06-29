@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { AlertCircle, ArrowRight, CheckCircle, Clock, FileSearch, MailCheck, Route, ShieldCheck } from 'lucide-react';
+import { AlertCircle, ArrowRight, CheckCircle, Clock, Download, FileSearch, MailCheck, Route, ShieldCheck } from 'lucide-react';
+import { getScannerOutputDownloadUrl } from '../lib/scannerApi';
 import { getLastScanResult } from '../lib/scanStorage';
 
 const categoryNames = [
@@ -84,6 +85,23 @@ export default function Findings() {
     { val: '0', label: 'hard pulls' },
   ];
   const letterQueue = result.recommended_letter_queue || [];
+  const downloads = [
+    {
+      label: 'Download errors worksheet',
+      detail: 'CSV opens in Excel and shows each scanner review point.',
+      href: getScannerOutputDownloadUrl(result.job_id, 'issues.csv'),
+    },
+    {
+      label: 'Download tradelines',
+      detail: 'CSV list of accounts and report details found by the scanner.',
+      href: getScannerOutputDownloadUrl(result.job_id, 'tradelines.csv'),
+    },
+    {
+      label: 'Download draft letters',
+      detail: 'Plain-text packet of draft dispute letters for review.',
+      href: getScannerOutputDownloadUrl(result.job_id, 'letters.txt'),
+    },
+  ];
   const scenarioCards = [
     {
       title: 'Bureau dispute',
@@ -139,6 +157,48 @@ export default function Findings() {
           </div>
         ))}
       </div>
+
+      <section className="bg-white rounded-xl p-5 border border-navy-100/60 mb-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Download size={16} className="text-sky-600" />
+          <h2 className="text-sm font-bold text-navy-900">Scanner desktop-style outputs</h2>
+        </div>
+        <div className="grid md:grid-cols-3 gap-3">
+          {downloads.map((download) => (
+            download.href ? (
+              <a
+                key={download.label}
+                href={download.href}
+                className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50 hover:border-sky-200 hover:bg-sky-50/40 transition"
+              >
+                <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-800">
+                  <Download size={14} className="text-sky-600" />
+                  {download.label}
+                </span>
+                <span className="block text-[11px] text-navy-500 mt-1 leading-relaxed">
+                  {download.detail}
+                </span>
+              </a>
+            ) : (
+              <div
+                key={download.label}
+                className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50"
+              >
+                <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-500">
+                  <Download size={14} className="text-navy-300" />
+                  {download.label}
+                </span>
+                <span className="block text-[11px] text-navy-400 mt-1 leading-relaxed">
+                  Available after a real scanner run.
+                </span>
+              </div>
+            )
+          ))}
+        </div>
+        <p className="text-[11px] text-navy-400 mt-4">
+          These files are generated for the scan job. Do not email real credit reports or raw exports unless the customer approved it.
+        </p>
+      </section>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-5">
         <div className="bg-white rounded-xl p-5 border border-navy-100/60">

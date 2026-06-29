@@ -1154,6 +1154,29 @@ def write_outputs(result: ParseResult, out_dir: Path) -> None:
             writer.writeheader()
             writer.writerows(issue_rows)
 
+    letter_sections = []
+    for letter in data.get("recommended_letter_queue", []):
+        letter_sections.append(
+            "\n".join(
+                [
+                    f"Letter ID: {letter.get('letter_id', '')}",
+                    f"Subject: {letter.get('letter_subject', '')}",
+                    f"Type: {letter.get('letter_type', '')}",
+                    f"Round: {letter.get('round', '')}",
+                    f"Recipient: {letter.get('recipient_type', '')}",
+                    f"Tracking status: {letter.get('tracking_status', '')}",
+                    "",
+                    str(letter.get("draft_letter_body") or "No draft body generated."),
+                ]
+            )
+        )
+
+    if letter_sections:
+        (out_dir / "draft_dispute_letters.txt").write_text(
+            "\n\n" + ("-" * 72) + "\n\n".join(letter_sections),
+            encoding="utf-8",
+        )
+
 
 # Phase 3 draft-only integrations.
 # These classes intentionally do not send disputes, mail, or bank data by

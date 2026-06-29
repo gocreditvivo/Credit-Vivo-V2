@@ -22,7 +22,7 @@ from typing import Dict, List
 
 from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 try:
     from pypdf import PdfReader
@@ -116,12 +116,24 @@ ADMIN_USER_LOG = STORAGE_ROOT / "users" / "provisioned_users.jsonl"
 UPLOADS.mkdir(parents=True, exist_ok=True)
 OUTPUT.mkdir(parents=True, exist_ok=True)
 
+SCAN_DOWNLOADS = {
+    "issues.csv": ("review_issues.csv", "text/csv", "credit-vivo-errors-worksheet.csv"),
+    "tradelines.csv": ("tradelines.csv", "text/csv", "credit-vivo-tradelines.csv"),
+    "letters.txt": ("draft_dispute_letters.txt", "text/plain", "credit-vivo-draft-dispute-letters.txt"),
+}
+
 
 def env_int(name: str, default: int) -> int:
     try:
         return int(os.getenv(name, str(default)))
     except ValueError:
         return default
+
+
+def scanner_job_dir(job_id: str) -> Path:
+    if not job_id.startswith("scan_") or any(ch in job_id for ch in ("/", "\\", "..")):
+        raise HTTPException(status_code=400, detail="Invalid scanner job id.")
+    return OUTPUT / job_id
 
 
 MAX_FILES = env_int("SCANNER_MAX_FILES", 3)
@@ -677,7 +689,7 @@ def vivo_command_live_brief():
 @app.get("/scanner/result/{job_id}")
 @app.get("/api/scanner/result/{job_id}")
 def get_result(job_id: str):
-    summary = OUTPUT / job_id / "scan_result_summary.json"
+    summary = scanner_job_dir(job_id) / "scan_result_summary.json"
     if not summary.exists():
         return JSONResponse({"ok": False, "error": "Result not found"}, status_code=404)
     return JSONResponse(json.loads(summary.read_text(encoding="utf-8")))
@@ -686,7 +698,22 @@ def get_result(job_id: str):
 @app.get("/scanner/result/{job_id}/full")
 @app.get("/api/scanner/result/{job_id}/full")
 def get_full_result(job_id: str):
-    full = OUTPUT / job_id / "credit_vivo_parser_result.json"
+    full = scanner_job_dir(job_id) / "credit_vivo_parser_result.json"
     if not full.exists():
         return JSONResponse({"ok": False, "error": "Full result not found"}, status_code=404)
     return JSONResponse(json.loads(full.read_text(encoding="utf-8")))
+
+
+@app.get("/scanner/result/{job_id}/download/{download_name}")
+@app.get("/api/scanner/result/{job_id}/download/{download_name}")
+def download_scanner_output(job_id: str, download_name: str):
+    download = SCAN_DOWNLOADS.get(download_name)
+    if not download:
+        return JSONResponse({"ok": False, "error": "Download not found"}, status_code=404)
+
+    filename, media_type, download_filename = download
+    path = scanner_job_dir(job_id) / filename
+    if not path.exists():
+        return JSONResponse({"ok": False, "error": "Scanner output not found"}, status_code=404)
+
+    return FileResponse(path, media_type=media_type, filename=download_filename)

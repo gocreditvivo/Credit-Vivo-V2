@@ -134,6 +134,14 @@ function getScannerApiUrl() {
 
 const SCANNER_API_URL = getScannerApiUrl();
 
+export function getScannerOutputDownloadUrl(
+  jobId: string,
+  downloadName: 'issues.csv' | 'tradelines.csv' | 'letters.txt'
+) {
+  if (!SCANNER_API_URL || !jobId || jobId === 'demo_scan') return '';
+  return `${SCANNER_API_URL}/api/scanner/result/${encodeURIComponent(jobId)}/download/${downloadName}`;
+}
+
 export async function parseCreditReports(
   files: File[],
   useAiSecondPass = false

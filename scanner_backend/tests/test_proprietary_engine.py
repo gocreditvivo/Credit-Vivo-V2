@@ -1,4 +1,4 @@
-from credit_vivo_proprietary_engine import parse_reports, result_to_dict
+from credit_vivo_proprietary_engine import parse_reports, result_to_dict, write_outputs
 
 SAMPLE = """
 --- PAGE 1 ---
@@ -24,7 +24,7 @@ Date Opened: 05/01/2019
 Date of First Delinquency: 10/01/2020
 """
 
-def test_parse_sample_report():
+def test_parse_sample_report(tmp_path):
     result = parse_reports({"experian.pdf": {"text": SAMPLE, "bureau": "Experian"}})
     data = result_to_dict(result)
     assert data["paid_ai_used"] is False
@@ -43,3 +43,11 @@ def test_parse_sample_report():
     assert "FCRA" in data["recommended_letter_queue"][0]["draft_letter_body"]
     assert data["fcra_review"]
     assert data["fcra_review"][0]["dispute_history_complete"] is False
+
+    write_outputs(result, tmp_path)
+    assert (tmp_path / "credit_vivo_parser_result.json").exists()
+    assert (tmp_path / "tradelines.csv").exists()
+    assert (tmp_path / "review_issues.csv").exists()
+    draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
+    assert "DRAFT" in draft_letters
+    assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters
