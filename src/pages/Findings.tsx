@@ -104,6 +104,13 @@ export default function Findings() {
   const letterQueue = result.recommended_letter_queue || [];
   const downloads = [
     {
+      label: 'Download desktop workbook',
+      detail: 'One Excel file with Summary, Detected Errors, Review Items, Draft Letters, and FCRA Review tabs.',
+      href: getScannerOutputDownloadUrl(result.job_id, 'workbook.xlsx'),
+      filename: 'credit-vivo-desktop-scanner-output.xlsx',
+      primary: true,
+    },
+    {
       label: 'Download errors worksheet',
       detail: 'CSV opens in Excel and shows each scanner review point.',
       href: getScannerOutputDownloadUrl(result.job_id, 'issues.csv'),
@@ -183,14 +190,18 @@ export default function Findings() {
           <Download size={16} className="text-sky-600" />
           <h2 className="text-sm font-bold text-navy-900">Scanner desktop-style outputs</h2>
         </div>
-        <div className="grid md:grid-cols-3 gap-3">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-3">
           {downloads.map((download) => (
             download.href ? (
               <button
                 key={download.label}
                 type="button"
                 onClick={() => void downloadScannerFile(download.href, download.filename)}
-                className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50 text-left hover:border-sky-200 hover:bg-sky-50/40 transition"
+                className={`rounded-lg p-4 border text-left transition ${
+                  download.primary
+                    ? 'border-sky-200 bg-sky-50/70 hover:border-sky-300 hover:bg-sky-50'
+                    : 'border-navy-100/50 bg-navy-50/50 hover:border-sky-200 hover:bg-sky-50/40'
+                }`}
               >
                 <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-800">
                   <Download size={14} className="text-sky-600" />

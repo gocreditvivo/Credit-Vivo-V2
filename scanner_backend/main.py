@@ -117,6 +117,11 @@ UPLOADS.mkdir(parents=True, exist_ok=True)
 OUTPUT.mkdir(parents=True, exist_ok=True)
 
 SCAN_DOWNLOADS = {
+    "workbook.xlsx": (
+        "credit_vivo_desktop_scanner_output.xlsx",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "credit-vivo-desktop-scanner-output.xlsx",
+    ),
     "issues.csv": ("review_issues.csv", "text/csv", "credit-vivo-errors-worksheet.csv"),
     "tradelines.csv": ("tradelines.csv", "text/csv", "credit-vivo-tradelines.csv"),
     "letters.txt": ("draft_dispute_letters.txt", "text/plain", "credit-vivo-draft-dispute-letters.txt"),

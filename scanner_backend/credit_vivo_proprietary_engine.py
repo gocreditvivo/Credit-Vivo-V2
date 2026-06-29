@@ -31,6 +31,17 @@ import json
 import csv
 from pathlib import Path
 
+try:
+    from openpyxl import Workbook
+    from openpyxl.styles import Alignment, Font, PatternFill
+    from openpyxl.utils import get_column_letter
+except Exception:
+    Workbook = None
+    Alignment = None
+    Font = None
+    PatternFill = None
+    get_column_letter = None
+
 
 # -----------------------------
 # Utility
@@ -1126,6 +1137,152 @@ def result_to_dict(result: ParseResult) -> dict:
     }
 
 
+def _safe_workbook_cell(value):
+    if isinstance(value, (list, tuple)):
+        return "; ".join(str(item) for item in value)
+    if isinstance(value, dict):
+        return json.dumps(value, ensure_ascii=False)
+    if value is None:
+        return ""
+    return value
+
+
+def _write_workbook_sheet(sheet, rows: List[List[object]]) -> None:
+    for row in rows:
+        sheet.append([_safe_workbook_cell(value) for value in row])
+
+    if not rows or Workbook is None:
+        return
+
+    header_fill = PatternFill("solid", fgColor="D1FAE5")
+    header_font = Font(bold=True, color="064E3B")
+    for cell in sheet[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(wrap_text=True, vertical="top")
+
+    for row in sheet.iter_rows():
+        for cell in row:
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
+
+    for column_index, column in enumerate(sheet.columns, start=1):
+        max_length = 10
+        for cell in column:
+            max_length = max(max_length, min(len(str(cell.value or "")), 55))
+        sheet.column_dimensions[get_column_letter(column_index)].width = max_length + 2
+
+    sheet.freeze_panes = "A2"
+    sheet.sheet_view.showGridLines = False
+
+
+def write_desktop_workbook(data: dict, out_dir: Path) -> None:
+    if Workbook is None:
+        return
+
+    wb = Workbook()
+    summary = wb.active
+    summary.title = "Summary"
+    errors = wb.create_sheet("Detected Errors")
+    items = wb.create_sheet("Review Items")
+    letters = wb.create_sheet("Draft Letters")
+    fcra = wb.create_sheet("FCRA Review")
+
+    _write_workbook_sheet(summary, [
+        ["Credit Vivo Scanner Output", ""],
+        ["Engine", data.get("engine", "")],
+        ["Version", data.get("version", "")],
+        ["Paid AI Used", "Yes" if data.get("paid_ai_used") else "No"],
+        ["Files Parsed", len(data.get("files", []))],
+        ["Review Items", len(data.get("tradelines", []))],
+        ["Detected Errors / Review Points", len(data.get("issues", []))],
+        ["Draft Letters Queued", len(data.get("recommended_letter_queue", []))],
+        ["Customer Message", data.get("customer_summary", {}).get("message", "")],
+        ["Important Notice", "Draft review data only. Nothing is sent without customer approval and admin review."],
+    ])
+
+    _write_workbook_sheet(errors, [
+        ["Issue ID", "Issue Type", "Severity", "Customer Label", "Customer Explanation", "Admin Explanation", "Suggested Round", "Related Tradeline IDs", "Confidence", "Evidence Count"],
+        *[
+            [
+                issue.get("id", ""),
+                issue.get("issue_type", ""),
+                issue.get("severity", ""),
+                issue.get("customer_label", ""),
+                issue.get("customer_explanation", ""),
+                issue.get("admin_explanation", ""),
+                issue.get("suggested_round", ""),
+                issue.get("related_tradeline_ids", []),
+                issue.get("confidence", ""),
+                len(issue.get("evidence", [])),
+            ]
+            for issue in data.get("issues", [])
+        ],
+    ])
+
+    _write_workbook_sheet(items, [
+        ["ID", "Bureau", "Source File", "Account Name", "Account Type", "Status", "Balance", "Date Opened", "Date Reported", "DOFD", "Remarks", "Confidence", "Needs Admin Review"],
+        *[
+            [
+                item.get("id", ""),
+                item.get("bureau", ""),
+                item.get("source_filename", ""),
+                item.get("account_name", ""),
+                item.get("account_type", ""),
+                item.get("status", ""),
+                item.get("balance", ""),
+                item.get("date_opened", ""),
+                item.get("date_reported", ""),
+                item.get("date_of_first_delinquency", ""),
+                item.get("remarks", ""),
+                item.get("confidence", ""),
+                "Yes" if item.get("needs_admin_review") else "No",
+            ]
+            for item in data.get("tradelines", [])
+        ],
+    ])
+
+    _write_workbook_sheet(letters, [
+        ["Letter ID", "Issue ID", "Subject", "Letter Type", "Round", "Recipient Type", "Delivery Method", "FCRA Notice Included", "Customer Approval Required", "Tracking Status", "Recommended Next Action", "Draft Letter Body"],
+        *[
+            [
+                letter.get("letter_id", ""),
+                letter.get("issue_id", ""),
+                letter.get("letter_subject", ""),
+                letter.get("letter_type", ""),
+                letter.get("round", ""),
+                letter.get("recipient_type", ""),
+                letter.get("delivery_method", ""),
+                "Yes" if letter.get("fcra_notice_included") else "No",
+                "Yes" if letter.get("customer_approval_required") else "No",
+                letter.get("tracking_status", ""),
+                letter.get("recommended_next_action", ""),
+                letter.get("draft_letter_body", ""),
+            ]
+            for letter in data.get("recommended_letter_queue", [])
+        ],
+    ])
+
+    _write_workbook_sheet(fcra, [
+        ["Issue ID", "Possible FCRA Issue", "Issue Type", "Responsible Party", "Dispute History Complete", "Evidence Strength", "Damages Evidence", "Next Action", "Requires Admin Review"],
+        *[
+            [
+                row.get("issue_id", ""),
+                "Yes" if row.get("possible_fcra_issue") else "No",
+                row.get("issue_type", ""),
+                row.get("responsible_party", ""),
+                "Yes" if row.get("dispute_history_complete") else "No",
+                row.get("evidence_strength", ""),
+                row.get("damages_evidence", ""),
+                row.get("next_action", ""),
+                "Yes" if row.get("requires_admin_review") else "No",
+            ]
+            for row in data.get("fcra_review", [])
+        ],
+    ])
+
+    wb.save(out_dir / "credit_vivo_desktop_scanner_output.xlsx")
+
+
 def write_outputs(result: ParseResult, out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     data = result_to_dict(result)
@@ -1173,9 +1330,11 @@ def write_outputs(result: ParseResult, out_dir: Path) -> None:
 
     if letter_sections:
         (out_dir / "draft_dispute_letters.txt").write_text(
-            "\n\n" + ("-" * 72) + "\n\n".join(letter_sections),
+            ("\n\n" + ("-" * 72) + "\n\n").join(letter_sections),
             encoding="utf-8",
         )
+
+    write_desktop_workbook(data, out_dir)
 
 
 # Phase 3 draft-only integrations.

@@ -1,4 +1,5 @@
 from credit_vivo_proprietary_engine import parse_reports, result_to_dict, write_outputs
+from openpyxl import load_workbook
 
 SAMPLE = """
 --- PAGE 1 ---
@@ -48,6 +49,16 @@ def test_parse_sample_report(tmp_path):
     assert (tmp_path / "credit_vivo_parser_result.json").exists()
     assert (tmp_path / "tradelines.csv").exists()
     assert (tmp_path / "review_issues.csv").exists()
+    workbook_path = tmp_path / "credit_vivo_desktop_scanner_output.xlsx"
+    assert workbook_path.exists()
+    workbook = load_workbook(workbook_path, read_only=True)
+    assert workbook.sheetnames == [
+        "Summary",
+        "Detected Errors",
+        "Review Items",
+        "Draft Letters",
+        "FCRA Review",
+    ]
     draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
     assert "DRAFT" in draft_letters
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters
