@@ -48,8 +48,8 @@ ROOT = Path(__file__).resolve().parent
 STORAGE_ROOT = Path(os.getenv("SCANNER_STORAGE_DIR", "/tmp/creditvivo-scanner" if os.getenv("VERCEL") else str(ROOT)))
 UPLOADS = STORAGE_ROOT / "uploads"
 OUTPUT = STORAGE_ROOT / "output"
-UPLOADS.mkdir(exist_ok=True)
-OUTPUT.mkdir(exist_ok=True)
+UPLOADS.mkdir(parents=True, exist_ok=True)
+OUTPUT.mkdir(parents=True, exist_ok=True)
 
 
 def env_int(name: str, default: int) -> int:
