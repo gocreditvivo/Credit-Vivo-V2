@@ -49,6 +49,7 @@ try:
     from .growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from .growth_ads_ai import build_ad_plan
     from .growth_ai_sources import build_growth_source_brief
+    from .growth_codex_capabilities import build_codex_like_growth_brief
     from .growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -74,6 +75,7 @@ except ImportError:
     from growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from growth_ads_ai import build_ad_plan
     from growth_ai_sources import build_growth_source_brief
+    from growth_codex_capabilities import build_codex_like_growth_brief
     from growth_problem_solver import build_problem_solver_brief, solve_growth_problem
     from lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -372,6 +374,12 @@ async def growth_ai_solve(payload: Dict[str, object]):
     if not question:
         raise HTTPException(status_code=400, detail="question is required.")
     return JSONResponse(solve_growth_problem(question))
+
+
+@app.get("/growth-ai/codex-like-capabilities")
+@app.get("/api/growth-ai/codex-like-capabilities")
+def growth_ai_codex_like_capabilities():
+    return JSONResponse(build_codex_like_growth_brief())
 
 
 @app.get("/operator-ai/brief")
