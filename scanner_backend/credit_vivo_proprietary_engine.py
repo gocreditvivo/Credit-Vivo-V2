@@ -1703,15 +1703,175 @@ def build_metro2_requirement_review(tradelines: List[dict]) -> List[dict]:
     return rows
 
 
+FCRA_COMPLIANCE_AREAS = {
+    "maximum_possible_accuracy": {
+        "label": "FCRA accuracy and completeness",
+        "law_reference": "FCRA 607(b) / 15 USC 1681e(b)",
+        "plain_english": "Credit reports should use reasonable procedures so the information is as accurate as possible.",
+        "applies_when": "Any account field appears wrong, incomplete, mixed, misleading, duplicated, or inconsistent across bureaus.",
+        "evidence_needed": "3-bureau comparison, raw report excerpt, account statements, payment proof, creditor/collector records, identity proof when needed.",
+        "tracking_action": "Create field-level dispute draft and track before/after bureau values.",
+    },
+    "bureau_reinvestigation": {
+        "label": "Bureau reinvestigation duty",
+        "law_reference": "FCRA 611 / 15 USC 1681i",
+        "plain_english": "When a consumer disputes report information, the bureau must reasonably reinvestigate and send written results.",
+        "applies_when": "Customer disputes a specific bureau report item or cross-bureau mismatch.",
+        "evidence_needed": "Customer-approved dispute, specific account fields challenged, proof documents, delivery tracking, bureau response.",
+        "tracking_action": "Track dispute sent date, delivery date, response due date, written results, changed/deleted/verified outcome.",
+    },
+    "furnisher_after_notice": {
+        "label": "Furnisher investigation after bureau notice",
+        "law_reference": "FCRA 623(b) / 15 USC 1681s-2(b)",
+        "plain_english": "After the bureau sends the dispute to the furnisher, the furnisher must investigate and report results back.",
+        "applies_when": "A bureau dispute is sent and the furnisher/collector is the source of the challenged field.",
+        "evidence_needed": "Bureau dispute package, furnisher records, account ledger, ownership/assignment proof, payment history, response result.",
+        "tracking_action": "Track which furnisher controls each challenged field and whether the item was corrected, deleted, or verified.",
+    },
+    "direct_furnisher_dispute": {
+        "label": "Direct furnisher dispute",
+        "law_reference": "Regulation V 12 CFR 1022.43",
+        "plain_english": "A consumer can dispute certain account information directly with the company furnishing the data.",
+        "applies_when": "The dispute relates to liability, account terms, balance, credit limit, payment status, payment amount, or open/closed dates.",
+        "evidence_needed": "Direct dispute notice, account identifier, specific facts, supporting documents, proof of delivery, furnisher response.",
+        "tracking_action": "Prepare direct furnisher dispute only after customer approval and route to the furnisher's direct-dispute address when available.",
+    },
+    "dofd_obsolescence": {
+        "label": "DOFD and obsolete information review",
+        "law_reference": "FCRA 605 and 623(a)(5) / 15 USC 1681c and 1681s-2(a)(5)",
+        "plain_english": "Negative reporting needs the right first-delinquency date so old items do not stay on the report too long.",
+        "applies_when": "Collection, charge-off, late payment, or other negative item is missing DOFD, has conflicting dates, or appears too old.",
+        "evidence_needed": "First delinquency timeline, payment history, charge-off date, collection placement date, removal date, prior reports.",
+        "tracking_action": "Flag missing/conflicting DOFD and track whether deletion/correction or obsolescence review is needed.",
+    },
+    "disputed_by_consumer_notation": {
+        "label": "Disputed-account notation",
+        "law_reference": "FCRA 623(a)(3) / 15 USC 1681s-2(a)(3)",
+        "plain_english": "If an account is disputed and still furnished, it should be reported as disputed when the duty applies.",
+        "applies_when": "Credit Vivo sends a customer-approved dispute and later report updates still omit dispute notation.",
+        "evidence_needed": "Notice of dispute, proof of delivery, post-dispute report, furnisher/bureau response.",
+        "tracking_action": "After sending, check updated reports for dispute notation and escalate if unresolved.",
+    },
+    "identity_theft_block": {
+        "label": "Identity theft block review",
+        "law_reference": "FCRA 605B / 15 USC 1681c-2",
+        "plain_english": "Identity-theft items can require a faster block when the consumer provides the required identity-theft packet.",
+        "applies_when": "Customer says the account is identity theft, fraud, not mine, or mixed file.",
+        "evidence_needed": "Identity proof, identity theft report, item identification, consumer statement that the transaction was not theirs.",
+        "tracking_action": "Hold for identity-theft workflow and attorney/compliance review before using this route.",
+    },
+}
+
+
+def _related_issue_types_for_tradeline(tradeline_id: str, issues: List[dict]) -> List[str]:
+    return [
+        issue.get("issue_type", "")
+        for issue in issues
+        if tradeline_id in issue.get("related_tradeline_ids", [])
+    ]
+
+
+def _fcra_scanner_signals(tradeline: dict, requirement_row: dict, issue_types: List[str], area_key: str) -> List[str]:
+    signals = []
+    missing = requirement_row.get("missing_or_needs_validation", [])
+    warnings = requirement_row.get("warning_flags", [])
+    status_text = " ".join([
+        str(tradeline.get("status", "") or ""),
+        str(tradeline.get("pay_status", "") or ""),
+        str(tradeline.get("remarks", "") or ""),
+        str(tradeline.get("raw_block", "") or ""),
+    ]).lower()
+
+    if issue_types:
+        signals.append("Detected issue types: " + ", ".join(sorted(set(issue_types))))
+    if missing and area_key in {"maximum_possible_accuracy", "direct_furnisher_dispute"}:
+        signals.append("Missing or needs validation: " + "; ".join(missing[:8]))
+    if warnings and area_key in {"maximum_possible_accuracy", "dofd_obsolescence", "disputed_by_consumer_notation"}:
+        signals.append("Warnings: " + "; ".join(warnings))
+    if area_key == "bureau_reinvestigation" and issue_types:
+        signals.append("Specific bureau dispute candidate based on scanner findings")
+    if area_key == "furnisher_after_notice" and any(
+        issue.startswith("cross_bureau") or issue in {"collection_review", "chargeoff_review", "closed_sold_balance_review"}
+        for issue in issue_types
+    ):
+        signals.append("Furnisher likely controls one or more challenged account fields")
+    if area_key == "dofd_obsolescence" and (
+        "Date of First Delinquency" in " ".join(missing) or any(term in status_text for term in ["collection", "charge", "late", "past due"])
+    ):
+        signals.append("Negative reporting candidate needs DOFD/age review")
+    if area_key == "disputed_by_consumer_notation":
+        signals.append("Applies after customer-approved dispute is sent and a later report is reviewed")
+    if area_key == "identity_theft_block" and any(term in status_text for term in ["identity theft", "fraud", "not mine", "mixed file"]):
+        signals.append("Possible identity theft or mixed-file wording found")
+
+    if not signals:
+        signals.append("No automatic trigger; keep as compliance checklist item")
+    return signals
+
+
+def _fcra_area_keys_for_tradeline(tradeline: dict, requirement_row: dict, issue_types: List[str]) -> List[str]:
+    keys = ["maximum_possible_accuracy", "direct_furnisher_dispute", "disputed_by_consumer_notation"]
+    if issue_types or requirement_row.get("missing_or_needs_validation"):
+        keys.append("bureau_reinvestigation")
+    if issue_types:
+        keys.append("furnisher_after_notice")
+    text = " ".join([
+        str(tradeline.get("account_type", "") or ""),
+        str(tradeline.get("status", "") or ""),
+        str(tradeline.get("pay_status", "") or ""),
+        str(tradeline.get("remarks", "") or ""),
+        str(tradeline.get("raw_block", "") or ""),
+    ]).lower()
+    if (
+        "Date of First Delinquency" in " ".join(requirement_row.get("missing_or_needs_validation", []))
+        or any(term in text for term in ["collection", "charge", "late", "past due", "delinquent"])
+    ):
+        keys.append("dofd_obsolescence")
+    if any(term in text for term in ["identity theft", "fraud", "not mine", "mixed file"]):
+        keys.append("identity_theft_block")
+    return list(dict.fromkeys(keys))
+
+
+def build_fcra_compliance_review(tradelines: List[dict], issues: List[dict], metro2_rows: List[dict]) -> List[dict]:
+    rows = []
+    metro2_by_id = {row.get("tradeline_id"): row for row in metro2_rows}
+    for tradeline in tradelines:
+        tradeline_id = tradeline.get("id", "")
+        requirement_row = metro2_by_id.get(tradeline_id, {})
+        issue_types = _related_issue_types_for_tradeline(tradeline_id, issues)
+        for area_key in _fcra_area_keys_for_tradeline(tradeline, requirement_row, issue_types):
+            area = FCRA_COMPLIANCE_AREAS[area_key]
+            rows.append({
+                "tradeline_id": tradeline_id,
+                "bureau": tradeline.get("bureau", ""),
+                "account_name": tradeline.get("account_name", ""),
+                "fcra_area": area["label"],
+                "law_reference": area["law_reference"],
+                "plain_english": area["plain_english"],
+                "applies_when": area["applies_when"],
+                "scanner_signals": _fcra_scanner_signals(tradeline, requirement_row, issue_types, area_key),
+                "evidence_needed": area["evidence_needed"],
+                "tracking_action": area["tracking_action"],
+                "customer_approval_required": True,
+                "attorney_or_compliance_review": area_key in {"identity_theft_block", "dofd_obsolescence"} or any(
+                    issue.startswith("cross_bureau") for issue in issue_types
+                ),
+                "note": "Compliance checklist only. Not legal advice. Attorney/compliance review required before production policy or escalation.",
+            })
+    return rows
+
+
 def result_to_dict(result: ParseResult) -> dict:
     tradelines = [asdict(t) for t in result.tradelines]
+    issues = [asdict(i) for i in result.issues]
+    metro2_requirement_review = build_metro2_requirement_review(tradelines)
     return {
         "engine": result.engine,
         "version": result.version,
         "paid_ai_used": result.paid_ai_used,
         "files": result.files,
         "tradelines": tradelines,
-        "issues": [asdict(i) for i in result.issues],
+        "issues": issues,
         "cross_bureau_groups": result.cross_bureau_groups,
         "customer_summary": result.customer_summary,
         "admin_summary": result.admin_summary,
@@ -1719,7 +1879,8 @@ def result_to_dict(result: ParseResult) -> dict:
         "recommended_letter_queue": build_recommended_letter_queue(result.issues),
         "fcra_review": build_fcra_review(result.issues),
         "metro2_fcra_review": build_metro2_fcra_review(result.issues),
-        "metro2_requirement_review": build_metro2_requirement_review(tradelines),
+        "metro2_requirement_review": metro2_requirement_review,
+        "fcra_compliance_review": build_fcra_compliance_review(tradelines, issues, metro2_requirement_review),
     }
 
 
@@ -2165,6 +2326,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     items = wb.create_sheet("Review Items")
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
     metro2_requirements = wb.create_sheet("Metro 2 Requirements")
+    fcra_compliance = wb.create_sheet("FCRA Compliance Review")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
     dispute_methods = wb.create_sheet("Dispute Methods")
     dispute_sop = wb.create_sheet("Dispute SOP")
@@ -2294,6 +2456,42 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
                 row.get("production_note", ""),
             ]
             for row in data.get("metro2_requirement_review", [])
+        ],
+    ])
+
+    _write_workbook_sheet(fcra_compliance, [
+        [
+            "Tradeline ID",
+            "Bureau",
+            "Account Name",
+            "FCRA Area",
+            "Law Reference",
+            "Plain English Meaning",
+            "Applies When",
+            "Scanner Signals",
+            "Evidence Needed",
+            "Tracking Action",
+            "Customer Approval Required",
+            "Attorney / Compliance Review",
+            "Note",
+        ],
+        *[
+            [
+                row.get("tradeline_id", ""),
+                row.get("bureau", ""),
+                row.get("account_name", ""),
+                row.get("fcra_area", ""),
+                row.get("law_reference", ""),
+                row.get("plain_english", ""),
+                row.get("applies_when", ""),
+                row.get("scanner_signals", []),
+                row.get("evidence_needed", ""),
+                row.get("tracking_action", ""),
+                "Yes" if row.get("customer_approval_required") else "No",
+                "Yes" if row.get("attorney_or_compliance_review") else "No",
+                row.get("note", ""),
+            ]
+            for row in data.get("fcra_compliance_review", [])
         ],
     ])
 

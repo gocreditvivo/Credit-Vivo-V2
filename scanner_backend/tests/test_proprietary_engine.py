@@ -121,6 +121,24 @@ def test_parse_sample_report(tmp_path):
     assert "Validate against official licensed CDIA Metro 2 CRRG" in " ".join(
         row["production_note"] for row in data["metro2_requirement_review"]
     )
+    assert data["fcra_compliance_review"]
+    fcra_areas = {row["fcra_area"] for row in data["fcra_compliance_review"]}
+    assert "FCRA accuracy and completeness" in fcra_areas
+    assert "Bureau reinvestigation duty" in fcra_areas
+    assert "Direct furnisher dispute" in fcra_areas
+    assert "DOFD and obsolete information review" in fcra_areas
+    assert "Disputed-account notation" in fcra_areas
+    fcra_text = " ".join(
+        row["law_reference"] + " " +
+        row["plain_english"] + " " +
+        " ".join(row["scanner_signals"]) + " " +
+        row["tracking_action"]
+        for row in data["fcra_compliance_review"]
+    )
+    assert "FCRA 611" in fcra_text
+    assert "FCRA 623" in fcra_text
+    assert "Regulation V 12 CFR 1022.43" in fcra_text
+    assert "dispute notation" in fcra_text
     cross_labels = {x["customer_label"] for x in data["issues"] if x["issue_type"].startswith("cross_bureau")}
     assert "Balance differs across bureaus" in cross_labels
     assert "Status differs across bureaus" in cross_labels
@@ -140,6 +158,7 @@ def test_parse_sample_report(tmp_path):
         "Review Items",
         "Metro 2 + FCRA Review",
         "Metro 2 Requirements",
+        "FCRA Compliance Review",
         "FCRA Notice Rules",
         "Dispute Methods",
         "Dispute SOP",
@@ -248,6 +267,21 @@ def test_parse_sample_report(tmp_path):
     assert "Collection account" in requirements_text
     assert "Date of First Delinquency" in requirements_text
     assert "official licensed CDIA Metro 2 CRRG" in requirements_text
+    fcra_compliance = workbook["FCRA Compliance Review"]
+    fcra_headers = [fcra_compliance.cell(row=1, column=column).value for column in range(1, fcra_compliance.max_column + 1)]
+    assert "FCRA Area" in fcra_headers
+    assert "Law Reference" in fcra_headers
+    assert "Scanner Signals" in fcra_headers
+    assert "Tracking Action" in fcra_headers
+    fcra_workbook_text = " ".join(
+        str(fcra_compliance.cell(row=row, column=column).value or "")
+        for row in range(2, fcra_compliance.max_row + 1)
+        for column in range(1, fcra_compliance.max_column + 1)
+    )
+    assert "Bureau reinvestigation duty" in fcra_workbook_text
+    assert "Direct furnisher dispute" in fcra_workbook_text
+    assert "DOFD and obsolete information review" in fcra_workbook_text
+    assert "FCRA 623" in fcra_workbook_text
     notice_rules = workbook["FCRA Notice Rules"]
     notice_rule_text = " ".join(
         str(notice_rules.cell(row=row, column=2).value or "")
