@@ -59,3 +59,43 @@ Default beta behavior:
 - Parser results still contain draft evidence snippets for customer/admin review.
 
 Use a private backend host, HTTPS, restrictive CORS, and secure retention rules before accepting real customer reports.
+
+## Render deployment
+
+This repo includes `render.yaml` for deploying the scanner as a Render web service.
+
+Recommended Render service:
+
+- Service type: Web Service
+- Runtime: Python
+- Python version: `python-3.12.8` from root `runtime.txt`
+- Build command: `pip install -r scanner_backend/requirements.txt`
+- Start command: `cd scanner_backend && uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Health check path: `/health`
+
+Production environment variables:
+
+```text
+CREDIT_VIVO_ALLOWED_ORIGINS=https://www.creditvivo.com,https://creditvivo.com
+SCANNER_ENVIRONMENT=production
+SCANNER_MAX_FILES=3
+SCANNER_MAX_FILE_MB=25
+SCANNER_RETAIN_UPLOADS=false
+SCANNER_WRITE_RAW_TEXT=false
+SCANNER_STORAGE_DIR=/tmp/creditvivo-scanner
+```
+
+After Render deploys, verify:
+
+```text
+https://YOUR-RENDER-SERVICE.onrender.com/health
+```
+
+Expected response includes:
+
+```json
+{
+  "ok": true,
+  "service": "credit-vivo-proprietary-scanner-api"
+}
+```

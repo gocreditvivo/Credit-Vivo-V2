@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: creditvivo-scanner-api
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r scanner_backend/requirements.txt
+    startCommand: cd scanner_backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: CREDIT_VIVO_ALLOWED_ORIGINS
+        value: https://www.creditvivo.com,https://creditvivo.com
+      - key: SCANNER_ENVIRONMENT
+        value: production
+      - key: SCANNER_MAX_FILES
+        value: 3
+      - key: SCANNER_MAX_FILE_MB
+        value: 25
+      - key: SCANNER_RETAIN_UPLOADS
+        value: false
+      - key: SCANNER_WRITE_RAW_TEXT
+        value: false
+      - key: SCANNER_STORAGE_DIR
+        value: /tmp/creditvivo-scanner
