@@ -289,6 +289,37 @@ COLLECTION_TERMS = [
     "original creditor", "placed for collection", "assigned"
 ]
 
+BOILERPLATE_TERMS = [
+    "consumerfinance.gov",
+    "violates the fcra",
+    "additional information",
+    "the last reported status of the account",
+    "name, address, and phone",
+    "insurer, employer, landlord",
+    "upgrades and enhancements",
+    "account types is good for your credit",
+    "amount of the debt",
+    "public records and residential information",
+    "supplemental public records",
+]
+
+BAD_ACCOUNT_NAME_FRAGMENTS = [
+    "consumerfinance.gov",
+    "learnmore",
+    "violates the fcra",
+    "additional information",
+    "last reported status",
+    "account types is good",
+    "amount of the debt",
+    "name, address",
+    "insurer, employer",
+    "landlord",
+    "enhancements",
+    "responsibility individual",
+    "public records and residential",
+    "supplemental public records",
+]
+
 
 # -----------------------------
 # Text + page utilities
@@ -410,6 +441,26 @@ def extract_field(field_name: str, block: str) -> str:
     return value
 
 
+def is_bad_account_name(name: str) -> bool:
+    cleaned = clean_text(name).strip(" .;:,|-")
+    lower = cleaned.lower()
+    if not cleaned or cleaned == "Review Item":
+        return True
+    if len(cleaned) < 3 or len(cleaned) > 90:
+        return True
+    if any(fragment in lower for fragment in BAD_ACCOUNT_NAME_FRAGMENTS):
+        return True
+    if lower.startswith(("of ", "and ", "the ", "this ", "that ", "www.")):
+        return True
+    if cleaned.endswith(".") and len(cleaned.split()) > 3:
+        return True
+    if len(cleaned.split()) > 8:
+        return True
+    if not re.search(r"[A-Za-z]", cleaned):
+        return True
+    return False
+
+
 def guess_account_name(block: str) -> str:
     lines = [clean_text(x).strip(" :-") for x in block.splitlines() if clean_text(x)]
     bad = (
@@ -422,7 +473,7 @@ def guess_account_name(block: str) -> str:
         r"(?:account name|creditor|furnisher|subscriber)\s*[:\-]?\s*([A-Za-z0-9 &.,'()/\-]{3,90})"
     ], block)
     if labeled:
-        return labeled
+        return labeled if not is_bad_account_name(labeled) else "Review Item"
 
     for line in lines[:14]:
         lower = line.lower()
@@ -433,10 +484,66 @@ def guess_account_name(block: str) -> str:
         if not re.search(r"[A-Za-z]", line):
             continue
         # Avoid long report sentences
-        if len(line.split()) <= 9:
+        if len(line.split()) <= 9 and not is_bad_account_name(line):
             return line
 
     return "Review Item"
+
+
+def is_boilerplate_block(block: str) -> bool:
+    lower = block.lower()
+    boilerplate_hits = sum(1 for term in BOILERPLATE_TERMS if term in lower)
+    core_field_hits = sum(
+        1
+        for term in [
+            "account number",
+            "account #",
+            "date opened",
+            "date reported",
+            "original creditor",
+            "account type",
+            "payment status",
+            "account status",
+            "balance",
+        ]
+        if term in lower
+    )
+    return boilerplate_hits > 0 and core_field_hits < 2
+
+
+def is_probable_tradeline(t: NormalizedTradeline) -> bool:
+    if is_bad_account_name(t.account_name):
+        return False
+
+    core_fields = [
+        t.account_number_masked,
+        t.account_type,
+        t.status or t.pay_status,
+        t.balance,
+        t.date_opened,
+        t.date_reported,
+        t.date_of_first_delinquency,
+        t.original_creditor,
+        t.remarks,
+    ]
+    core_count = sum(1 for field in core_fields if field)
+    lower = t.raw_block.lower()
+    has_money_or_account = bool(t.balance or t.account_number_masked)
+    has_credit_signal = any(
+        term in lower
+        for term in [
+            "account type",
+            "original creditor",
+            "date opened",
+            "date reported",
+            "payment status",
+            "account status",
+            "credit limit",
+            "past due",
+            "high credit",
+        ]
+    )
+    return core_count >= 2 and (has_money_or_account or has_credit_signal)
 
 
 def classify_category(t: NormalizedTradeline) -> Tuple[str, str, str, str]:
@@ -520,6 +627,8 @@ def parse_tradelines_for_bureau(bureau: str, filename: str, text: str) -> List[N
     tradelines = []
     for page_num, block in candidate_blocks(text):
         lower = block.lower()
+        if is_boilerplate_block(block):
+            continue
         has_signal = (
             any(term in lower for term in NEGATIVE_TERMS)
             or any(label in lower for label in ["account number", "account #", "date opened", "payment status", "account status"])
@@ -560,6 +669,8 @@ def parse_tradelines_for_bureau(bureau: str, filename: str, text: str) -> List[N
         t.confidence_score = score_confidence(t)
         t.confidence = confidence_label(t.confidence_score)
         t.needs_admin_review = t.confidence != "high"
+        if not is_probable_tradeline(t):
+            continue
         tradelines.append(t)
 
     return dedupe_tradelines(tradelines)
@@ -1325,6 +1436,22 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
     tradelines_by_id = {item.get("id"): item for item in data.get("tradelines", [])}
     bureau_order = ["Experian", "Equifax", "TransUnion"]
     cross_issue_ids = set()
+    per_bureau_fields = [
+        ("Source", "source_filename"),
+        ("Account #", "account_number_masked"),
+        ("Type", "account_type"),
+        ("Original Creditor", "original_creditor"),
+        ("Balance", "balance"),
+        ("Past Due", "past_due"),
+        ("Status", "status"),
+        ("Opened", "date_opened"),
+        ("Closed", "date_closed"),
+        ("Reported", "date_reported"),
+        ("DOFD", "date_of_first_delinquency"),
+        ("Remarks", "remarks"),
+        ("Confidence", "confidence"),
+        ("Raw Evidence", "raw_block"),
+    ]
 
     for issue in data.get("issues", []):
         if str(issue.get("issue_type", "")).startswith("cross_bureau"):
@@ -1333,22 +1460,13 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
     rows = [[
         "Group ID",
         "Account Name",
+        "Matched Bureaus",
         "Error Flags",
         "Missing Bureaus",
-        "Experian Balance",
-        "Experian Status",
-        "Experian Reported",
-        "Experian DOFD",
-        "Equifax Balance",
-        "Equifax Status",
-        "Equifax Reported",
-        "Equifax DOFD",
-        "TransUnion Balance",
-        "TransUnion Status",
-        "TransUnion Reported",
-        "TransUnion DOFD",
         "Suggested Review",
     ]]
+    for bureau in bureau_order:
+        rows[0].extend([f"{bureau} {label}" for label, _field in per_bureau_fields])
 
     for group in data.get("cross_bureau_groups", []):
         items = [tradelines_by_id.get(item_id) for item_id in group.get("tradeline_ids", [])]
@@ -1385,32 +1503,32 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         row = [
             group.get("group_id", ""),
             "; ".join(sorted({name for name in account_names if name})),
+            ", ".join(sorted(by_bureau.keys())),
             "; ".join(flag for flag in flags if flag),
             ", ".join(missing),
+            suggested_review,
         ]
 
         for bureau in bureau_order:
             item = by_bureau.get(bureau, {})
-            row.extend([
-                item.get("balance", ""),
-                item.get("status") or item.get("pay_status") or "",
-                item.get("date_reported", ""),
-                item.get("date_of_first_delinquency", ""),
-            ])
-
-        row.append(suggested_review)
+            for _label, field in per_bureau_fields:
+                value = item.get(field, "")
+                if field == "status":
+                    value = item.get("status") or item.get("pay_status") or ""
+                if field == "raw_block":
+                    value = clean_text(str(value))[:650]
+                row.append(value)
         rows.append(row)
 
     if len(rows) == 1:
         rows.append([
             "No matched cross-bureau accounts",
             "",
+            "",
             "No 3-bureau comparison could be created from the uploaded report set.",
             "",
-            "", "", "", "",
-            "", "", "", "",
-            "", "", "", "",
             "Upload reports from at least two bureaus to compare the same account side by side.",
+            *["" for _ in range(len(bureau_order) * len(per_bureau_fields))],
         ])
 
     return rows

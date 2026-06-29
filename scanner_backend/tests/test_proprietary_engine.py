@@ -57,6 +57,17 @@ Date of First Delinquency: 01/01/2021
 Remarks: Account placed for collection
 """
 
+BOILERPLATE_SAMPLE = """
+--- PAGE 1 ---
+Experian Credit Report
+
+For more information, go to www.consumerfinance.gov/learnmore for additional information.
+Supplying information to a consumer reporting agency violates the FCRA if you know or have reasonable cause to believe the information is inaccurate.
+This section represents the last reported status of the account.
+Account types is good for your credit.
+The company must give you the name, address, and phone number of the furnisher.
+"""
+
 def test_parse_sample_report(tmp_path):
     result = parse_reports({
         "experian.pdf": {"text": SAMPLE, "bureau": "Experian"},
@@ -120,10 +131,12 @@ def test_parse_sample_report(tmp_path):
     comparison = workbook["3 Bureau Comparison"]
     headers = [comparison.cell(row=1, column=column).value for column in range(1, comparison.max_column + 1)]
     assert "Experian Balance" in headers
+    assert "Experian Account #" in headers
+    assert "Experian Raw Evidence" in headers
     assert "Equifax Balance" in headers
     assert "TransUnion Balance" in headers
     comparison_flags = " ".join(
-        str(comparison.cell(row=row, column=3).value or "")
+        str(comparison.cell(row=row, column=4).value or "")
         for row in range(2, comparison.max_row + 1)
     )
     assert "Balance differs" in comparison_flags
@@ -143,3 +156,10 @@ def test_parse_sample_report(tmp_path):
     draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
     assert "DRAFT" in draft_letters
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters
+
+
+def test_boilerplate_disclosure_text_is_not_a_tradeline():
+    result = parse_reports({"experian_boilerplate.pdf": {"text": BOILERPLATE_SAMPLE, "bureau": "Experian"}})
+    data = result_to_dict(result)
+    assert data["tradelines"] == []
+    assert data["issues"] == []
