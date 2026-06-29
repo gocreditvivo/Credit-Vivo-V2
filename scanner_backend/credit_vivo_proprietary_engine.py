@@ -649,6 +649,11 @@ def is_bad_account_name(name: str) -> bool:
         return True
     if any(fragment in lower for fragment in BAD_ACCOUNT_NAME_FRAGMENTS):
         return True
+    if re.match(
+        r"^(?:high balance|highest balance|high credit|credit limit|balance|past due|amount past due|monthly payment|recent payment)\b",
+        lower,
+    ):
+        return True
     if lower.startswith(("of ", "and ", "the ", "this ", "that ", "www.")):
         return True
     if cleaned.endswith(".") and len(cleaned.split()) > 3:
@@ -3236,7 +3241,10 @@ def sop_for_comparison(flags: List[str], missing: List[str], has_cross_issue: bo
 
 
 def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
-    tradelines_by_id = {item.get("id"): item for item in data.get("tradelines", [])}
+    tradelines = data.get("tradelines", [])
+    tradeline_indexes_by_id = {}
+    for index, item in enumerate(tradelines):
+        tradeline_indexes_by_id.setdefault(item.get("id"), []).append(index)
     bureau_order = ["Equifax", "Experian", "TransUnion"]
     cross_issue_ids = set()
     per_bureau_fields = [
@@ -3287,13 +3295,15 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         "Group ID",
     ])
 
-    for group in data.get("cross_bureau_groups", []):
-        items = [tradelines_by_id.get(item_id) for item_id in group.get("tradeline_ids", [])]
-        items = [item for item in items if item]
-        if len(items) < 2:
-            continue
+    used_indexes = set()
 
-        by_bureau = {item.get("bureau"): item for item in items}
+    def row_for_items(items: List[dict], group_id: str = "") -> List[object]:
+        by_bureau = {}
+        for item in items:
+            bureau = item.get("bureau")
+            if bureau and bureau not in by_bureau:
+                by_bureau[bureau] = item
+
         balances = [item.get("balance", "") for item in items]
         statuses = [item.get("status") or item.get("pay_status") or "" for item in items]
         reported_dates = [item.get("date_reported", "") for item in items]
@@ -3354,7 +3364,6 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         )
 
         row = [account_name]
-
         for bureau in bureau_order:
             item = by_bureau.get(bureau, {})
             for _label, field in per_bureau_fields:
@@ -3385,9 +3394,28 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             "draft_not_sent_customer_approval_required",
             ", ".join(missing),
             ", ".join(sorted(by_bureau.keys())),
-            group.get("group_id", ""),
+            group_id,
         ])
-        rows.append(row)
+        return row
+
+    for group in data.get("cross_bureau_groups", []):
+        group_indexes = []
+        for item_id in group.get("tradeline_ids", []):
+            available = [index for index in tradeline_indexes_by_id.get(item_id, []) if index not in used_indexes]
+            if available:
+                group_indexes.append(available[0])
+        items = [tradelines[index] for index in group_indexes]
+        if len(items) < 2:
+            continue
+
+        used_indexes.update(group_indexes)
+        rows.append(row_for_items(items, group.get("group_id", "")))
+
+    for index, item in enumerate(tradelines):
+        if index in used_indexes:
+            continue
+        rows.append(row_for_items([item], item.get("id", "")))
+        used_indexes.add(index)
 
     if len(rows) == 1:
         rows.append([

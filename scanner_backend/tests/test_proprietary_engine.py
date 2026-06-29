@@ -1,4 +1,4 @@
-from credit_vivo_proprietary_engine import parse_reports, result_to_dict, write_outputs
+from credit_vivo_proprietary_engine import build_three_bureau_comparison_rows, is_bad_account_name, parse_reports, result_to_dict, write_outputs
 from openpyxl import load_workbook
 
 SAMPLE = """
@@ -657,6 +657,58 @@ def test_boilerplate_disclosure_text_is_not_a_tradeline():
     data = result_to_dict(result)
     assert data["tradelines"] == []
     assert data["issues"] == []
+
+
+def test_money_labels_are_not_account_names():
+    assert is_bad_account_name("High Balance $2,335")
+    assert is_bad_account_name("Credit Limit $500")
+    assert is_bad_account_name("Amount Past Due $75")
+
+
+def test_three_bureau_comparison_includes_ungrouped_accounts():
+    data = {
+        "tradelines": [
+            {
+                "id": "eq1",
+                "bureau": "Equifax",
+                "source_filename": "equifax.pdf",
+                "account_name": "CREDIT ONE BANK",
+                "account_number_masked": "*1111",
+                "account_type": "Credit Card",
+                "balance": "$100",
+                "status": "Pays As Agreed",
+            },
+            {
+                "id": "ex1",
+                "bureau": "Experian",
+                "source_filename": "experian.pdf",
+                "account_name": "CREDIT ONE BANK",
+                "account_number_masked": "*2222",
+                "account_type": "Credit Card",
+                "balance": "$125",
+                "status": "Open",
+            },
+            {
+                "id": "tu_only",
+                "bureau": "TransUnion",
+                "source_filename": "transunion.pdf",
+                "account_name": "LVNV FUNDING LLC",
+                "account_number_masked": "*3333",
+                "account_type": "Collection",
+                "balance": "$500",
+                "status": "Collection",
+            },
+        ],
+        "issues": [],
+        "cross_bureau_groups": [{"group_id": "group-credit-one", "tradeline_ids": ["eq1", "ex1"]}],
+    }
+
+    rows = build_three_bureau_comparison_rows(data)
+    account_names = [row[0] for row in rows[1:]]
+
+    assert any("CREDIT ONE BANK" in name for name in account_names)
+    assert "LVNV FUNDING LLC" in account_names
+    assert len(rows) == 3
 
 
 def test_parser_fills_columns_from_realistic_bureau_snippets():
