@@ -61,6 +61,20 @@ const founderMetrics = [
   { label: 'backend health URL', value: 'Pending', note: 'Add Render URL after deployment.' },
 ];
 
+const customerMetrics = [
+  { label: 'total customers', today: '0', week: '0', month: '0', note: 'All active customer accounts.' },
+  { label: 'new accounts', today: '0', week: '0', month: '0', note: 'People who joined Credit Vivo.' },
+  { label: 'canceled accounts', today: '0', week: '0', month: '0', note: 'Customers who canceled or did not continue.' },
+  { label: 'free check-ins', today: '0', week: '0', month: '0', note: 'Customers who started the free scan path.' },
+];
+
+const moneyMetrics = [
+  { label: 'revenue', today: '$0', week: '$0', month: '$0', note: 'Money collected from Credit Vivo plans.' },
+  { label: 'refunds', today: '$0', week: '$0', month: '$0', note: 'Money returned to customers.' },
+  { label: 'failed payments', today: '0', week: '0', month: '0', note: 'Cards or payments that did not go through.' },
+  { label: 'outside costs', today: '$0', week: '$0', month: '$0', note: 'Mail, report access, ID checks, or partner costs.' },
+];
+
 function toneClass(tone: string) {
   if (tone === 'green') return 'border-mint-100 bg-mint-50/60 text-mint-700';
   if (tone === 'yellow') return 'border-amber-100 bg-amber-50/70 text-amber-700';
@@ -87,6 +101,68 @@ export default function FounderHealth() {
           </div>
         ))}
       </div>
+
+      <section className="mb-5 rounded-xl border border-navy-100/60 bg-white p-5">
+        <h2 className="mb-1 text-sm font-bold text-navy-900">Customers</h2>
+        <p className="mb-4 text-xs text-navy-400">
+          This will show how many people joined, stayed, canceled, and started the free Credit Check-In.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="border-b border-navy-100 text-navy-400">
+                <th className="py-2 pr-4">Metric</th>
+                <th className="py-2 pr-4">Today</th>
+                <th className="py-2 pr-4">This week</th>
+                <th className="py-2 pr-4">This month</th>
+                <th className="py-2 pr-4">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              {customerMetrics.map((metric) => (
+                <tr key={metric.label} className="border-b border-navy-50">
+                  <td className="py-3 pr-4 font-semibold text-navy-800">{metric.label}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.today}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.week}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.month}</td>
+                  <td className="py-3 pr-4 text-navy-400">{metric.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mb-5 rounded-xl border border-navy-100/60 bg-white p-5">
+        <h2 className="mb-1 text-sm font-bold text-navy-900">Money</h2>
+        <p className="mb-4 text-xs text-navy-400">
+          This will show how much Credit Vivo collected, refunded, lost to failed payments, and spent on outside costs.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="border-b border-navy-100 text-navy-400">
+                <th className="py-2 pr-4">Metric</th>
+                <th className="py-2 pr-4">Today</th>
+                <th className="py-2 pr-4">This week</th>
+                <th className="py-2 pr-4">This month</th>
+                <th className="py-2 pr-4">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              {moneyMetrics.map((metric) => (
+                <tr key={metric.label} className="border-b border-navy-50">
+                  <td className="py-3 pr-4 font-semibold text-navy-800">{metric.label}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.today}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.week}</td>
+                  <td className="py-3 pr-4 text-navy-600">{metric.month}</td>
+                  <td className="py-3 pr-4 text-navy-400">{metric.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <div className="mb-5 grid gap-4 lg:grid-cols-2">
         {healthCards.map(({ title, status, detail, icon: Icon, tone }) => (
