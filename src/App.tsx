@@ -24,6 +24,7 @@ import AdminReview from './pages/AdminReview';
 import BankLink from './pages/BankLink';
 import FounderHealth from './pages/FounderHealth';
 import GrowthAI from './pages/GrowthAI';
+import OwnerAICommand from './pages/OwnerAICommand';
 
 export default function App() {
   return (
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/scan" element={<FreeScan />} />
           <Route path="/findings" element={<Findings />} />
           <Route path="/founder-health" element={<FounderHealth />} />
+          <Route path="/owner-ai" element={<OwnerAICommand />} />
           <Route path="/growth-ai" element={<GrowthAI />} />
           <Route path="/admin-review" element={<AdminReview />} />
           <Route path="/bank-link" element={<BankLink />} />

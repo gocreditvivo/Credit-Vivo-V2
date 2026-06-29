@@ -11,12 +11,14 @@ import {
   Landmark,
   Activity,
   Megaphone,
+  BrainCircuit,
 } from 'lucide-react';
 
 const sideLinks = [
   { to: '/dashboard', label: 'Roadmap', icon: Compass },
   { to: '/scan', label: 'Free Scan', icon: Search },
   { to: '/findings', label: 'Findings', icon: FileText },
+  { to: '/owner-ai', label: 'Owner AI', icon: BrainCircuit },
   { to: '/founder-health', label: 'Founder Health', icon: Activity },
   { to: '/growth-ai', label: 'Growth AI', icon: Megaphone },
   { to: '/bank-link', label: 'Bank Link', icon: Landmark },
