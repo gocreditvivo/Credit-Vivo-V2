@@ -12,6 +12,7 @@ import Compliance from './pages/Compliance';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Disclosure from './pages/Disclosure';
+import InvestorDemo from './pages/InvestorDemo';
 import Dashboard from './pages/Dashboard';
 import FreeScan from './pages/FreeScan';
 import Findings from './pages/Findings';
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/disclosure" element={<Disclosure />} />
+          <Route path="/investor-demo" element={<InvestorDemo />} />
         </Route>
 
         {/* Member pages */}
