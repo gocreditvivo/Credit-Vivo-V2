@@ -21,3 +21,5 @@ services:
         value: false
       - key: SCANNER_STORAGE_DIR
         value: /tmp/creditvivo-scanner
+      - key: ADMIN_SETUP_TOKEN
+        sync: false

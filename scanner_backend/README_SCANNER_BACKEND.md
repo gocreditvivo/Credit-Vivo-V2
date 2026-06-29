@@ -99,3 +99,46 @@ Expected response includes:
   "service": "credit-vivo-proprietary-scanner-api"
 }
 ```
+
+## Owner-only user provisioning
+
+The backend includes setup endpoints for creating demo/provisioned users while full production auth is being connected.
+
+Required environment variable:
+
+```text
+ADMIN_SETUP_TOKEN=use-a-long-random-owner-only-token
+```
+
+Setup info:
+
+```text
+GET /api/admin/users/setup
+```
+
+Create user:
+
+```text
+POST /api/admin/users/create
+Header: X-Credit-Vivo-Admin-Setup-Token: YOUR_ADMIN_SETUP_TOKEN
+```
+
+Example body:
+
+```json
+{
+  "email": "owner@creditvivo.com",
+  "display_name": "Owner",
+  "role": "owner_admin"
+}
+```
+
+Roles:
+
+- `owner_admin`: all privileges
+- `partner_reviewer`: partner review access
+- `technical_reviewer`: technical review access
+- `demo_customer`: customer demo access
+
+Important:
+This provisioning endpoint does not replace a full production auth provider. It creates secure setup records and one-time temporary passwords. Connect Supabase, Auth0, Clerk, or another auth provider before public launch.

@@ -20,7 +20,7 @@ import uuid
 from pathlib import Path
 from typing import Dict, List
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -47,6 +47,13 @@ try:
     )
     from .ai_operating_system import build_ai_operating_system_brief
     from .ai_tracking_map import build_ai_tracking_map
+    from .admin_users import (
+        append_provisioned_user,
+        build_provisioned_user,
+        read_provisioned_users,
+        require_setup_token,
+        role_templates,
+    )
     from .growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from .growth_ads_ai import build_ad_plan
     from .growth_ai_sources import build_growth_source_brief
@@ -78,6 +85,13 @@ except ImportError:
     )
     from ai_operating_system import build_ai_operating_system_brief
     from ai_tracking_map import build_ai_tracking_map
+    from admin_users import (
+        append_provisioned_user,
+        build_provisioned_user,
+        read_provisioned_users,
+        require_setup_token,
+        role_templates,
+    )
     from growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from growth_ads_ai import build_ad_plan
     from growth_ai_sources import build_growth_source_brief
@@ -98,6 +112,7 @@ UPLOADS = STORAGE_ROOT / "uploads"
 OUTPUT = STORAGE_ROOT / "output"
 EVENT_LOG = STORAGE_ROOT / "events" / "vivo_events.jsonl"
 LEAD_LOG = STORAGE_ROOT / "leads" / "captured_leads.jsonl"
+ADMIN_USER_LOG = STORAGE_ROOT / "users" / "provisioned_users.jsonl"
 UPLOADS.mkdir(parents=True, exist_ok=True)
 OUTPUT.mkdir(parents=True, exist_ok=True)
 
@@ -291,6 +306,93 @@ async def parse_uploaded_reports(
 @app.get("/api/health")
 def api_health():
     return health()
+
+
+@app.get("/admin/users/setup")
+@app.get("/api/admin/users/setup")
+def admin_users_setup():
+    return JSONResponse({
+        "ok": True,
+        "service": "credit-vivo-admin-user-provisioning",
+        "mode": "owner_setup_token_required",
+        "token_configured": bool(os.getenv("ADMIN_SETUP_TOKEN")),
+        "create_user_endpoint": "/api/admin/users/create",
+        "list_users_endpoint": "/api/admin/users/list",
+        "required_header": "X-Credit-Vivo-Admin-Setup-Token",
+        "roles": role_templates(),
+        "owner_note": (
+            "This provisions backend user records for setup/testing. "
+            "Full production login still requires Supabase, Auth0, Clerk, or another auth provider."
+        ),
+    })
+
+
+@app.post("/admin/users/create")
+@app.post("/api/admin/users/create")
+async def admin_users_create(
+    payload: Dict[str, object],
+    x_credit_vivo_admin_setup_token: str | None = Header(default=None),
+):
+    try:
+        require_setup_token(x_credit_vivo_admin_setup_token, os.getenv("ADMIN_SETUP_TOKEN"))
+        user, temporary_password = build_provisioned_user(payload, created_by="owner_admin")
+        append_provisioned_user(user, ADMIN_USER_LOG)
+    except PermissionError as exc:
+        raise HTTPException(status_code=401, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    return JSONResponse({
+        "ok": True,
+        "service": "credit-vivo-admin-user-provisioning",
+        "user": {
+            "user_id": user.user_id,
+            "email": user.email,
+            "display_name": user.display_name,
+            "role": user.role,
+            "role_label": user.role_label,
+            "privileges": user.privileges,
+            "password_reset_required": user.password_reset_required,
+            "status": user.status,
+        },
+        "temporary_password": temporary_password,
+        "important": "Temporary password is returned once. Store securely and force reset after first login.",
+    })
+
+
+@app.get("/admin/users/list")
+@app.get("/api/admin/users/list")
+def admin_users_list(
+    x_credit_vivo_admin_setup_token: str | None = Header(default=None),
+):
+    try:
+        require_setup_token(x_credit_vivo_admin_setup_token, os.getenv("ADMIN_SETUP_TOKEN"))
+    except PermissionError as exc:
+        raise HTTPException(status_code=401, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    users = read_provisioned_users(ADMIN_USER_LOG)
+    safe_users = [
+        {
+            "user_id": user.get("user_id"),
+            "email": user.get("email"),
+            "display_name": user.get("display_name"),
+            "role": user.get("role"),
+            "role_label": user.get("role_label"),
+            "privileges": user.get("privileges", []),
+            "password_reset_required": user.get("password_reset_required"),
+            "created_at": user.get("created_at"),
+            "status": user.get("status"),
+        }
+        for user in users
+    ]
+    return JSONResponse({
+        "ok": True,
+        "service": "credit-vivo-admin-user-provisioning",
+        "user_count": len(safe_users),
+        "users": safe_users,
+    })
 
 
 @app.get("/growth-ai/brief")
