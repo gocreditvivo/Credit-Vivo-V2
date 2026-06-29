@@ -4,9 +4,11 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 try:
+    from .ai_operating_system import build_ai_operating_system_brief
     from .growth_ai import GrowthSnapshot, build_growth_brief
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
 except ImportError:
+    from ai_operating_system import build_ai_operating_system_brief
     from growth_ai import GrowthSnapshot, build_growth_brief
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
 
@@ -84,6 +86,7 @@ def build_command_brief(
     events = operator_events or demo_operator_events()
     growth = build_growth_brief(snapshot)
     operator = build_operator_brief(events)
+    ai_system = build_ai_operating_system_brief()
 
     top_actions = []
     for action in growth["recommended_actions"][:3]:
@@ -109,12 +112,14 @@ def build_command_brief(
         "service": "vivo-command-ai",
         "mode": "mission_oriented_watch_recommend_approve",
         "mission_statement": "Automate Credit Vivo operations toward growth, customer help, and compliance-safe execution.",
+        "operating_standard": ai_system["standard"],
         "revenue_goal": {
             "monthly_target": 1000000,
             "current_mrr": snapshot.monthly_recurring_revenue,
             "paid_customer_gap": growth["million_month_target"]["paid_customer_gap"],
         },
         "missions": [mission_to_dict(mission) for mission in COMMAND_MISSIONS],
+        "ai_operating_system": ai_system,
         "top_actions": top_actions,
         "automation_policy": {
             "can_do_now": [

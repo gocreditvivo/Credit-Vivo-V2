@@ -44,6 +44,7 @@ try:
         read_events,
         summarize_events,
     )
+    from .ai_operating_system import build_ai_operating_system_brief
     from .growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -64,6 +65,7 @@ except ImportError:
         read_events,
         summarize_events,
     )
+    from ai_operating_system import build_ai_operating_system_brief
     from growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -355,6 +357,12 @@ def vivo_command_brief(
         referral_signups=referral_signups,
     )
     return JSONResponse(build_command_brief(growth_snapshot=snapshot))
+
+
+@app.get("/vivo-command/ai-operating-system")
+@app.get("/api/vivo-command/ai-operating-system")
+def vivo_ai_operating_system():
+    return JSONResponse(build_ai_operating_system_brief())
 
 
 @app.post("/events/track")
