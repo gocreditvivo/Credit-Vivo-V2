@@ -87,17 +87,12 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div className="relative z-10">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/80 px-3 py-1.5 text-[11px] font-semibold text-emerald-800 shadow-sm shadow-emerald-900/5">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-white/85 px-4 py-2 text-sm font-bold text-emerald-800 shadow-sm shadow-emerald-900/5">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                AI credit scanner + attorney escalation
+                AI Scanner + Attorney Escalation
               </div>
 
-              <h1 className="mb-4 text-[30px] font-semibold leading-tight text-navy-900 sm:text-[36px]">
-                AI finds the credit report problems.{' '}
-                <span className="text-gradient-vivo">Attorneys help with the hard ones.</span>
-              </h1>
-
-              <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
+              <p className="text-[17px] text-navy-500 leading-relaxed mb-6 max-w-xl">
                 <strong className="text-navy-700">Credit Vivo combines AI-powered report analysis with attorney-reviewed escalation options.</strong>{' '}
                 Start with a no-hard-pull Credit Check-In to identify potential errors in plain English, then seamlessly transition qualified files toward bureau disputes, furnisher disputes, CFPB/state escalation, or direct attorney review.
               </p>
