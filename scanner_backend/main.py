@@ -29,16 +29,25 @@ try:
 except Exception:
     PdfReader = None
 
-from credit_vivo_proprietary_engine import (
-    detect_bureau,
-    parse_reports,
-    result_to_dict,
-    write_outputs,
-)
+try:
+    from .credit_vivo_proprietary_engine import (
+        detect_bureau,
+        parse_reports,
+        result_to_dict,
+        write_outputs,
+    )
+except ImportError:
+    from credit_vivo_proprietary_engine import (
+        detect_bureau,
+        parse_reports,
+        result_to_dict,
+        write_outputs,
+    )
 
 ROOT = Path(__file__).resolve().parent
-UPLOADS = ROOT / "uploads"
-OUTPUT = ROOT / "output"
+STORAGE_ROOT = Path(os.getenv("SCANNER_STORAGE_DIR", "/tmp/creditvivo-scanner" if os.getenv("VERCEL") else str(ROOT)))
+UPLOADS = STORAGE_ROOT / "uploads"
+OUTPUT = STORAGE_ROOT / "output"
 UPLOADS.mkdir(exist_ok=True)
 OUTPUT.mkdir(exist_ok=True)
 
