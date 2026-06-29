@@ -25,6 +25,17 @@ class PublicPartnerLead:
     recommended_campaign: str
 
 
+@dataclass(frozen=True)
+class MarketSignalSource:
+    name: str
+    category: str
+    source_url: str
+    demand_signal: str
+    allowed_growth_use: str
+    blocked_use: str
+    recommended_campaign: str
+
+
 GROWTH_DATA_SOURCES: List[GrowthDataSource] = [
     GrowthDataSource(
         name="Credit Vivo website events",
@@ -121,6 +132,154 @@ GROWTH_DATA_SOURCES: List[GrowthDataSource] = [
         what_growth_ai_gets="Financial counseling association and member ecosystem.",
         first_action="Research partner categories and possible education alliances.",
         compliance_note="Public organization research only.",
+    ),
+]
+
+
+MARKET_SIGNAL_SOURCES: List[MarketSignalSource] = [
+    MarketSignalSource(
+        name="CFPB Consumer Complaint Database",
+        category="government_complaint_data",
+        source_url="https://www.consumerfinance.gov/data-research/consumer-complaints/",
+        demand_signal="Credit reporting, debt collection, auto loan, mortgage, and credit card complaint trends.",
+        allowed_growth_use="Analyze complaint volume by issue, company type, state, and trend to choose content topics and campaign pages.",
+        blocked_use="Do not use complaint narratives or any personal details to contact individual consumers.",
+        recommended_campaign="/collection-not-mine",
+    ),
+    MarketSignalSource(
+        name="CFPB Consumer Complaint Database API",
+        category="government_api",
+        source_url="https://cfpb.github.io/api/ccdb/",
+        demand_signal="Structured public complaint data that can be filtered by product, issue, state, and date.",
+        allowed_growth_use="Build aggregate dashboards for top credit reporting and debt collection issues by state.",
+        blocked_use="Do not create individual prospect lists from complaints.",
+        recommended_campaign="/collection-not-mine",
+    ),
+    MarketSignalSource(
+        name="BBB credit repair and debt relief research",
+        category="business_complaint_research",
+        source_url="https://www.bbb.org/all/scamstudies/debt-relief-study/debt-relief-full-study",
+        demand_signal="Common consumer complaints about debt relief and credit repair providers, including high fees and poor service.",
+        allowed_growth_use="Shape trust messaging, compliance language, and comparison content.",
+        blocked_use="Do not scrape complainant names, reviewers, or complaint submitters for outreach.",
+        recommended_campaign="/why",
+    ),
+    MarketSignalSource(
+        name="BBB complaint and business directory",
+        category="business_directory",
+        source_url="https://www.bbb.org/file-a-complaint",
+        demand_signal="Businesses, categories, and complaint themes in financial services.",
+        allowed_growth_use="Research competitor pain points and identify accredited business partner categories.",
+        blocked_use="Do not harvest private complaint submitters or reviewers.",
+        recommended_campaign="/why",
+    ),
+    MarketSignalSource(
+        name="Federal Reserve credit card delinquency data",
+        category="aggregate_financial_data",
+        source_url="https://fred.stlouisfed.org/series/DRCCLACBS",
+        demand_signal="National credit card delinquency trends.",
+        allowed_growth_use="Use aggregate trend data for content planning and investor dashboards.",
+        blocked_use="Cannot identify people behind on credit card payments.",
+        recommended_campaign="/learning",
+    ),
+    MarketSignalSource(
+        name="Federal Reserve charge-off and delinquency rates",
+        category="aggregate_financial_data",
+        source_url="https://www.federalreserve.gov/releases/chargeoff/",
+        demand_signal="Bank loan delinquency and charge-off rates by loan category.",
+        allowed_growth_use="Monitor macro demand for credit education, debt, auto, mortgage, and credit card topics.",
+        blocked_use="Do not imply Credit Vivo can access private bank delinquency files.",
+        recommended_campaign="/learning",
+    ),
+    MarketSignalSource(
+        name="New York Fed Household Debt and Credit Report",
+        category="aggregate_financial_data",
+        source_url="https://www.newyorkfed.org/microeconomics/hhdc",
+        demand_signal="Household debt, mortgage, auto loan, student loan, and credit card trends.",
+        allowed_growth_use="Investor-grade market sizing, content calendar, and state-of-consumer insights.",
+        blocked_use="No individual targeting.",
+        recommended_campaign="/mortgage-readiness",
+    ),
+    MarketSignalSource(
+        name="Philadelphia Fed large bank credit card and mortgage data",
+        category="aggregate_financial_data",
+        source_url="https://www.philadelphiafed.org/surveys-and-data/large-bank-credit-card-and-mortgage-data",
+        demand_signal="Large bank credit card and mortgage performance trends.",
+        allowed_growth_use="Track stress in card and mortgage markets to pick educational campaigns.",
+        blocked_use="No individual targeting.",
+        recommended_campaign="/mortgage-readiness",
+    ),
+    MarketSignalSource(
+        name="State open data portals",
+        category="public_open_data",
+        source_url="https://data.ny.gov/",
+        demand_signal="State-level public datasets including finance, housing, consumer, business, and public records categories.",
+        allowed_growth_use="Use aggregate patterns and public agency directories to find partner channels.",
+        blocked_use="Do not target people because they appear in sensitive debt, judgment, or tax-delinquency records.",
+        recommended_campaign="/learning",
+    ),
+    MarketSignalSource(
+        name="NYC Open Data tax lien sale lists",
+        category="public_record_high_sensitivity",
+        source_url="https://data.cityofnewyork.us/City-Government/Tax-Lien-Sale-Lists/9rz4-mjek",
+        demand_signal="Property tax lien stress by property and geography.",
+        allowed_growth_use="Use only aggregate geographic trends and partner outreach to housing counselors, attorneys, and nonprofits.",
+        blocked_use="Do not contact named property owners or households because they owe taxes.",
+        recommended_campaign="/mortgage-readiness",
+    ),
+    MarketSignalSource(
+        name="State court judgment and collection records",
+        category="public_record_high_sensitivity",
+        source_url="state and county court portals",
+        demand_signal="Collection judgment and civil debt trends.",
+        allowed_growth_use="Use aggregate trend analysis and partner/referral strategy with legal aid, consumer attorneys, and nonprofits.",
+        blocked_use="Do not build a direct marketing list of defendants, debtors, or people with judgments.",
+        recommended_campaign="/collection-not-mine",
+    ),
+    MarketSignalSource(
+        name="County tax delinquency and property tax sites",
+        category="public_record_high_sensitivity",
+        source_url="county treasurer, tax collector, and assessor portals",
+        demand_signal="Local property tax stress and homeownership hardship patterns.",
+        allowed_growth_use="Use only aggregate location-level trends and referral partnerships with housing counselors.",
+        blocked_use="Do not contact named taxpayers or households because they owe taxes.",
+        recommended_campaign="/mortgage-readiness",
+    ),
+    MarketSignalSource(
+        name="Credit forums, Reddit, car forums, and mortgage forums",
+        category="public_discussion_research",
+        source_url="public forum search and platform APIs where permitted",
+        demand_signal="Questions people ask about denials, collections, credit cards, auto loans, mortgages, and bureau errors.",
+        allowed_growth_use="Summarize themes, keywords, objections, and content ideas; post helpful content only where rules allow.",
+        blocked_use="Do not scrape usernames, private messages, emails, or target individuals based on hardship posts.",
+        recommended_campaign="/learning",
+    ),
+    MarketSignalSource(
+        name="Credit card comparison and issuer sites",
+        category="market_research",
+        source_url="public credit card product pages and comparison pages",
+        demand_signal="Approval requirements, secured-card demand, credit-building language, and denied-applicant questions.",
+        allowed_growth_use="Create education content for people comparing cards or rebuilding credit.",
+        blocked_use="Do not imply Credit Vivo can guarantee approval or access issuer private decline data.",
+        recommended_campaign="/learning",
+    ),
+    MarketSignalSource(
+        name="Equifax, Experian, and TransUnion public education pages",
+        category="bureau_public_research",
+        source_url="public bureau education and dispute pages",
+        demand_signal="Official consumer language around reports, disputes, fraud, freezes, and rights.",
+        allowed_growth_use="Use as reference points for plain-English education and customer journey design.",
+        blocked_use="Do not copy protected content or imply bureau partnership without an agreement.",
+        recommended_campaign="/learning",
+    ),
+    MarketSignalSource(
+        name="Google, Bing, Yahoo, and other search engines",
+        category="search_demand",
+        source_url="search trends, search console, keyword tools, and ad platforms",
+        demand_signal="Search volume for auto loan denial, credit report errors, collections, apartment denial, and mortgage readiness.",
+        allowed_growth_use="Build SEO pages, paid search campaigns, and landing pages for opt-in visitors.",
+        blocked_use="Do not use search ads that overpromise, shame, or target sensitive hardship in a manipulative way.",
+        recommended_campaign="/auto-loan-denial",
     ),
 ]
 
@@ -227,6 +386,10 @@ def partner_lead_to_dict(lead: PublicPartnerLead) -> Dict[str, str]:
     return lead.__dict__
 
 
+def market_signal_to_dict(source: MarketSignalSource) -> Dict[str, str]:
+    return source.__dict__
+
+
 def build_growth_source_brief() -> Dict[str, object]:
     campaign_counts: Dict[str, int] = {}
     for lead in PUBLIC_PARTNER_LEADS:
@@ -237,9 +400,11 @@ def build_growth_source_brief() -> Dict[str, object]:
         "service": "credit-vivo-growth-ai-sources",
         "guardrail": "Use public business/referral sources and opt-in customer channels. Do not scrape or email private consumers about credit hardship without consent.",
         "data_sources": [data_source_to_dict(source) for source in GROWTH_DATA_SOURCES],
+        "market_signal_sources": [market_signal_to_dict(source) for source in MARKET_SIGNAL_SOURCES],
         "public_partner_leads": [partner_lead_to_dict(lead) for lead in PUBLIC_PARTNER_LEADS],
         "counts": {
             "data_sources": len(GROWTH_DATA_SOURCES),
+            "market_signal_sources": len(MARKET_SIGNAL_SOURCES),
             "public_partner_leads": len(PUBLIC_PARTNER_LEADS),
             "recommended_campaigns": campaign_counts,
         },
