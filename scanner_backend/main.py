@@ -147,6 +147,7 @@ async def save_pdf_upload(file: UploadFile, dest: Path) -> int:
     return total
 
 
+@app.post("/scanner/parse")
 @app.post("/api/scanner/parse")
 async def parse_uploaded_reports(
     files: List[UploadFile] = File(...),
@@ -242,6 +243,7 @@ def api_health():
     return JSONResponse(result)
 
 
+@app.get("/scanner/result/{job_id}")
 @app.get("/api/scanner/result/{job_id}")
 def get_result(job_id: str):
     summary = OUTPUT / job_id / "scan_result_summary.json"
@@ -250,6 +252,7 @@ def get_result(job_id: str):
     return JSONResponse(json.loads(summary.read_text(encoding="utf-8")))
 
 
+@app.get("/scanner/result/{job_id}/full")
 @app.get("/api/scanner/result/{job_id}/full")
 def get_full_result(job_id: str):
     full = OUTPUT / job_id / "credit_vivo_parser_result.json"
