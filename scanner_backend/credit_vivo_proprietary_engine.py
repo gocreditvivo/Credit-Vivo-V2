@@ -351,6 +351,12 @@ BOILERPLATE_TERMS = [
     "amount of the debt",
     "public records and residential information",
     "supplemental public records",
+    "your credit report can include",
+    "consumer added notices",
+    "security freezes or locks",
+    "prescreened offers of credit",
+    "when reviewing your account info",
+    "see if an account is open",
 ]
 
 BAD_ACCOUNT_NAME_FRAGMENTS = [
@@ -368,6 +374,42 @@ BAD_ACCOUNT_NAME_FRAGMENTS = [
     "responsibility individual",
     "public records and residential",
     "supplemental public records",
+    "consumer added notices",
+    "equifax.com/personal/help",
+    "your credit report can include",
+    "see if an account is open",
+    "closed accounts should have",
+    "s of credit accounts",
+]
+
+ACCOUNT_SECTION_TERMS = [
+    "account number",
+    "account #",
+    "account name",
+    "account type",
+    "loan/account type",
+    "date opened",
+    "date reported",
+    "date updated",
+    "date of first delinquency",
+    "date of 1st delinquency",
+    "original creditor",
+    "pay status",
+    "payment status",
+    "account status",
+    "balance",
+    "past due",
+]
+
+NON_ACCOUNT_SECTION_TERMS = [
+    "payment history guide",
+    "your credit report can include",
+    "consumer added notices",
+    "security freezes or locks",
+    "prescreened offers",
+    "see if an account is open",
+    "closed accounts should have no money",
+    "for more information",
 ]
 
 
@@ -654,24 +696,29 @@ def is_boilerplate_block(block: str) -> bool:
     boilerplate_hits = sum(1 for term in BOILERPLATE_TERMS if term in lower)
     core_field_hits = sum(
         1
-        for term in [
-            "account number",
-            "account #",
-            "date opened",
-            "date reported",
-            "original creditor",
-            "account type",
-            "payment status",
-            "account status",
-            "balance",
-        ]
+        for term in ACCOUNT_SECTION_TERMS
         if term in lower
     )
     return boilerplate_hits > 0 and core_field_hits < 2
 
 
+def account_section_score(block: str) -> int:
+    lower = block.lower()
+    return sum(1 for term in ACCOUNT_SECTION_TERMS if term in lower)
+
+
+def has_non_account_section_bias(block: str) -> bool:
+    lower = block.lower()
+    non_account_hits = sum(1 for term in NON_ACCOUNT_SECTION_TERMS if term in lower)
+    return non_account_hits >= 2 and account_section_score(block) < 4
+
+
 def is_probable_tradeline(t: NormalizedTradeline) -> bool:
     if is_bad_account_name(t.account_name):
+        return False
+    if has_non_account_section_bias(t.raw_block):
+        return False
+    if compact_key(t.account_name) in {"co", "ok", "cls", "nd", "address"}:
         return False
 
     core_fields = [
@@ -687,7 +734,12 @@ def is_probable_tradeline(t: NormalizedTradeline) -> bool:
     ]
     core_count = sum(1 for field in core_fields if field)
     lower = t.raw_block.lower()
+    section_score = account_section_score(t.raw_block)
     has_money_or_account = bool(t.balance or t.account_number_masked)
+    has_account_identifier = bool(
+        t.account_number_masked
+        or re.search(r"\b(?:account number|account #|account name)\b", lower, flags=re.I)
+    )
     has_credit_signal = any(
         term in lower
         for term in [
@@ -702,6 +754,10 @@ def is_probable_tradeline(t: NormalizedTradeline) -> bool:
             "high credit",
         ]
     )
+    if section_score < 2 and not has_account_identifier:
+        return False
+    if not has_account_identifier and core_count < 4:
+        return False
     return core_count >= 2 and (has_money_or_account or has_credit_signal)
 
 
@@ -887,19 +943,26 @@ def same_cross_bureau_account(left: NormalizedTradeline, right: NormalizedTradel
         if left.original_creditor and right.original_creditor
         else 0
     )
+    left_key = compact_key(left.account_name)
+    right_key = compact_key(right.account_name)
+
+    if not left_key or not right_key:
+        return False
+    if left_key in {"co", "ok", "cls", "nd", "address"} or right_key in {"co", "ok", "cls", "nd", "address"}:
+        return False
 
     if acct_match:
         return True
 
-    if name_score >= 0.72:
+    if name_score >= 0.82:
         return True
 
     # Same original creditor is only supporting evidence. It cannot, by itself,
     # merge a collector/debt-buyer tradeline with the original creditor's own card/loan.
     if original_score >= 0.72:
-        if name_score >= 0.55:
+        if name_score >= 0.65:
             return True
-        if is_collection_like(left) and is_collection_like(right) and name_score >= 0.45:
+        if is_collection_like(left) and is_collection_like(right) and name_score >= 0.55:
             return True
 
     return False

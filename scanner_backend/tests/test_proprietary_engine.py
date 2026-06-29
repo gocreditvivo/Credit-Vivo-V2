@@ -137,6 +137,32 @@ Credit Limit (Hist.)
 Credit limit of $500 from 10/2023 to 03/2026
 """
 
+EQUIFAX_HELP_SECTION_THAT_IS_NOT_AN_ACCOUNT = """
+--- PAGE 1 ---
+Equifax Credit Report
+
+Your credit report can include fraud and active duty alerts, security freezes or locks,
+and opt-outs of receiving prescreened offers of credit or insurance. You can also choose
+to add a consumer statement to your credit report to provide an explanation for why you
+missed a payment or why you believe something is being reported incorrectly. For more
+information on these consumer added notices visit equifax.com/personal/help/.
+
+Account Information
+Your credit report can include all types of credit accounts, such as revolving accounts,
+mortgage accounts, and any other installment loans or open lines of credit. When reviewing
+your account information, see if an account is open, closed, paid on time, or past due.
+Closed accounts should have no money due.
+
+MIDLAND CREDIT MANAGEMENT - Closed
+320 E BIG BEAVER RD STE 300, TROY, MI 48083-1271 | (877) 822-0381
+Date Reported: 06/25/2026 | Balance: $1,473
+Account Number: *8933 | Owner: Individual
+Loan/Account Type: Debt Buyer Account | Status: Collection
+Date Opened: 02/17/2022
+Date of 1st Delinquency: 07/07/2021
+Amount Past Due: $1,473
+"""
+
 def test_parse_sample_report(tmp_path):
     result = parse_reports({
         "experian.pdf": {"text": SAMPLE, "bureau": "Experian"},
@@ -512,6 +538,22 @@ def test_parse_sample_report(tmp_path):
     draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
     assert "DRAFT" in draft_letters
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters
+
+
+def test_equifax_help_text_does_not_become_account():
+    result = parse_reports({
+        "equifax june 29 2026.pdf": {
+            "text": EQUIFAX_HELP_SECTION_THAT_IS_NOT_AN_ACCOUNT,
+            "bureau": "Equifax",
+        },
+    })
+    data = result_to_dict(result)
+    account_names = [item["account_name"] for item in data["tradelines"]]
+
+    assert any("MIDLAND CREDIT MANAGEMENT" in name for name in account_names)
+    assert not any("consumer added notices" in name.lower() for name in account_names)
+    assert not any("equifax.com/personal/help" in name.lower() for name in account_names)
+    assert not any("see if an account is open" in name.lower() for name in account_names)
 
 
 def test_boilerplate_disclosure_text_is_not_a_tradeline():

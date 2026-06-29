@@ -152,7 +152,18 @@ app = FastAPI(title="Credit Vivo Proprietary Scanner API", version="16.0")
 
 allowed_origins = os.getenv(
     "CREDIT_VIVO_ALLOWED_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173"
+    ",".join([
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:4173",
+        "http://127.0.0.1:4173",
+        "http://localhost:4195",
+        "http://127.0.0.1:4195",
+        "http://localhost:4196",
+        "http://127.0.0.1:4196",
+        "http://localhost:4197",
+        "http://127.0.0.1:4197",
+    ])
 ).split(",")
 
 app.add_middleware(
