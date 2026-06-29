@@ -3,52 +3,73 @@ import { Check, ArrowRight } from 'lucide-react';
 
 const plans = [
   {
-    badge: 'DIY support',
-    name: 'AI Guided',
-    price: '$29',
+    badge: 'Start here',
+    name: 'Free Check-In',
+    price: '$0',
     cadence: '/mo',
-    description: 'For customers who want guidance, education, and draft-ready documents.',
-    cta: 'Choose AI Guided',
+    description: 'A simple starting point to upload or connect a report and see a plain-English preview.',
+    cta: 'Start Free',
     to: '/join',
     featured: false,
     features: [
-      'AI findings dashboard',
-      'Draft dispute letter workspace',
-      'Learning path and reminders',
-      'Monthly roadmap updates',
+      'No-hard-pull starting point',
+      'AI issue preview',
+      'Plain-English summary',
+      'Learning Center access',
     ],
   },
   {
     badge: 'Popular',
-    name: 'Vivo Plus',
-    price: '$59',
+    name: 'AI Guided',
+    price: '$29',
     cadence: '/mo',
-    description: 'A managed workflow for bureau disputes, furnisher follow-up, and progress updates.',
-    cta: 'Choose Vivo Plus',
+    description: 'For customers who want the scanner findings, dispute prep, and a monthly action path.',
+    cta: 'Choose AI Guided',
     to: '/join',
     featured: true,
     features: [
-      'Bureau dispute workflow',
-      'Furnisher validation workflow',
-      'Portal progress updates',
-      'Document vault organization',
+      'AI findings dashboard',
+      'Draft dispute letter workspace',
+      'Monthly roadmap updates',
+      'Progress tracking',
     ],
   },
   {
-    badge: 'Top tier',
-    name: 'Attorney Assist',
-    price: '$99',
+    badge: 'Full workflow',
+    name: 'Vivo Plus',
+    price: '$59',
     cadence: '/mo',
-    description: 'For customers who may need attorney-ready escalation after normal disputes.',
-    cta: 'Check Eligibility',
+    description: 'For customers who want bureau/furnisher workflows, stronger tracking, and escalation prep.',
+    cta: 'Choose Vivo Plus',
     to: '/join',
     featured: false,
     features: [
+      'Bureau dispute workflow',
+      'Furnisher validation workflow',
       'Attorney-ready evidence packet',
-      'Escalation review eligibility',
       'CFPB and state complaint prep',
-      'Advanced response tracking',
     ],
+  },
+];
+
+const addOns = [
+  {
+    name: 'Optional legal access',
+    provider: 'LegalShield or another attorney resource',
+    price: 'Separate',
+    detail: 'LegalShield personal plans are separate from Credit Vivo and may require a separate membership or agreement.',
+  },
+  {
+    name: 'Optional credit monitoring',
+    provider: 'IDShield or another monitoring provider',
+    price: 'From $14.95/mo',
+    detail: 'IDShield individual plans publicly list 1-bureau monitoring from $14.95/mo and 3-bureau monitoring from $19.95/mo.',
+  },
+  {
+    name: 'Mail and third-party costs',
+    provider: 'Certified mail, report access, identity verification, or legal costs',
+    price: 'As used',
+    detail: 'These costs are not included unless a written plan says they are included before purchase.',
   },
 ];
 
@@ -63,10 +84,10 @@ export default function Pricing() {
             Pricing
           </div>
           <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Simple packages for every stage.
+            Start free. Add support when needed.
           </h1>
           <p className="text-[15px] text-navy-500 max-w-xl mx-auto">
-            Start with a free Credit Check-In, then choose from three package levels when paid plans are active.
+            Credit Vivo pricing stays simple. Legal access and credit monitoring are optional separate services.
           </p>
         </div>
       </section>
@@ -77,9 +98,9 @@ export default function Pricing() {
           <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Free entry point</p>
-              <h2 className="mt-1 text-base font-bold text-navy-900">Free Credit Check-In</h2>
+              <h2 className="mt-1 text-base font-bold text-navy-900">AI Credit + Attorney Access</h2>
               <p className="mt-1 text-xs text-navy-500">
-                Start with secure upload, plain-English issue preview, credit goal intake, and Learning Center access.
+                Start with the Credit Vivo scanner first. If legal help or credit monitoring is wanted, customers can choose separate provider options.
               </p>
             </div>
             <Link to="/join" className="btn-primary shrink-0 text-xs py-2.5">
@@ -138,8 +159,31 @@ export default function Pricing() {
 
           <div className="mt-8 rounded-2xl border border-amber-100 bg-amber-50 p-5">
             <p className="text-xs leading-relaxed text-amber-900">
-              <strong>Launch note:</strong> Pricing shown is planned package positioning. Credit Vivo is not accepting paid credit repair services until final terms, disclosures, cancellation rights, and payment processing are approved. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes.
+              <strong>Launch note:</strong> Pricing shown is planned package positioning. Credit Vivo is not accepting paid credit repair services until final terms, disclosures, cancellation rights, and payment processing are approved. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes. LegalShield, IDShield, attorney services, credit monitoring, mail, report access, and third-party costs are separate unless a written plan says otherwise.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-7 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">Optional add-ons</p>
+            <h2 className="text-2xl font-bold text-navy-900">Legal access and monitoring stay separate.</h2>
+            <p className="mt-2 text-sm text-navy-500">
+              Customers can choose these only if they want them. They are not required to use Credit Vivo.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {addOns.map((item) => (
+              <div key={item.name} className="rounded-xl border border-navy-100/60 bg-navy-50/40 p-5">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-sky-700">{item.provider}</p>
+                <h3 className="mt-2 text-sm font-bold text-navy-900">{item.name}</h3>
+                <p className="mt-3 text-2xl font-extrabold text-navy-900">{item.price}</p>
+                <p className="mt-3 text-xs leading-relaxed text-navy-500">{item.detail}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -150,7 +194,7 @@ export default function Pricing() {
           <div className="grid md:grid-cols-3 gap-5">
             {[
               { title: 'Start with free clarity', desc: 'The free Credit Check-In gives consumers a simple starting point and helps them understand where to focus.' },
-              { title: 'Upgrade when ready', desc: 'Paid tiers are designed around more guidance, tracking, document organization, and escalation support.' },
+              { title: 'Upgrade when ready', desc: 'Paid tiers are designed around more guidance, tracking, document organization, and escalation prep.' },
               { title: 'Review comes first', desc: 'Draft findings are for review only. Nothing should be sent, mailed, or escalated without approval.' },
             ].map((card) => (
               <div key={card.title} className="bg-white rounded-xl p-5 border border-navy-100/60">
