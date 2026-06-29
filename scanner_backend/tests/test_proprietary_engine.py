@@ -25,8 +25,44 @@ Date Opened: 05/01/2019
 Date of First Delinquency: 10/01/2020
 """
 
+SAMPLE_EQUIFAX = """
+--- PAGE 1 ---
+Equifax Credit Report
+
+MIDLAND CREDIT MANAGEMENT
+Account Number: 1234567890
+Account Type: Collection
+Original Creditor: CAPITAL ONE BANK
+Balance: $1,999
+Status: Collection Account
+Date Opened: 01/10/2021
+Date Reported: 05/01/2026
+Date of First Delinquency: 02/01/2021
+Remarks: Account placed for collection
+"""
+
+SAMPLE_TRANSUNION = """
+--- PAGE 1 ---
+TransUnion Credit Report
+
+MIDLAND CREDIT MANAGEMENT
+Account Number: 1234567890
+Account Type: Collection
+Original Creditor: CAPITAL ONE BANK
+Balance: $1,234
+Status: Paid collection
+Date Opened: 01/10/2021
+Date Reported: 04/01/2026
+Date of First Delinquency: 01/01/2021
+Remarks: Account placed for collection
+"""
+
 def test_parse_sample_report(tmp_path):
-    result = parse_reports({"experian.pdf": {"text": SAMPLE, "bureau": "Experian"}})
+    result = parse_reports({
+        "experian.pdf": {"text": SAMPLE, "bureau": "Experian"},
+        "equifax.pdf": {"text": SAMPLE_EQUIFAX, "bureau": "Equifax"},
+        "transunion.pdf": {"text": SAMPLE_TRANSUNION, "bureau": "TransUnion"},
+    })
     data = result_to_dict(result)
     assert data["paid_ai_used"] is False
     assert data["tradelines"]
@@ -44,6 +80,10 @@ def test_parse_sample_report(tmp_path):
     assert "FCRA" in data["recommended_letter_queue"][0]["draft_letter_body"]
     assert data["fcra_review"]
     assert data["fcra_review"][0]["dispute_history_complete"] is False
+    cross_labels = {x["customer_label"] for x in data["issues"] if x["issue_type"].startswith("cross_bureau")}
+    assert "Balance differs across bureaus" in cross_labels
+    assert "Status differs across bureaus" in cross_labels
+    assert "Dates differ across bureaus" in cross_labels
 
     write_outputs(result, tmp_path)
     assert (tmp_path / "credit_vivo_parser_result.json").exists()
@@ -54,11 +94,24 @@ def test_parse_sample_report(tmp_path):
     workbook = load_workbook(workbook_path, read_only=True)
     assert workbook.sheetnames == [
         "Summary",
+        "3 Bureau Comparison",
         "Detected Errors",
         "Review Items",
         "Draft Letters",
         "FCRA Review",
     ]
+    comparison = workbook["3 Bureau Comparison"]
+    headers = [comparison.cell(row=1, column=column).value for column in range(1, comparison.max_column + 1)]
+    assert "Experian Balance" in headers
+    assert "Equifax Balance" in headers
+    assert "TransUnion Balance" in headers
+    comparison_flags = " ".join(
+        str(comparison.cell(row=row, column=3).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    assert "Balance differs" in comparison_flags
+    assert "Status differs" in comparison_flags
+    assert "DOFD differs" in comparison_flags
     draft_letters = (tmp_path / "draft_dispute_letters.txt").read_text(encoding="utf-8")
     assert "DRAFT" in draft_letters
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in draft_letters

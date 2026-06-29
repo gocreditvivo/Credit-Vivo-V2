@@ -1175,6 +1175,112 @@ def _write_workbook_sheet(sheet, rows: List[List[object]]) -> None:
     sheet.sheet_view.showGridLines = False
 
 
+def _norm_compare(value) -> str:
+    return clean_text(str(value or "")).lower()
+
+
+def _comparison_flag(values: List[str], label: str) -> str:
+    present = {_norm_compare(value) for value in values if _norm_compare(value)}
+    if len(present) >= 2:
+        return f"{label} differs"
+    return ""
+
+
+def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
+    tradelines_by_id = {item.get("id"): item for item in data.get("tradelines", [])}
+    bureau_order = ["Experian", "Equifax", "TransUnion"]
+    cross_issue_ids = set()
+
+    for issue in data.get("issues", []):
+        if str(issue.get("issue_type", "")).startswith("cross_bureau"):
+            cross_issue_ids.update(issue.get("related_tradeline_ids", []))
+
+    rows = [[
+        "Group ID",
+        "Account Name",
+        "Error Flags",
+        "Missing Bureaus",
+        "Experian Balance",
+        "Experian Status",
+        "Experian Reported",
+        "Experian DOFD",
+        "Equifax Balance",
+        "Equifax Status",
+        "Equifax Reported",
+        "Equifax DOFD",
+        "TransUnion Balance",
+        "TransUnion Status",
+        "TransUnion Reported",
+        "TransUnion DOFD",
+        "Suggested Review",
+    ]]
+
+    for group in data.get("cross_bureau_groups", []):
+        items = [tradelines_by_id.get(item_id) for item_id in group.get("tradeline_ids", [])]
+        items = [item for item in items if item]
+        if len(items) < 2:
+            continue
+
+        by_bureau = {item.get("bureau"): item for item in items}
+        balances = [item.get("balance", "") for item in items]
+        statuses = [item.get("status") or item.get("pay_status") or "" for item in items]
+        reported_dates = [item.get("date_reported", "") for item in items]
+        dofds = [item.get("date_of_first_delinquency", "") for item in items]
+        account_names = [item.get("account_name", "") for item in items]
+
+        flags = [
+            _comparison_flag(balances, "Balance"),
+            _comparison_flag(statuses, "Status"),
+            _comparison_flag(reported_dates, "Reported date"),
+            _comparison_flag(dofds, "DOFD"),
+            _comparison_flag(account_names, "Account name"),
+        ]
+        missing = [bureau for bureau in bureau_order if bureau not in by_bureau]
+        if missing:
+            flags.append("Missing on " + ", ".join(missing))
+
+        has_cross_issue = any(item.get("id") in cross_issue_ids for item in items)
+        suggested_review = (
+            "Review and dispute field-level mismatch if inaccurate or unverifiable."
+            if has_cross_issue or any(flags)
+            else
+            "Matched across bureaus. No mismatch flag detected."
+        )
+
+        row = [
+            group.get("group_id", ""),
+            "; ".join(sorted({name for name in account_names if name})),
+            "; ".join(flag for flag in flags if flag),
+            ", ".join(missing),
+        ]
+
+        for bureau in bureau_order:
+            item = by_bureau.get(bureau, {})
+            row.extend([
+                item.get("balance", ""),
+                item.get("status") or item.get("pay_status") or "",
+                item.get("date_reported", ""),
+                item.get("date_of_first_delinquency", ""),
+            ])
+
+        row.append(suggested_review)
+        rows.append(row)
+
+    if len(rows) == 1:
+        rows.append([
+            "No matched cross-bureau accounts",
+            "",
+            "No 3-bureau comparison could be created from the uploaded report set.",
+            "",
+            "", "", "", "",
+            "", "", "", "",
+            "", "", "", "",
+            "Upload reports from at least two bureaus to compare the same account side by side.",
+        ])
+
+    return rows
+
+
 def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     if Workbook is None:
         return
@@ -1182,6 +1288,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     wb = Workbook()
     summary = wb.active
     summary.title = "Summary"
+    bureau_comparison = wb.create_sheet("3 Bureau Comparison")
     errors = wb.create_sheet("Detected Errors")
     items = wb.create_sheet("Review Items")
     letters = wb.create_sheet("Draft Letters")
@@ -1199,6 +1306,8 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
         ["Customer Message", data.get("customer_summary", {}).get("message", "")],
         ["Important Notice", "Draft review data only. Nothing is sent without customer approval and admin review."],
     ])
+
+    _write_workbook_sheet(bureau_comparison, build_three_bureau_comparison_rows(data))
 
     _write_workbook_sheet(errors, [
         ["Issue ID", "Issue Type", "Severity", "Customer Label", "Customer Explanation", "Admin Explanation", "Suggested Round", "Related Tradeline IDs", "Confidence", "Evidence Count"],
