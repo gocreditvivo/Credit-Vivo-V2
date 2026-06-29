@@ -230,17 +230,17 @@ async def parse_uploaded_reports(
         "output_folder": str(out_dir),
     }
 
-
-@app.get("/api/health")
-def api_health():
-    return health()
-
     (out_dir / "scan_result_summary.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
 
     if not RETAIN_UPLOADS:
         shutil.rmtree(job_dir, ignore_errors=True)
 
     return JSONResponse(result)
+
+
+@app.get("/api/health")
+def api_health():
+    return health()
 
 
 @app.get("/scanner/result/{job_id}")
