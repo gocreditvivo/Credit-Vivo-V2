@@ -53,9 +53,9 @@ export default function FreeScan() {
       </p>
       <h1 className="text-xl font-bold text-navy-900 mb-2">Free Credit Check-In</h1>
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
-        Upload one or more credit report PDFs. Credit Vivo will organize review items into
-        customer-friendly categories before any action is prepared. Scanner output is draft
-        review data only and should be checked before use. No payment is required during beta.
+        Upload a credit report PDF. Credit Vivo will organize review items, show possible
+        errors in plain English, and prepare draft dispute letters for review. Scanner output
+        is draft review data only. Nothing is sent without approval.
       </p>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5">
@@ -68,9 +68,20 @@ export default function FreeScan() {
             Upload or connect your report
           </h2>
           <p className="text-xs text-navy-400 mb-5 leading-relaxed">
-            The scanner is private to the member area. The public website does not expose
-            backend scanner details.
+            For your first real test, start with one bureau report. The scanner accepts
+            PDF reports only, up to 3 files and 25 MB per file.
           </p>
+
+          <div className="mb-5 rounded-lg border border-amber-100 bg-amber-50 p-3">
+            <div className="flex gap-2 text-xs leading-relaxed text-amber-900">
+              <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />
+              <p>
+                Real credit reports contain sensitive personal data. Use your own report or a report
+                you have permission to test. Uploaded PDFs are not retained after parsing unless
+                retention is intentionally turned on.
+              </p>
+            </div>
+          </div>
 
           <label className="block border border-dashed border-navy-200 rounded-xl p-5 bg-navy-50/40 cursor-pointer hover:bg-sky-50/40 transition-colors">
             <input
@@ -149,9 +160,10 @@ export default function FreeScan() {
           <div className="space-y-3">
             {[
               'Credit Vivo extracts report text.',
-              'Review items are grouped by bureau.',
-              'Possible review points are organized as draft review data.',
-              'Nothing is sent without approval.',
+              'Possible errors are grouped by bureau and account.',
+              'Findings appear in a worksheet-style review flow.',
+              'Draft dispute letters are prepared for review.',
+              'Nothing is mailed, disputed, or escalated without approval.',
             ].map((step, index) => (
               <div key={step} className="flex gap-3">
                 <div className="w-6 h-6 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center text-[11px] font-bold flex-shrink-0">
