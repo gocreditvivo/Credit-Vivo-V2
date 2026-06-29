@@ -89,12 +89,15 @@ export default function Home() {
             <div className="relative z-10">
               <div className="mb-5 inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-white/85 px-4 py-2 text-sm font-bold text-emerald-800 shadow-sm shadow-emerald-900/5">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                Smart Credit Review + Attorney Help
+                No hard pull to start
               </div>
 
-              <p className="text-[17px] text-navy-500 leading-relaxed mb-6 max-w-xl">
-                <strong className="text-navy-700">Credit Vivo helps you understand what may be wrong on your credit report.</strong>{' '}
-                Start with a no-hard-pull Credit Check-In, see possible errors in plain English, and get clear next steps. If the problem is serious, we help prepare the file for attorney review.
+              <h1 className="mb-4 text-[34px] font-bold leading-tight text-navy-900 sm:text-[40px]">
+                AI Credit Review + Attorney Escalation
+              </h1>
+
+              <p className="text-base text-navy-500 leading-relaxed mb-6 max-w-xl">
+                Credit Vivo uses advanced AI to analyze your credit report. See your errors in plain English, track your progress, and seamlessly prepare your file for attorney review when the situation demands it.
               </p>
 
               <div className="mb-8 flex flex-wrap gap-3">
