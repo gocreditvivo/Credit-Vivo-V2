@@ -18,6 +18,7 @@ import FreeScan from './pages/FreeScan';
 import Findings from './pages/Findings';
 import AdminReview from './pages/AdminReview';
 import BankLink from './pages/BankLink';
+import FounderHealth from './pages/FounderHealth';
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/login" element={<Dashboard />} />
           <Route path="/scan" element={<FreeScan />} />
           <Route path="/findings" element={<Findings />} />
+          <Route path="/founder-health" element={<FounderHealth />} />
           <Route path="/admin-review" element={<AdminReview />} />
           <Route path="/bank-link" element={<BankLink />} />
         </Route>

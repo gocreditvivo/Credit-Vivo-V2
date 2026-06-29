@@ -41,6 +41,10 @@ function countCategory(label: string, result: ReturnType<typeof getLastScanResul
   return Math.max(fromIssues, fromItems);
 }
 
+function formatLabel(value: string) {
+  return value.replace(/_/g, ' ');
+}
+
 export default function Findings() {
   const result = getLastScanResult();
 
@@ -102,7 +106,7 @@ export default function Findings() {
       next: 'Prepare history, delivery proof, responses, and evidence packet.',
     },
   ];
-  const trackingSteps = [
+  const trackingSteps: Array<[string, string, boolean]> = [
     ['Drafted', 'Scanner created draft review items', true],
     ['Customer review', 'Customer approval and authorization required', false],
     ['Mailed', 'Certified tracking number saved after mailing', false],
@@ -266,16 +270,16 @@ export default function Findings() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-sm font-semibold text-navy-800">
-                        {letter.letter_type.replaceAll('_', ' ')}
+                        {formatLabel(letter.letter_type)}
                       </p>
                       <p className="text-xs text-navy-500 mt-1">{letter.round}</p>
                     </div>
                     <span className="rounded-lg bg-white px-2 py-1 text-[10px] font-bold uppercase text-navy-500">
-                      {letter.tracking_status.replaceAll('_', ' ')}
+                      {formatLabel(letter.tracking_status)}
                     </span>
                   </div>
                   <p className="text-[11px] text-navy-400 mt-2">
-                    Recipient: {letter.recipient_type.replaceAll('_', ' ')} | Delivery: {letter.delivery_method.replaceAll('_', ' ')}
+                    Recipient: {formatLabel(letter.recipient_type)} | Delivery: {formatLabel(letter.delivery_method)}
                   </p>
                 </div>
               ))}

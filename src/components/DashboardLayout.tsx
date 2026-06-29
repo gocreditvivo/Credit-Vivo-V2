@@ -9,12 +9,14 @@ import {
   Headphones,
   ArrowLeft,
   Landmark,
+  Activity,
 } from 'lucide-react';
 
 const sideLinks = [
   { to: '/dashboard', label: 'Roadmap', icon: Compass },
   { to: '/scan', label: 'Free Scan', icon: Search },
   { to: '/findings', label: 'Findings', icon: FileText },
+  { to: '/founder-health', label: 'Founder Health', icon: Activity },
   { to: '/bank-link', label: 'Bank Link', icon: Landmark },
   { to: '/dashboard', label: 'Monthly Plan', icon: Calendar },
   { to: '/learning', label: 'Learning Center', icon: BookOpen },
