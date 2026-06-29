@@ -46,6 +46,7 @@ try:
     )
     from .ai_operating_system import build_ai_operating_system_brief
     from .growth_ai import GrowthSnapshot, build_growth_brief, lead_score
+    from .growth_ads_ai import build_ad_plan
     from .growth_ai_sources import build_growth_source_brief
     from .lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from .operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -68,6 +69,7 @@ except ImportError:
     )
     from ai_operating_system import build_ai_operating_system_brief
     from growth_ai import GrowthSnapshot, build_growth_brief, lead_score
+    from growth_ads_ai import build_ad_plan
     from growth_ai_sources import build_growth_source_brief
     from lead_capture import append_lead, build_lead, read_leads, summarize_leads
     from operator_ai import OperatorEvent, build_operator_brief, demo_operator_events
@@ -316,6 +318,12 @@ async def growth_ai_lead_score(signals: Dict[str, bool]):
 @app.get("/api/growth-ai/sources")
 def growth_ai_sources():
     return JSONResponse(build_growth_source_brief())
+
+
+@app.get("/growth-ai/ad-plan")
+@app.get("/api/growth-ai/ad-plan")
+def growth_ai_ad_plan():
+    return JSONResponse(build_ad_plan())
 
 
 @app.get("/operator-ai/brief")
