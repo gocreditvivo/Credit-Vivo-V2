@@ -208,6 +208,20 @@ def test_parse_sample_report(tmp_path):
     assert "FCRA 623" in fcra_text
     assert "Regulation V 12 CFR 1022.43" in fcra_text
     assert "dispute notation" in fcra_text
+    assert data["field_compliance_audit"]
+    field_audit_text = " ".join(
+        row["field_name"] + " " +
+        row["required_or_expected"] + " " +
+        row["issue_flag"] + " " +
+        row["metro2_concept"] + " " +
+        row["fcra_basis"] + " " +
+        row["verification_ask"]
+        for row in data["field_compliance_audit"]
+    )
+    assert "Date of First Delinquency" in field_audit_text
+    assert "Original Creditor" in field_audit_text
+    assert "FCRA 623(a)(5)" in field_audit_text
+    assert "Reg V direct dispute" in field_audit_text or "Regulation V" in field_audit_text
     cross_labels = {x["customer_label"] for x in data["issues"] if x["issue_type"].startswith("cross_bureau")}
     assert "Balance differs across bureaus" in cross_labels
     assert "Status differs across bureaus" in cross_labels
@@ -231,6 +245,7 @@ def test_parse_sample_report(tmp_path):
         "Metro 2 + FCRA Review",
         "Metro 2 Requirements",
         "FCRA Compliance Review",
+        "Field Compliance Audit",
         "FCRA Notice Rules",
         "Dispute Methods",
         "Dispute SOP",
@@ -377,6 +392,19 @@ def test_parse_sample_report(tmp_path):
     assert "Direct furnisher dispute" in fcra_workbook_text
     assert "DOFD and obsolete information review" in fcra_workbook_text
     assert "FCRA 623" in fcra_workbook_text
+    field_compliance = workbook["Field Compliance Audit"]
+    field_headers = [field_compliance.cell(row=1, column=column).value for column in range(1, field_compliance.max_column + 1)]
+    assert "Metro 2 Concept" in field_headers
+    assert "FCRA / Reg V Basis" in field_headers
+    assert "Verification Ask" in field_headers
+    field_workbook_text = " ".join(
+        str(field_compliance.cell(row=row, column=column).value or "")
+        for row in range(2, field_compliance.max_row + 1)
+        for column in range(1, field_compliance.max_column + 1)
+    )
+    assert "Date of First Delinquency" in field_workbook_text
+    assert "Original Creditor" in field_workbook_text
+    assert "FCRA 623(a)(5)" in field_workbook_text
     notice_rules = workbook["FCRA Notice Rules"]
     notice_rule_text = " ".join(
         str(notice_rules.cell(row=row, column=2).value or "")

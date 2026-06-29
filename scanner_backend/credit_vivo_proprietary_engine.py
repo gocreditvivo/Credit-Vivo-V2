@@ -1958,6 +1958,215 @@ FCRA_COMPLIANCE_AREAS = {
 }
 
 
+FIELD_COMPLIANCE_RULES = {
+    "Account/Furnisher Name": {
+        "source_field": "account_name",
+        "required_for": ["all"],
+        "metro2_concept": "Identifies the reporting furnisher/tradeline.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 611 reinvestigation if disputed.",
+        "missing_issue": "Furnisher/account name is missing or not visible.",
+        "different_issue": "Furnisher/account name differs across bureaus.",
+        "verification_ask": "Verify the exact furnisher/subscriber name reporting this tradeline.",
+    },
+    "Account Number": {
+        "source_field": "account_number_masked",
+        "required_for": ["all"],
+        "metro2_concept": "Consumer account identifier, usually masked on consumer reports.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 611 reinvestigation if disputed.",
+        "missing_issue": "Account number is missing or masked differently across reports.",
+        "different_issue": "Account number does not align across bureaus.",
+        "verification_ask": "Verify the account identifier and confirm this is the same tradeline across bureaus.",
+    },
+    "Account Type": {
+        "source_field": "account_type",
+        "required_for": ["all"],
+        "metro2_concept": "Classifies the account as collection, revolving, auto, mortgage, student loan, charge account, etc.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Account type is missing or not visible.",
+        "different_issue": "Account type differs across bureaus.",
+        "verification_ask": "Verify the reported account type and correct any inaccurate classification.",
+    },
+    "Responsibility / ECOA": {
+        "source_field": "responsibility",
+        "required_for": ["all"],
+        "metro2_concept": "Consumer responsibility such as individual, joint, co-signer, or authorized user.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 611 reinvestigation if disputed.",
+        "missing_issue": "Responsibility/ECOA field is missing.",
+        "different_issue": "Responsibility/ECOA differs across bureaus.",
+        "verification_ask": "Verify the consumer responsibility code for this tradeline.",
+    },
+    "Original Creditor": {
+        "source_field": "original_creditor",
+        "required_for": ["collection", "debt buyer", "factoring"],
+        "metro2_concept": "Original creditor/source account, especially important for collections and purchased debt.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher duties after notice; Reg V direct dispute where applicable.",
+        "missing_issue": "Original creditor is missing for a collection/debt-buyer review item.",
+        "different_issue": "Original creditor differs across bureaus.",
+        "verification_ask": "Verify the original creditor/source account and ownership or assignment chain.",
+    },
+    "Current Balance": {
+        "source_field": "balance",
+        "required_for": ["all"],
+        "metro2_concept": "Current reported balance.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties; Reg V direct dispute.",
+        "missing_issue": "Current balance is missing.",
+        "different_issue": "Current balance differs across bureaus.",
+        "verification_ask": "Verify the current balance and provide the records supporting the amount.",
+    },
+    "Past Due Amount": {
+        "source_field": "past_due",
+        "required_for": ["collection", "charge-off", "late", "past due", "delinquent"],
+        "metro2_concept": "Amount currently past due, if applicable.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties; Reg V direct dispute.",
+        "missing_issue": "Past due amount is missing or not separately shown for a negative account.",
+        "different_issue": "Past due amount differs across bureaus.",
+        "verification_ask": "Verify the amount past due and whether it should be separately reported.",
+    },
+    "High Credit / Original Amount": {
+        "source_field": "high_credit_or_original_amount",
+        "required_for": ["collection", "debt buyer", "installment", "mortgage", "auto", "loan", "charge-off"],
+        "metro2_concept": "Original balance, high credit, or original amount depending on account type.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Original amount/high credit is missing for this account class.",
+        "different_issue": "Original amount/high credit differs across bureaus.",
+        "verification_ask": "Verify the original balance, original amount, high credit, or charge-off amount.",
+    },
+    "Credit Limit": {
+        "source_field": "credit_limit",
+        "required_for": ["credit card", "revolving"],
+        "metro2_concept": "Credit limit for revolving accounts when applicable.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Credit limit is missing where it may be applicable.",
+        "different_issue": "Credit limit differs across bureaus.",
+        "verification_ask": "Verify the credit limit or confirm why it is not applicable.",
+    },
+    "Status / Pay Status": {
+        "source_field": "status",
+        "required_for": ["all"],
+        "metro2_concept": "Current account/payment condition such as current, collection, charge-off, paid, closed, transferred.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties; FCRA 611 after dispute.",
+        "missing_issue": "Status/pay status is missing.",
+        "different_issue": "Status/pay status differs across bureaus.",
+        "verification_ask": "Verify the exact account/payment status and supporting account history.",
+    },
+    "Date Opened / Assigned": {
+        "source_field": "date_opened",
+        "required_for": ["all"],
+        "metro2_concept": "Date opened or assignment/open date depending on account type.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Date opened/assigned is missing.",
+        "different_issue": "Date opened/assigned differs across bureaus.",
+        "verification_ask": "Verify the date opened or assignment date with source records.",
+    },
+    "Date Reported / Updated": {
+        "source_field": "date_reported",
+        "required_for": ["all"],
+        "metro2_concept": "Date the furnisher last reported or updated the account.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Date reported/updated is missing.",
+        "different_issue": "Date reported/updated differs across bureaus.",
+        "verification_ask": "Verify the date this account was last reported or updated.",
+    },
+    "Date Closed": {
+        "source_field": "date_closed",
+        "required_for": ["closed", "charge-off", "transferred", "sold"],
+        "metro2_concept": "Date account was closed, transferred, sold, or otherwise no longer open.",
+        "fcra_basis": "FCRA 607(b) accuracy; FCRA 623 furnisher accuracy/integrity duties.",
+        "missing_issue": "Date closed is missing for a closed/sold/transferred account.",
+        "different_issue": "Date closed differs across bureaus.",
+        "verification_ask": "Verify the date closed or confirm whether the account should be open/closed.",
+    },
+    "Date of First Delinquency": {
+        "source_field": "date_of_first_delinquency",
+        "required_for": ["collection", "charge-off", "late", "past due", "delinquent"],
+        "metro2_concept": "First delinquency date tied to the negative reporting period.",
+        "fcra_basis": "FCRA 605 obsolescence; FCRA 623(a)(5) DOFD duty; FCRA 611 reinvestigation if disputed.",
+        "missing_issue": "Date of first delinquency is missing for an adverse account.",
+        "different_issue": "Date of first delinquency differs across bureaus.",
+        "verification_ask": "Verify the DOFD and reporting-period source records.",
+    },
+    "Estimated Removal / On Record Until": {
+        "source_field": "estimated_removal_date",
+        "required_for": ["collection", "charge-off", "late", "past due", "delinquent"],
+        "metro2_concept": "Consumer-facing estimated removal or on-record-until date, when shown.",
+        "fcra_basis": "FCRA 605 obsolescence; FCRA 623(a)(5) DOFD duty.",
+        "missing_issue": "Estimated removal/on-record-until date is missing for an adverse account.",
+        "different_issue": "Estimated removal/on-record-until date differs.",
+        "verification_ask": "Verify the reporting period and estimated removal date.",
+    },
+    "Remarks / Narrative Codes": {
+        "source_field": "remarks",
+        "required_for": ["disputed", "collection", "charge-off", "transferred", "sold", "bankruptcy"],
+        "metro2_concept": "Special comments, remarks, compliance condition, dispute, or narrative codes.",
+        "fcra_basis": "FCRA 623(a)(3) disputed-account notation; FCRA 607(b) accuracy.",
+        "missing_issue": "Remarks/dispute notation may be missing where expected.",
+        "different_issue": "Remarks/narrative codes differ across bureaus.",
+        "verification_ask": "Verify special comments, dispute indicators, and narrative codes.",
+    },
+}
+
+
+def _account_class_text(tradeline: dict) -> str:
+    return " ".join(
+        str(tradeline.get(field, "") or "")
+        for field in [
+            "account_name",
+            "account_type",
+            "portfolio_type",
+            "status",
+            "pay_status",
+            "remarks",
+            "raw_block",
+        ]
+    ).lower()
+
+
+def _field_required_for_account(rule: dict, account_class: str) -> bool:
+    required_for = [str(item).lower() for item in rule.get("required_for", [])]
+    if "all" in required_for:
+        return True
+    return any(token in account_class for token in required_for)
+
+
+def build_field_compliance_audit(tradelines: List[dict]) -> List[dict]:
+    rows = []
+    for tradeline in tradelines:
+        account_class = _account_class_text(tradeline)
+        for field_name, rule in FIELD_COMPLIANCE_RULES.items():
+            source_field = rule["source_field"]
+            value = tradeline.get(source_field, "")
+            if field_name == "Status / Pay Status":
+                value = tradeline.get("status") or tradeline.get("pay_status") or ""
+            required = _field_required_for_account(rule, account_class)
+            present = bool(str(value or "").strip())
+            if present:
+                issue_flag = "OK"
+            elif required:
+                issue_flag = "MISSING_REQUIRED_EXPECTED"
+            else:
+                issue_flag = "NOT_VISIBLE_CONDITIONAL"
+            rows.append({
+                "tradeline_id": tradeline.get("id", ""),
+                "bureau": tradeline.get("bureau", ""),
+                "account_name": tradeline.get("account_name", ""),
+                "field_name": field_name,
+                "parsed_value": value or "Not shown",
+                "required_or_expected": "Yes" if required else "Conditional / if reported",
+                "issue_flag": issue_flag,
+                "metro2_concept": rule["metro2_concept"],
+                "fcra_basis": rule["fcra_basis"],
+                "issue_text": "" if issue_flag == "OK" else rule["missing_issue"],
+                "verification_ask": rule["verification_ask"],
+                "requested_outcome": (
+                    "Verify and correct with all CRAs; delete only if inaccurate, incomplete, or unverifiable."
+                    if issue_flag != "OK" else
+                    "No automated correction requested unless source records show an inaccuracy."
+                ),
+                "source_note": "Built from Credit Vivo local FCRA/Metro 2 rule files; not a substitute for attorney/CDIA CRRG validation.",
+            })
+    return rows
+
+
 def _related_issue_types_for_tradeline(tradeline_id: str, issues: List[dict]) -> List[str]:
     return [
         issue.get("issue_type", "")
@@ -2060,6 +2269,7 @@ def result_to_dict(result: ParseResult) -> dict:
     tradelines = [asdict(t) for t in result.tradelines]
     issues = [asdict(i) for i in result.issues]
     metro2_requirement_review = build_metro2_requirement_review(tradelines)
+    field_compliance_audit = build_field_compliance_audit(tradelines)
     return {
         "engine": result.engine,
         "version": result.version,
@@ -2076,6 +2286,7 @@ def result_to_dict(result: ParseResult) -> dict:
         "metro2_fcra_review": build_metro2_fcra_review(result.issues),
         "metro2_requirement_review": metro2_requirement_review,
         "fcra_compliance_review": build_fcra_compliance_review(tradelines, issues, metro2_requirement_review),
+        "field_compliance_audit": field_compliance_audit,
     }
 
 
@@ -2691,6 +2902,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     metro2_fcra = wb.create_sheet("Metro 2 + FCRA Review")
     metro2_requirements = wb.create_sheet("Metro 2 Requirements")
     fcra_compliance = wb.create_sheet("FCRA Compliance Review")
+    field_compliance = wb.create_sheet("Field Compliance Audit")
     fcra_notice_rules = wb.create_sheet("FCRA Notice Rules")
     dispute_methods = wb.create_sheet("Dispute Methods")
     dispute_sop = wb.create_sheet("Dispute SOP")
@@ -2925,6 +3137,42 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
                 row.get("note", ""),
             ]
             for row in data.get("fcra_compliance_review", [])
+        ],
+    ])
+
+    _write_workbook_sheet(field_compliance, [
+        [
+            "Tradeline ID",
+            "Bureau",
+            "Account Name",
+            "Field Name",
+            "Parsed Value",
+            "Required / Expected",
+            "Issue Flag",
+            "Metro 2 Concept",
+            "FCRA / Reg V Basis",
+            "Issue Text",
+            "Verification Ask",
+            "Requested Outcome",
+            "Source Note",
+        ],
+        *[
+            [
+                row.get("tradeline_id", ""),
+                row.get("bureau", ""),
+                row.get("account_name", ""),
+                row.get("field_name", ""),
+                row.get("parsed_value", ""),
+                row.get("required_or_expected", ""),
+                row.get("issue_flag", ""),
+                row.get("metro2_concept", ""),
+                row.get("fcra_basis", ""),
+                row.get("issue_text", ""),
+                row.get("verification_ask", ""),
+                row.get("requested_outcome", ""),
+                row.get("source_note", ""),
+            ]
+            for row in data.get("field_compliance_audit", [])
         ],
     ])
 
