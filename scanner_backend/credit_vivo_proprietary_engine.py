@@ -1341,6 +1341,8 @@ def _next_action_for_issue(issue: ReviewIssue) -> str:
 
 
 def _draft_letter_subject(letter_type: str, issue: ReviewIssue) -> str:
+    if letter_type == "debt_validation_request":
+        return f"Debt Validation Request - {issue.customer_label}"
     if letter_type == "furnisher_direct_dispute":
         return f"Direct Dispute of Account Reporting - {issue.customer_label}"
     if letter_type == "bureau_dispute":
@@ -1358,6 +1360,44 @@ def _draft_letter_body(letter_type: str, recipient_type: str, issue: ReviewIssue
             "manual review before any dispute path is selected."
         )
 
+    evidence_note = "Evidence from the Credit Vivo scanner is attached for customer/admin review."
+    if issue.evidence:
+        snippet = issue.evidence[0].snippet[:450]
+        evidence_note = f"Scanner evidence excerpt for review: {snippet}"
+
+    if letter_type == "debt_validation_request":
+        return (
+            "DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n"
+            "DO NOT SEND UNTIL CUSTOMER AUTHORIZATION IS VERIFIED\n\n"
+            "[Customer Name]\n"
+            "[Customer Mailing Address]\n"
+            "[City, State ZIP]\n\n"
+            "[Date]\n\n"
+            "To: Debt Collector / Debt Buyer\n"
+            "[Recipient Address]\n\n"
+            f"Re: {issue.customer_label}\n\n"
+            "To Whom It May Concern:\n\n"
+            "I am requesting validation of the debt you claim is owed. If you are attempting "
+            "to collect this debt or reporting it as a collector/debt buyer, please provide "
+            "documents and information sufficient to verify the debt, the amount claimed, "
+            "the original creditor, your authority to collect, and any assignment or sale "
+            "of the account.\n\n"
+            "Please provide:\n"
+            "- the name and address of the original creditor;\n"
+            "- an itemized accounting of the balance, fees, interest, and payments;\n"
+            "- documents showing I am responsible for the debt;\n"
+            "- documents showing your authority to collect or report this account;\n"
+            "- the date of first delinquency and records supporting the reported timeline;\n"
+            "- the account number or other identifier used to report the account.\n\n"
+            "This request is made for consumer review and dispute-tracking purposes. "
+            "Nothing in this letter is an admission that the debt is owed. Please send "
+            "your written response to the mailing address above.\n\n"
+            f"{evidence_note}\n\n"
+            "Sincerely,\n\n"
+            "[Customer Signature]\n"
+            "[Customer Printed Name]\n"
+        )
+
     recipient_line = "Credit Bureau" if recipient_type == "credit_bureau" else "Furnisher / Collector"
     requested_action = (
         "Please investigate this item, correct any inaccurate or incomplete information, "
@@ -1367,10 +1407,6 @@ def _draft_letter_body(letter_type: str, recipient_type: str, issue: ReviewIssue
         "Please provide the basis for your reporting, including records supporting ownership, "
         "balance, status, payment history, date of first delinquency, and authority to report this account."
     )
-    evidence_note = "Evidence from the Credit Vivo scanner is attached for customer/admin review."
-    if issue.evidence:
-        snippet = issue.evidence[0].snippet[:450]
-        evidence_note = f"Scanner evidence excerpt for review: {snippet}"
 
     return (
         "DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n"
@@ -1457,6 +1493,27 @@ def build_letter_workflow() -> dict:
                 "written investigation result or correction/deletion notice",
             ],
         },
+        "debt_validation_procedure": {
+            "recipient_type": "debt_collector_or_debt_buyer",
+            "delivery_preference": "certified_mail_recommended",
+            "legal_basis": "FDCPA validation-style request when a collector/debt buyer is collecting or reporting the debt; not a substitute for an FCRA furnisher dispute.",
+            "when_to_use": [
+                "collection account",
+                "debt buyer account",
+                "factoring company account",
+                "collector is reporting a balance",
+                "original creditor, ownership, authority, or itemized balance needs proof",
+            ],
+            "requested_validation": [
+                "original creditor name and address",
+                "itemized balance, fees, interest, and payments",
+                "documents showing consumer responsibility",
+                "chain of title, sale, assignment, or authority to collect",
+                "date of first delinquency support",
+                "account number or reporting identifier",
+            ],
+            "credit_vivo_guardrail": "Generate as draft only. Customer approval required. Use with attorney/compliance review for state-specific debt-collection requirements.",
+        },
         "escalation_procedure": {
             "cfpb_complaint": {
                 "trigger": "no response, verified-as-accurate with weak support, or repeated inaccurate reporting after dispute history is complete",
@@ -1509,6 +1566,50 @@ def build_letter_workflow() -> dict:
             "response_scanned",
             "next_action_assigned",
         ],
+}
+
+
+def _is_debt_validation_candidate(issue: ReviewIssue) -> bool:
+    blob = " ".join([
+        issue.issue_type,
+        issue.customer_label,
+        issue.customer_explanation,
+        issue.admin_explanation,
+        " ".join(e.snippet for e in issue.evidence),
+    ]).lower()
+    return any(term in blob for term in [
+        "collection",
+        "collector",
+        "debt buyer",
+        "factoring company",
+        "placed for collection",
+    ])
+
+
+def _letter_queue_item(issue: ReviewIssue, letter_type: str, recipient_type: str, responsible_party: str) -> dict:
+    return {
+        "letter_id": stable_id("letter", issue.id, letter_type),
+        "issue_id": issue.id,
+        "issue_type": issue.issue_type,
+        "letter_type": letter_type,
+        "letter_subject": _draft_letter_subject(letter_type, issue),
+        "draft_letter_body": _draft_letter_body(letter_type, recipient_type, issue),
+        "round": issue.suggested_round,
+        "recipient_type": recipient_type,
+        "responsible_party": responsible_party,
+        "delivery_method": "certified_mail_recommended",
+        "fcra_notice_required": letter_type not in {"admin_review_hold", "debt_validation_request"},
+        "fcra_notice_included": letter_type not in {"admin_review_hold", "debt_validation_request"},
+        "fdcpa_validation_request": letter_type == "debt_validation_request",
+        "customer_approval_required": True,
+        "customer_authorization_verified": False,
+        "tracking_status": "draft_not_sent",
+        "recommended_next_action": (
+            "send_debt_validation_request_if_collector_or_debt_buyer_and_customer_approves"
+            if letter_type == "debt_validation_request"
+            else _next_action_for_issue(issue)
+        ),
+        "escalation_candidate": False,
     }
 
 
@@ -1525,25 +1626,15 @@ def build_recommended_letter_queue(issues: List[ReviewIssue]) -> List[dict]:
             letter_type = "admin_review_hold"
             recipient_type = "undetermined"
 
-        queue.append({
-            "letter_id": stable_id("letter", issue.id, letter_type),
-            "issue_id": issue.id,
-            "issue_type": issue.issue_type,
-            "letter_type": letter_type,
-            "letter_subject": _draft_letter_subject(letter_type, issue),
-            "draft_letter_body": _draft_letter_body(letter_type, recipient_type, issue),
-            "round": issue.suggested_round,
-            "recipient_type": recipient_type,
-            "responsible_party": responsible_party,
-            "delivery_method": "certified_mail_recommended",
-            "fcra_notice_required": letter_type != "admin_review_hold",
-            "fcra_notice_included": letter_type != "admin_review_hold",
-            "customer_approval_required": True,
-            "customer_authorization_verified": False,
-            "tracking_status": "draft_not_sent",
-            "recommended_next_action": _next_action_for_issue(issue),
-            "escalation_candidate": False,
-        })
+        queue.append(_letter_queue_item(issue, letter_type, recipient_type, responsible_party))
+
+        if _is_debt_validation_candidate(issue):
+            queue.append(_letter_queue_item(
+                issue,
+                "debt_validation_request",
+                "debt_collector_or_debt_buyer",
+                "collector_or_debt_buyer",
+            ))
     return queue
 
 
@@ -2767,6 +2858,17 @@ DISPUTE_METHODS = [
         "next_escalation": "Round 3 MOV/process audit, CFPB/state packet, or attorney-ready packet if reporting remains unsupported or contradictory.",
     },
     {
+        "method": "FDCPA Debt Validation Request",
+        "legal_basis": "FDCPA validation-style request for debt collectors; state debt-collection laws may add requirements",
+        "when_to_use": "Use for collection agencies, debt buyers, or factoring company accounts when the customer needs proof of the debt, original creditor, itemized balance, ownership, assignment, or authority to collect/report.",
+        "recipient": "Debt collector, collection agency, debt buyer, or collection attorney when acting as collector",
+        "send_channel": "Mail/tracked mail preferred, with customer approval and proof-of-delivery tracking.",
+        "required_notice": "Request validation of the debt and documentation supporting amount, original creditor, consumer responsibility, and authority to collect.",
+        "required_packet": "customer-approved validation request, report excerpt, collector identity, account identifier, and any collection notice if available",
+        "tracking": "sent date, delivery date, tracking number, response due date, validation received, gaps, next dispute/escalation decision",
+        "next_escalation": "FCRA furnisher dispute, CFPB/state complaint, or attorney-ready packet if the collector keeps reporting/collecting without adequate support.",
+    },
+    {
         "method": "MOV / Process Audit",
         "legal_basis": "FCRA 611(a)(6)-(7) results and method-of-verification style follow-up",
         "when_to_use": "Use after a bureau verifies an item but the response does not explain or resolve the evidence-backed dispute.",
@@ -2806,6 +2908,7 @@ def dispute_methods_for_comparison(flags: List[str], missing: List[str], has_cro
     methods = ["FCRA Bureau Dispute", "Metro 2 Field-Level Dispute"]
     if has_cross_issue or flags or missing:
         methods.append("FCRA / Regulation V Direct Furnisher Dispute")
+        methods.append("FDCPA Debt Validation Request for collector/debt-buyer items")
     if any("verified" in flag.lower() for flag in flags):
         methods.append("MOV / Process Audit")
     return {
@@ -2882,6 +2985,7 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         "CFPB/CFPA Escalation Trigger",
         "Bureau Dispute Draft",
         "Furnisher Dispute Draft",
+        "Debt Validation Draft",
         "SOP Round",
         "SOP Status",
         "SOP Timing",
@@ -2951,6 +3055,15 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             "date reporting support, ownership/assignment records where applicable, and any records used to verify the account. "
             "If the information cannot be verified as accurate and complete, please correct, update, or stop furnishing the disputed information."
         )
+        debt_validation_letter = (
+            "DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n"
+            "To: Debt Collector / Debt Buyer\n"
+            f"Re: {account_name}\n\n"
+            "I request validation of the debt you claim is owed or are reporting. Please provide the original creditor, "
+            "an itemized balance, documents showing consumer responsibility, chain of title or assignment, authority to collect/report, "
+            "date of first delinquency support, and the account identifier used for reporting. Nothing in this request is an admission "
+            "that the debt is owed."
+        )
 
         row = [account_name]
 
@@ -2973,6 +3086,7 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             methods["cfpb_cfpa_trigger"],
             bureau_letter,
             furnisher_letter,
+            debt_validation_letter,
             sop["round"],
             sop["status"],
             sop["timing"],

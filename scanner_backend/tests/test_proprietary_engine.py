@@ -190,6 +190,14 @@ def test_parse_sample_report(tmp_path):
     assert "DRAFT" in data["recommended_letter_queue"][0]["draft_letter_body"]
     assert "CUSTOMER REVIEW AND APPROVAL REQUIRED" in data["recommended_letter_queue"][0]["draft_letter_body"]
     assert "FCRA" in data["recommended_letter_queue"][0]["draft_letter_body"]
+    letter_types = {row["letter_type"] for row in data["recommended_letter_queue"]}
+    assert "debt_validation_request" in letter_types
+    debt_validation = next(row for row in data["recommended_letter_queue"] if row["letter_type"] == "debt_validation_request")
+    assert debt_validation["fdcpa_validation_request"] is True
+    assert "Debt Validation Request" in debt_validation["letter_subject"]
+    assert "original creditor" in debt_validation["draft_letter_body"].lower()
+    assert "itemized" in debt_validation["draft_letter_body"].lower()
+    assert "authority to collect" in debt_validation["draft_letter_body"].lower()
     assert data["fcra_review"]
     assert data["fcra_review"][0]["dispute_history_complete"] is False
     assert data["metro2_fcra_review"]
@@ -307,7 +315,7 @@ def test_parse_sample_report(tmp_path):
     assert "Experian Raw Evidence" in headers
     assert "Equifax Balance" in headers
     assert "TransUnion Balance" in headers
-    assert headers[-20:] == [
+    assert headers[-21:] == [
         "Errors",
         "Findings",
         "Dispute Targets",
@@ -317,6 +325,7 @@ def test_parse_sample_report(tmp_path):
         "CFPB/CFPA Escalation Trigger",
         "Bureau Dispute Draft",
         "Furnisher Dispute Draft",
+        "Debt Validation Draft",
         "SOP Round",
         "SOP Status",
         "SOP Timing",
@@ -332,6 +341,7 @@ def test_parse_sample_report(tmp_path):
     errors_column = headers.index("Errors") + 1
     bureau_letter_column = headers.index("Bureau Dispute Draft") + 1
     furnisher_letter_column = headers.index("Furnisher Dispute Draft") + 1
+    debt_validation_column = headers.index("Debt Validation Draft") + 1
     primary_method_column = headers.index("Primary Dispute Method") + 1
     secondary_method_column = headers.index("Secondary Dispute Methods") + 1
     metro2_focus_column = headers.index("Metro 2 Field Focus") + 1
@@ -375,10 +385,16 @@ def test_parse_sample_report(tmp_path):
         str(comparison.cell(row=row, column=furnisher_letter_column).value or "")
         for row in range(2, comparison.max_row + 1)
     )
+    debt_validation_letters = " ".join(
+        str(comparison.cell(row=row, column=debt_validation_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
     assert "To: Credit Bureau" in bureau_letters
     assert "forward all relevant dispute information to the furnisher" in bureau_letters
     assert "To: Furnisher / Collector" in furnisher_letters
     assert "basis for reporting" in furnisher_letters
+    assert "To: Debt Collector / Debt Buyer" in debt_validation_letters
+    assert "itemized balance" in debt_validation_letters
     primary_methods = " ".join(
         str(comparison.cell(row=row, column=primary_method_column).value or "")
         for row in range(2, comparison.max_row + 1)
@@ -522,6 +538,7 @@ def test_parse_sample_report(tmp_path):
     )
     assert "FCRA Bureau Dispute" in method_text
     assert "Direct Furnisher Dispute" in method_text
+    assert "FDCPA Debt Validation Request" in method_text
     assert "CFPB / CFPA Complaint Escalation" in method_text
     assert "Metro 2 Field-Level Dispute" in method_text
     dispute_sop = workbook["Dispute SOP"]
