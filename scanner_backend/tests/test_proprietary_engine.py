@@ -139,8 +139,20 @@ def test_parse_sample_report(tmp_path):
     assert "Experian Raw Evidence" in headers
     assert "Equifax Balance" in headers
     assert "TransUnion Balance" in headers
-    assert headers[-5:] == ["Errors", "Findings", "Missing Bureaus", "Matched Bureaus", "Group ID"]
+    assert headers[-9:] == [
+        "Errors",
+        "Findings",
+        "Dispute Targets",
+        "Bureau Dispute Draft",
+        "Furnisher Dispute Draft",
+        "Tracking Status",
+        "Missing Bureaus",
+        "Matched Bureaus",
+        "Group ID",
+    ]
     errors_column = headers.index("Errors") + 1
+    bureau_letter_column = headers.index("Bureau Dispute Draft") + 1
+    furnisher_letter_column = headers.index("Furnisher Dispute Draft") + 1
     comparison_flags = " ".join(
         str(comparison.cell(row=row, column=errors_column).value or "")
         for row in range(2, comparison.max_row + 1)
@@ -148,6 +160,18 @@ def test_parse_sample_report(tmp_path):
     assert "Balance differs" in comparison_flags
     assert "Status differs" in comparison_flags
     assert "DOFD differs" in comparison_flags
+    bureau_letters = " ".join(
+        str(comparison.cell(row=row, column=bureau_letter_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    furnisher_letters = " ".join(
+        str(comparison.cell(row=row, column=furnisher_letter_column).value or "")
+        for row in range(2, comparison.max_row + 1)
+    )
+    assert "To: Credit Bureau" in bureau_letters
+    assert "forward all relevant dispute information to the furnisher" in bureau_letters
+    assert "To: Furnisher / Collector" in furnisher_letters
+    assert "basis for reporting" in furnisher_letters
     expert = workbook["Metro 2 + FCRA Review"]
     expert_headers = [expert.cell(row=1, column=column).value for column in range(1, expert.max_column + 1)]
     assert "Metro 2 Fields To Review" in expert_headers

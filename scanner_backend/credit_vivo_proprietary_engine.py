@@ -1463,6 +1463,10 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
     rows[0].extend([
         "Errors",
         "Findings",
+        "Dispute Targets",
+        "Bureau Dispute Draft",
+        "Furnisher Dispute Draft",
+        "Tracking Status",
         "Missing Bureaus",
         "Matched Bureaus",
         "Group ID",
@@ -1499,8 +1503,31 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             else
             "Matched across bureaus. No mismatch flag detected."
         )
+        account_name = "; ".join(sorted({name for name in account_names if name}))
+        error_text = "; ".join(flag for flag in flags if flag) or "No mismatch flag detected."
+        dispute_targets = "Credit bureaus and furnishing creditor/collector"
+        bureau_letter = (
+            "DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n"
+            "To: Credit Bureau\n"
+            f"Re: {account_name}\n\n"
+            "I dispute the accuracy, completeness, and/or verifiability of this account as reported on my credit file. "
+            f"The bureau comparison shows: {error_text}. "
+            "Please conduct a reasonable FCRA investigation, forward all relevant dispute information to the furnisher, "
+            "mark the item as disputed while pending, and correct, update, or delete any information that cannot be verified as accurate and complete. "
+            "Please provide written investigation results and an updated report if changes are made."
+        )
+        furnisher_letter = (
+            "DRAFT - CUSTOMER REVIEW AND APPROVAL REQUIRED\n"
+            "To: Furnisher / Collector\n"
+            f"Re: {account_name}\n\n"
+            "I dispute the accuracy, completeness, and/or verifiability of the information you are furnishing about this account. "
+            f"The bureau comparison shows: {error_text}. "
+            "Please investigate your records and provide the basis for reporting, including balance support, account status support, "
+            "date reporting support, ownership/assignment records where applicable, and any records used to verify the account. "
+            "If the information cannot be verified as accurate and complete, please correct, update, or stop furnishing the disputed information."
+        )
 
-        row = ["; ".join(sorted({name for name in account_names if name}))]
+        row = [account_name]
 
         for bureau in bureau_order:
             item = by_bureau.get(bureau, {})
@@ -1512,8 +1539,12 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
                     value = clean_text(str(value))[:650]
                 row.append(value)
         row.extend([
-            "; ".join(flag for flag in flags if flag),
+            error_text,
             suggested_review,
+            dispute_targets,
+            bureau_letter,
+            furnisher_letter,
+            "draft_not_sent_customer_approval_required",
             ", ".join(missing),
             ", ".join(sorted(by_bureau.keys())),
             group.get("group_id", ""),
@@ -1526,6 +1557,10 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             *["" for _ in range(len(bureau_order) * len(per_bureau_fields))],
             "No 3-bureau comparison could be created from the uploaded report set.",
             "Upload reports from at least two bureaus to compare the same account side by side.",
+            "",
+            "",
+            "",
+            "",
             "",
             "",
             "",
