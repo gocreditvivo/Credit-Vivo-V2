@@ -46,6 +46,7 @@ try:
         summarize_events,
     )
     from .ai_operating_system import build_ai_operating_system_brief
+    from .ai_tracking_map import build_ai_tracking_map
     from .growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from .growth_ads_ai import build_ad_plan
     from .growth_ai_sources import build_growth_source_brief
@@ -76,6 +77,7 @@ except ImportError:
         summarize_events,
     )
     from ai_operating_system import build_ai_operating_system_brief
+    from ai_tracking_map import build_ai_tracking_map
     from growth_ai import GrowthSnapshot, build_growth_brief, lead_score
     from growth_ads_ai import build_ad_plan
     from growth_ai_sources import build_growth_source_brief
@@ -474,6 +476,12 @@ def vivo_command_brief(
 @app.get("/api/vivo-command/ai-operating-system")
 def vivo_ai_operating_system():
     return JSONResponse(build_ai_operating_system_brief())
+
+
+@app.get("/vivo-command/ai-tracking-map")
+@app.get("/api/vivo-command/ai-tracking-map")
+def vivo_ai_tracking_map():
+    return JSONResponse(build_ai_tracking_map())
 
 
 @app.post("/events/track")
