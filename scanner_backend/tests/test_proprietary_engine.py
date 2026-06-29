@@ -423,3 +423,37 @@ def test_parser_fills_columns_from_realistic_bureau_snippets():
     assert by_bureau["TransUnion"]["date_last_payment"] == "02/11/2026"
     assert by_bureau["TransUnion"]["credit_limit"] == "$500"
     assert by_bureau["TransUnion"]["high_credit_or_original_amount"] == "$696"
+
+
+def test_original_creditor_alone_does_not_merge_collection_with_card():
+    result = parse_reports({
+        "equifax_macys.pdf": {"bureau": "Equifax", "text": """
+--- PAGE 1 ---
+Equifax Credit Report
+
+MACYS/CITIBANK NA - Closed
+PO BOX 6789, SIOUX FALLS, SD 57117-6789 Date Reported: 12/25/2019 | Balance: $0
+Account Number: *0540 | Owner: Individual Account Credit Limit: $100 | High Credit: $99
+Loan/Account Type: Charge Account | Status: Pays As Agreed
+"""},
+        "transunion_midland.pdf": {"bureau": "TransUnion", "text": """
+--- PAGE 1 ---
+TransUnion Credit Report
+
+MIDLAND CREDIT MANAGEMENT INC
+32075****
+Date Opened 02/17/2022
+Responsibility Individual Account
+Account Type Open Account
+Loan Type FACTORING COMPANY ACCOUNT
+Balance $1,445
+Date Updated 03/19/2026
+High Balance $1,127
+Original Creditor CITIBANK N A
+Pay Status >Collection<
+Remarks Account information disputed by consumer (FCRA); >PLACED FOR COLLECTION<
+"""},
+    })
+    data = result_to_dict(result)
+    assert len(data["tradelines"]) == 2
+    assert data["cross_bureau_groups"] == []

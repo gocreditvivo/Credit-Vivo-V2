@@ -622,7 +622,7 @@ def guess_account_name(block: str) -> str:
     )
 
     labeled = first_match([
-        r"(?:account name|creditor|furnisher|subscriber)\s*[:\-]?\s*([A-Za-z0-9 &.,'()/\-]{3,90})"
+        r"(?:account name|furnisher|subscriber)\s*[:\-]?\s*([A-Za-z0-9 &.,'()/\-]{3,90})"
     ], block)
     if labeled:
         return labeled if not is_bad_account_name(labeled) else "Review Item"
@@ -852,6 +852,52 @@ def dedupe_tradelines(items: List[NormalizedTradeline]) -> List[NormalizedTradel
 # Cross-bureau matching
 # -----------------------------
 
+def is_collection_like(t: NormalizedTradeline) -> bool:
+    blob = " ".join([
+        t.account_name,
+        t.account_type,
+        t.status,
+        t.pay_status,
+        t.remarks,
+        t.collector_or_debt_buyer,
+        t.raw_block,
+    ]).lower()
+    return any(term in blob for term in [
+        "collection",
+        "collector",
+        "debt buyer",
+        "factoring company",
+        "placed for collection",
+        "assigned",
+    ])
+
+
+def same_cross_bureau_account(left: NormalizedTradeline, right: NormalizedTradeline) -> bool:
+    name_score = simple_similarity(left.account_name, right.account_name)
+    acct_match = bool(left.account_number_masked and left.account_number_masked == right.account_number_masked)
+    original_score = (
+        simple_similarity(left.original_creditor, right.original_creditor)
+        if left.original_creditor and right.original_creditor
+        else 0
+    )
+
+    if acct_match:
+        return True
+
+    if name_score >= 0.72:
+        return True
+
+    # Same original creditor is only supporting evidence. It cannot, by itself,
+    # merge a collector/debt-buyer tradeline with the original creditor's own card/loan.
+    if original_score >= 0.72:
+        if name_score >= 0.55:
+            return True
+        if is_collection_like(left) and is_collection_like(right) and name_score >= 0.45:
+            return True
+
+    return False
+
+
 def group_cross_bureau(tradelines: List[NormalizedTradeline]) -> List[dict]:
     groups: List[dict] = []
     used = set()
@@ -869,11 +915,7 @@ def group_cross_bureau(tradelines: List[NormalizedTradeline]) -> List[dict]:
             if t.bureau == other.bureau:
                 continue
 
-            name_score = simple_similarity(t.account_name, other.account_name)
-            acct_match = bool(t.account_number_masked and t.account_number_masked == other.account_number_masked)
-            original_score = simple_similarity(t.original_creditor, other.original_creditor) if t.original_creditor and other.original_creditor else 0
-
-            if acct_match or name_score >= 0.72 or original_score >= 0.72:
+            if same_cross_bureau_account(t, other):
                 group.append(other)
                 used.add(other.id)
 
