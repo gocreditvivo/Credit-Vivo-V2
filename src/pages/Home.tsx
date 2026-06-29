@@ -98,8 +98,8 @@ export default function Home() {
               </h1>
 
               <p className="text-[15px] text-navy-500 leading-relaxed mb-6 max-w-md">
-                <strong className="text-navy-700">Credit Vivo combines AI report analysis with attorney-reviewed escalation options.</strong>{' '}
-                Start with a no-hard-pull Credit Check-In, see possible errors in plain English, then move qualified files toward bureau disputes, furnisher disputes, CFPB/state escalation, or attorney review.
+                <strong className="text-navy-700">Credit Vivo combines AI-powered report analysis with attorney-reviewed escalation options.</strong>{' '}
+                Start with a no-hard-pull Credit Check-In to identify potential errors in plain English, then seamlessly transition qualified files toward bureau disputes, furnisher disputes, CFPB/state escalation, or direct attorney review.
               </p>
 
               <div className="mb-8 flex flex-wrap gap-3">
@@ -158,14 +158,14 @@ export default function Home() {
             Credit repair needs more than templates. <span className="text-amber-300">It needs evidence.</span>
           </h2>
           <p className="text-sm text-navy-300 max-w-lg mx-auto mb-10">
-            Credit Vivo uses AI to organize raw report data, spot possible inaccuracies, prepare dispute workflows, and flag files that may need attorney or regulator escalation.
+            Credit Vivo pairs AI-powered report analysis with attorney-reviewed escalation options, so potential errors can move from plain-English findings into the right dispute or review path.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { title: 'AI scan', desc: 'Parse credit report data and organize possible errors by account, bureau, and issue type.' },
+              { title: 'AI analysis', desc: 'Identify potential credit report errors in plain English by account, bureau, and issue type.' },
               { title: 'Evidence file', desc: 'Keep snippets, dates, bureau differences, and tracking fields ready for review.' },
-              { title: 'Attorney path', desc: 'Route stronger files toward attorney review when escalation may be appropriate.' },
+              { title: 'Attorney escalation', desc: 'Transition qualified files toward attorney review when the hard issues need human judgment.' },
               { title: 'Tracked action', desc: 'Follow letters, deadlines, responses, and next steps without losing the paper trail.' },
             ].map((g) => (
               <div key={g.title} className="lively-dark-card rounded-xl border border-white/10 bg-white/[0.04] p-5 text-left">
@@ -183,16 +183,16 @@ export default function Home() {
           <div className="text-center mb-12">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-sky-700">How it works</p>
             <h2 className="text-[22px] font-semibold text-navy-900 sm:text-[26px]">
-              From AI scan to attorney-ready escalation.
+              From AI Credit Check-In to attorney-reviewed escalation.
             </h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { num: '01', title: 'Start with AI', desc: 'Upload or connect a report for a no-hard-pull Credit Check-In.', icon: BrainCircuit },
-              { num: '02', title: 'Find possible errors', desc: 'The scanner organizes bureau differences, collections, dates, balances, and reporting issues.', icon: FileSearch },
-              { num: '03', title: 'Prepare the action file', desc: 'Credit Vivo builds draft dispute workflows and evidence packets for review.', icon: Calendar },
-              { num: '04', title: 'Escalate when needed', desc: 'Qualified files can move toward attorney review, CFPB/state escalation, or tracked follow-up.', icon: Scale },
+              { num: '01', title: 'Start with a no-hard-pull Check-In', desc: 'Upload or connect a report so AI can begin the review without affecting the score.', icon: BrainCircuit },
+              { num: '02', title: 'Identify potential errors', desc: 'AI organizes bureau differences, collections, dates, balances, and reporting issues in plain English.', icon: FileSearch },
+              { num: '03', title: 'Build the dispute path', desc: 'Qualified files move toward bureau disputes, furnisher disputes, CFPB/state escalation, or direct attorney review.', icon: Calendar },
+              { num: '04', title: 'Escalate the hard ones', desc: 'Attorney-reviewed escalation options help with stronger files, repeated verification, or unresolved reporting harm.', icon: Scale },
             ].map(({ num, title, desc, icon: Icon }) => (
               <div key={num} className="lively-step-card rounded-xl border border-navy-100 bg-white p-5 shadow-sm shadow-navy-100/50">
                 <div className="flex items-center gap-3 mb-3">
