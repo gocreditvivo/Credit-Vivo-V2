@@ -118,7 +118,10 @@ export type ScannerParseResult = {
 
 function getScannerApiUrl() {
   const configuredUrl = import.meta.env.VITE_SCANNER_API_URL;
-  if (configuredUrl) return configuredUrl;
+  const localScannerUrls = new Set(['http://127.0.0.1:8080', 'http://localhost:8080']);
+  if (configuredUrl && (import.meta.env.DEV || !localScannerUrls.has(configuredUrl))) {
+    return configuredUrl;
+  }
 
   if (import.meta.env.DEV) return 'http://127.0.0.1:8080';
 
