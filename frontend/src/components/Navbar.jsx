@@ -20,6 +20,7 @@ export default function Navbar() {
 
                 <nav className="hidden md:flex items-center gap-8 text-sm text-slate-600">
                     <a href="/#how" className="hover:text-slate-900 transition" data-testid="nav-how">How it works</a>
+                    <a href="/#why" className="hover:text-slate-900 transition" data-testid="nav-why">Why Credit Vivo</a>
                     <Link to="/pricing" className="hover:text-slate-900 transition" data-testid="nav-pricing">Pricing</Link>
                     <a href="/#faq" className="hover:text-slate-900 transition" data-testid="nav-faq">FAQ</a>
                     {user && <Link to="/hub" className="hover:text-slate-900 transition" data-testid="nav-hub">Member hub</Link>}

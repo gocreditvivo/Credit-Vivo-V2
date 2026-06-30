@@ -102,7 +102,7 @@ export default function Landing() {
             <MiniAnalyzer />
 
             {/* BENEFITS / Bento */}
-            <section id="benefits" className="py-20 md:py-28 bg-white border-y border-slate-100">
+            <section id="why" className="py-20 md:py-28 bg-white border-y border-slate-100">
                 <div className="max-w-7xl mx-auto px-6 md:px-10">
                     <div className="max-w-2xl">
                         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#047857]">Why Credit Vivo</p>
