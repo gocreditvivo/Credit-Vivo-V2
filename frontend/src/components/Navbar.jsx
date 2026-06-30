@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Sparkles, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -12,9 +12,6 @@ export default function Navbar() {
         <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-[#FCFBF9]/80 border-b border-slate-200/60" data-testid="navbar">
             <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-2" data-testid="nav-logo">
-                    <div className="h-8 w-8 rounded-xl bg-[#047857] grid place-items-center text-white">
-                        <Sparkles className="h-4 w-4" />
-                    </div>
                     <span className="font-display font-bold text-xl tracking-tight">Credit Vivo</span>
                 </Link>
 
