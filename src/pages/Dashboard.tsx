@@ -12,20 +12,20 @@ export default function Dashboard() {
   return (
     <div>
       <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">
-        Member Dashboard
+        Dashboard
       </p>
-      <h1 className="text-xl font-bold text-navy-900 mb-1">
-        Your Credit Roadmap is ready.
+      <h1 className="text-2xl font-black tracking-tight text-navy-950 mb-1">
+        Your credit path.
       </h1>
       <p className="text-sm text-navy-400 mb-6">
-        You take control. We clear the path.
+        Upload, review findings, approve disputes, and track progress.
       </p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
         {[
-          { val: String(stepsCount), label: 'steps this month' },
-          { val: String(reviewCount), label: 'items to review' },
-          { val: String(issueCount), label: 'review points' },
+          { val: String(stepsCount), label: 'next steps' },
+          { val: String(reviewCount), label: 'items found' },
+          { val: String(issueCount), label: 'possible errors' },
           { val: '0', label: 'hard pulls' },
         ].map((s) => (
           <div
@@ -39,28 +39,28 @@ export default function Dashboard() {
       </div>
 
       <div className="bg-white rounded-xl p-5 border border-navy-100/60 mb-5">
-        <h2 className="text-sm font-bold text-navy-900 mb-4">This Month's Plan</h2>
+        <h2 className="text-sm font-bold text-navy-900 mb-4">Next steps</h2>
         <div className="space-y-3">
           {[
             {
               num: 1,
-              title: result ? 'Review organized findings' : 'Start your Credit Check-In',
+              title: result ? 'Review AI findings' : 'Start your free scan',
               desc: result
-                ? 'Your report review items are ready in the Findings page.'
-                : 'Upload or connect your report to start your roadmap.',
+                ? 'Your possible errors are ready in plain English.'
+                : 'Upload your credit report to start.',
               to: result ? '/findings' : '/scan',
             },
             {
               num: 2,
-              title: 'Review selected report items',
-              desc: 'We organize items that may need more review.',
-              to: '/findings',
+              title: 'Approve dispute drafts',
+              desc: 'Choose what you want prepared before anything is sent.',
+              to: '/disputes',
             },
             {
               num: 3,
-              title: 'Review balance habits',
-              desc: 'One educational action item is ready.',
-              to: '/learning',
+              title: 'Track progress',
+              desc: 'See what is pending, completed, or ready for review.',
+              to: '/disputes',
             },
           ].map((step) => (
             <Link
@@ -85,8 +85,8 @@ export default function Dashboard() {
         <h2 className="text-sm font-bold text-navy-900 mb-2">Updates</h2>
         <p className="text-xs text-navy-400">
           {result
-            ? 'Your latest Credit Check-In result is available. Review findings before any next action.'
-            : 'Your next progress update will show what changed, what is pending, and what to focus on next.'}
+            ? 'Your latest scan is available. Review findings before any next action.'
+            : 'Your progress tracker will show what changed, what is pending, and what comes next.'}
         </p>
       </div>
     </div>

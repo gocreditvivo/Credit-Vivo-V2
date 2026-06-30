@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { AlertCircle, ArrowRight, CheckCircle, Clock, Download, FileSearch, MailCheck, Route, ShieldCheck } from 'lucide-react';
-import { getScannerOutputDownloadUrl } from '../lib/scannerApi';
+import { AlertCircle, ArrowRight, CheckCircle, Clock, FileSearch, MailCheck, Route, ShieldCheck } from 'lucide-react';
 import { getLastScanResult } from '../lib/scanStorage';
 
 const categoryNames = [
@@ -49,23 +48,6 @@ function formatLabel(value: string) {
 export default function Findings() {
   const result = getLastScanResult();
 
-  async function downloadScannerFile(href: string, filename: string) {
-    const response = await fetch(href);
-    if (!response.ok) {
-      throw new Error(`Download failed with status ${response.status}`);
-    }
-
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  }
-
   if (!result) {
     return (
       <div>
@@ -102,33 +84,6 @@ export default function Findings() {
     { val: '0', label: 'hard pulls' },
   ];
   const letterQueue = result.recommended_letter_queue || [];
-  const downloads = [
-    {
-      label: 'Download desktop workbook',
-      detail: 'One Excel file with 3-bureau comparison, Metro 2/FCRA review, errors, draft letters, and tracking tabs.',
-      href: getScannerOutputDownloadUrl(result.job_id, 'workbook.xlsx'),
-      filename: 'credit-vivo-desktop-scanner-output.xlsx',
-      primary: true,
-    },
-    {
-      label: 'Download errors worksheet',
-      detail: 'CSV opens in Excel and shows each scanner review point.',
-      href: getScannerOutputDownloadUrl(result.job_id, 'issues.csv'),
-      filename: 'credit-vivo-errors-worksheet.csv',
-    },
-    {
-      label: 'Download tradelines',
-      detail: 'CSV list of accounts and report details found by the scanner.',
-      href: getScannerOutputDownloadUrl(result.job_id, 'tradelines.csv'),
-      filename: 'credit-vivo-tradelines.csv',
-    },
-    {
-      label: 'Download draft letters',
-      detail: 'Plain-text packet of draft dispute letters for review.',
-      href: getScannerOutputDownloadUrl(result.job_id, 'letters.txt'),
-      filename: 'credit-vivo-draft-dispute-letters.txt',
-    },
-  ];
   const scenarioCards = [
     {
       title: 'Bureau dispute',
@@ -162,10 +117,10 @@ export default function Findings() {
   return (
     <div>
       <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">
-        Member Flow
+        AI Findings
       </p>
-      <h1 className="text-xl font-bold text-navy-900 mb-1">
-        Your Findings are organized.
+      <h1 className="text-2xl font-black tracking-tight text-navy-950 mb-1">
+        Possible errors found.
       </h1>
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
         {result.customer_summary?.message ||
@@ -185,60 +140,13 @@ export default function Findings() {
         ))}
       </div>
 
-      <section className="bg-white rounded-xl p-5 border border-navy-100/60 mb-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Download size={16} className="text-sky-600" />
-          <h2 className="text-sm font-bold text-navy-900">Scanner desktop-style outputs</h2>
-        </div>
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-3">
-          {downloads.map((download) => (
-            download.href ? (
-              <button
-                key={download.label}
-                type="button"
-                onClick={() => void downloadScannerFile(download.href, download.filename)}
-                className={`rounded-lg p-4 border text-left transition ${
-                  download.primary
-                    ? 'border-sky-200 bg-sky-50/70 hover:border-sky-300 hover:bg-sky-50'
-                    : 'border-navy-100/50 bg-navy-50/50 hover:border-sky-200 hover:bg-sky-50/40'
-                }`}
-              >
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-800">
-                  <Download size={14} className="text-sky-600" />
-                  {download.label}
-                </span>
-                <span className="block text-[11px] text-navy-500 mt-1 leading-relaxed">
-                  {download.detail}
-                </span>
-              </button>
-            ) : (
-              <div
-                key={download.label}
-                className="rounded-lg bg-navy-50/50 p-4 border border-navy-100/50"
-              >
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-500">
-                  <Download size={14} className="text-navy-300" />
-                  {download.label}
-                </span>
-                <span className="block text-[11px] text-navy-400 mt-1 leading-relaxed">
-                  Available after a real scanner run.
-                </span>
-              </div>
-            )
-          ))}
-        </div>
-        <p className="text-[11px] text-navy-400 mt-4">
-          These files are generated for the scan job. Do not email real credit reports or raw exports unless the customer approved it.
-        </p>
-      </section>
-
       <div className="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-5">
         <div className="bg-white rounded-xl p-5 border border-navy-100/60">
           <h2 className="text-sm font-bold text-navy-900 mb-3">
             Customer-friendly findings
           </h2>
           <p className="text-xs text-navy-400 mb-4">
-            We show simple categories. Backend details stay internal until admin review is needed.
+            We show simple categories and next steps. Technical scanner details stay internal.
           </p>
 
           <div className="space-y-2">
@@ -315,7 +223,7 @@ export default function Findings() {
                       {issue.customer_explanation}
                     </p>
                     <p className="text-[11px] text-navy-400 mt-2">
-                      {issue.suggested_round} • Confidence: {issue.confidence}
+                      Suggested next step: {issue.suggested_round}
                     </p>
                   </div>
                 </div>
@@ -324,10 +232,10 @@ export default function Findings() {
           </div>
 
           <Link
-            to="/admin-review"
+            to="/disputes"
             className="inline-flex items-center gap-2 mt-5 text-xs font-semibold text-sky-700 hover:text-sky-800"
           >
-            Open internal review view
+            Build disputes
             <ArrowRight size={13} />
           </Link>
         </div>

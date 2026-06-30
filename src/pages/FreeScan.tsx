@@ -49,13 +49,12 @@ export default function FreeScan() {
   return (
     <div>
       <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">
-        Member Flow
+        Upload Reports
       </p>
-      <h1 className="text-xl font-bold text-navy-900 mb-2">Free Credit Check-In</h1>
+      <h1 className="text-2xl font-black tracking-tight text-navy-950 mb-2">Start Free Scan</h1>
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
-        Upload a credit report PDF. Credit Vivo will organize review items, show possible
-        errors in plain English, and prepare draft dispute letters for review. Scanner output
-        is draft review data only. Nothing is sent without approval.
+        Upload your credit report. We find possible errors, build disputes, and track progress.
+        Nothing is sent without your approval.
       </p>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5">
@@ -65,11 +64,10 @@ export default function FreeScan() {
           </div>
 
           <h2 className="text-sm font-bold text-navy-900 mb-2">
-            Upload or connect your report
+            Upload your report
           </h2>
           <p className="text-xs text-navy-400 mb-5 leading-relaxed">
-            For your first real test, start with one bureau report. The scanner accepts
-            PDF reports only, up to 3 files and 25 MB per file.
+            Start with one PDF or add Experian, Equifax, and TransUnion reports together.
           </p>
 
           <div className="mb-5 rounded-lg border border-amber-100 bg-amber-50 p-3">
@@ -136,7 +134,7 @@ export default function FreeScan() {
                 </>
               ) : (
                 <>
-                  Start Credit Check-In
+                  Run AI Review
                   <ArrowRight size={14} />
                 </>
               )}
@@ -148,22 +146,20 @@ export default function FreeScan() {
               disabled={isReviewing}
               className="px-4 py-2.5 rounded-full border border-navy-100 text-xs font-semibold text-navy-600 hover:bg-navy-50 transition-colors"
             >
-              Load demo findings
+              Load Demo Findings
             </button>
           </div>
         </div>
 
         <div className="bg-white rounded-xl p-5 border border-navy-100/60 h-fit">
-          <h2 className="text-sm font-bold text-navy-900 mb-3">
-            What happens next
-          </h2>
+          <h2 className="text-sm font-bold text-navy-900 mb-3">What happens next</h2>
           <div className="space-y-3">
             {[
-              'Credit Vivo extracts report text.',
-              'Possible errors are grouped by bureau and account.',
-              'Findings appear in a worksheet-style review flow.',
-              'Draft dispute letters are prepared for review.',
-              'Nothing is mailed, disputed, or escalated without approval.',
+              'AI reviews the report behind the scenes.',
+              'You see clean findings in plain English.',
+              'Dispute drafts are prepared for review.',
+              'You approve before anything moves forward.',
+              'Progress is tracked in your portal.',
             ].map((step, index) => (
               <div key={step} className="flex gap-3">
                 <div className="w-6 h-6 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center text-[11px] font-bold flex-shrink-0">

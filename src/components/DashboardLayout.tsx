@@ -5,26 +5,18 @@ import {
   FileText,
   Calendar,
   BookOpen,
-  Bell,
   Headphones,
   ArrowLeft,
-  Landmark,
-  Activity,
-  Megaphone,
-  BrainCircuit,
+  ClipboardCheck,
 } from 'lucide-react';
 
 const sideLinks = [
-  { to: '/dashboard', label: 'Roadmap', icon: Compass },
-  { to: '/scan', label: 'Free Scan', icon: Search },
-  { to: '/findings', label: 'Findings', icon: FileText },
-  { to: '/owner-ai', label: 'Owner AI', icon: BrainCircuit },
-  { to: '/founder-health', label: 'Founder Health', icon: Activity },
-  { to: '/growth-ai', label: 'Growth AI', icon: Megaphone },
-  { to: '/bank-link', label: 'Bank Link', icon: Landmark },
-  { to: '/dashboard', label: 'Monthly Plan', icon: Calendar },
+  { to: '/dashboard', label: 'Dashboard', icon: Compass },
+  { to: '/scan', label: 'Upload Reports', icon: Search },
+  { to: '/findings', label: 'AI Findings', icon: FileText },
+  { to: '/disputes', label: 'Dispute Center', icon: ClipboardCheck },
+  { to: '/pricing', label: 'Plans', icon: Calendar },
   { to: '/learning', label: 'Learning Center', icon: BookOpen },
-  { to: '/dashboard', label: 'Updates', icon: Bell },
   { to: '/faq', label: 'Support', icon: Headphones },
 ];
 

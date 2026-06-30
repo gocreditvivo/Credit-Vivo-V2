@@ -86,7 +86,7 @@ function Footer() {
               </span>
             </Link>
             <p className="text-xs text-navy-400 leading-relaxed">
-              You take control. We clear the path.
+              Find errors. Build disputes. Track progress.
             </p>
           </div>
 
@@ -111,9 +111,10 @@ function Footer() {
           <div>
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Members</h4>
             <div className="space-y-2">
-              <Link to="/dashboard" className="block text-xs text-navy-400 hover:text-white transition-colors">Sign In</Link>
+              <Link to="/login" className="block text-xs text-navy-400 hover:text-white transition-colors">Sign In</Link>
               <Link to="/scan" className="block text-xs text-navy-400 hover:text-white transition-colors">Free Scan</Link>
               <Link to="/findings" className="block text-xs text-navy-400 hover:text-white transition-colors">Findings</Link>
+              <Link to="/disputes" className="block text-xs text-navy-400 hover:text-white transition-colors">Dispute Center</Link>
             </div>
           </div>
 
@@ -130,7 +131,7 @@ function Footer() {
 
         <div className="border-t border-navy-800 pt-6">
           <p className="text-[11px] text-navy-500 leading-relaxed max-w-4xl">
-            Credit Vivo does not guarantee credit score increases, removals, approvals, or specific outcomes. Accurate, current, and verifiable information may remain on a credit report. Credit Vivo is not a law firm and does not provide legal advice. Optional legal support, if offered, is separate.
+            CreditVivo is not a law firm and does not provide legal advice. Results are not guaranteed. Accurate, current, and verifiable information generally cannot be removed. Attorney support, if available, requires separate eligibility review and attorney engagement.
           </p>
           <div className="mt-4 space-y-3 text-[11px] text-navy-500 leading-relaxed max-w-4xl">
             <p>
@@ -138,8 +139,8 @@ function Footer() {
               You have the right to dispute inaccurate information in your credit report by contacting the credit bureau directly. However, neither you nor any credit repair company or credit repair organization has the right to have accurate, current, and verifiable information removed from your credit report. The credit bureau must remove accurate, negative information from your report only if it is over 7 years old. Bankruptcy information can be reported for 10 years.
             </p>
             <p>
-              <strong className="text-navy-300">Platform Classification:</strong>{' '}
-              Credit Vivo is an educational software platform and self-directed tool. Credit Vivo is not a credit repair agency, credit repair organization, or law firm. We do not provide legal advice or perform credit repair services on your behalf. Our software empowers users to organize their own data and generate their own disputes.
+              <strong className="text-navy-300">Customer Approval:</strong>{' '}
+              Credit Vivo shows possible errors, draft next steps, and progress tracking. Nothing is mailed, disputed, or escalated automatically without customer review and approval.
             </p>
           </div>
         </div>

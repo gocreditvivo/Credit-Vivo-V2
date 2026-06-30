@@ -7,6 +7,7 @@ import Pricing from './pages/Pricing';
 import FAQ from './pages/FAQ';
 import Learning from './pages/Learning';
 import JoinFree from './pages/JoinFree';
+import Login from './pages/Login';
 import Reviews from './pages/Reviews';
 import Compliance from './pages/Compliance';
 import Privacy from './pages/Privacy';
@@ -20,6 +21,7 @@ import CollectionNotMine from './pages/CollectionNotMine';
 import Dashboard from './pages/Dashboard';
 import FreeScan from './pages/FreeScan';
 import Findings from './pages/Findings';
+import DisputeCenter from './pages/DisputeCenter';
 import AdminReview from './pages/AdminReview';
 import BankLink from './pages/BankLink';
 import FounderHealth from './pages/FounderHealth';
@@ -30,6 +32,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
+
         {/* Public pages */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
@@ -54,9 +58,9 @@ export default function App() {
         {/* Member pages */}
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/login" element={<Dashboard />} />
           <Route path="/scan" element={<FreeScan />} />
           <Route path="/findings" element={<Findings />} />
+          <Route path="/disputes" element={<DisputeCenter />} />
           <Route path="/founder-health" element={<FounderHealth />} />
           <Route path="/owner-ai" element={<OwnerAICommand />} />
           <Route path="/growth-ai" element={<GrowthAI />} />

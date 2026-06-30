@@ -2,21 +2,21 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 const faqs = [
-  { q: 'What is Credit Vivo?', a: 'Credit Vivo is an educational software platform that helps you understand credit information, organize report details, track review items, and learn step by step.' },
-  { q: 'What does "You take control. We clear the path." mean?', a: 'It means you stay in charge of your credit journey. Credit Vivo helps organize information, explain what may matter, and keep your next steps clear.' },
+  { q: 'What is Credit Vivo?', a: 'Credit Vivo helps you review your credit report, find possible errors, build dispute drafts, and track progress in one place.' },
+  { q: 'What does "Find errors. Build disputes. Track progress." mean?', a: 'It means Credit Vivo helps turn a confusing credit report into clear findings, possible next steps, and a simple progress tracker.' },
   { q: 'Does Credit Vivo guarantee score increases?', a: 'No. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes.' },
-  { q: 'What is a Credit Check-In?', a: 'It is your free starting point. Credit Vivo organizes uploaded report information into a simple educational roadmap.' },
+  { q: 'What is a free scan?', a: 'It is your starting point. Upload a credit report and Credit Vivo shows possible errors in plain English.' },
   { q: 'Will Credit Vivo send disputes automatically?', a: 'No. Credit Vivo does not send disputes or letters automatically. Review data and next steps should be checked by you before anything is sent.' },
-  { q: 'What does the scanner do?', a: 'The scanner organizes uploaded report information into draft review data. It helps identify possible review points, but it is not a final legal or credit decision.' },
+  { q: 'What does the AI review do?', a: 'The AI review looks for possible report issues and organizes them into customer-friendly findings. Backend scanner details are not shown on customer pages.' },
   { q: 'Why not dispute everything at once?', a: 'Disputing everything at once can be confusing, expensive, and unsupported. Credit Vivo helps you review and prioritize information before you decide what to do.' },
   { q: 'Online disputes or letters?', a: 'Consumers may dispute inaccurate information directly with bureaus or furnishers. Credit Vivo can help organize draft information, but you remain responsible for reviewing and deciding what to send.' },
   { q: 'What is collection validation?', a: 'Collection validation means a consumer asks selected collectors to confirm important details about a debt, such as the original creditor, balance, ownership, and authority to collect.' },
   { q: 'What does verified mean?', a: 'It means the bureau or reporting company said the item should remain. Credit Vivo helps organize information so you can decide whether follow-up makes sense.' },
   { q: 'Can accurate negative information be removed?', a: 'Accurate, current, and verifiable information may remain on a credit report. Credit Vivo focuses on organization, education, possible errors, and next steps.' },
   { q: 'How does Credit Vivo help me build credit?', a: 'Credit Vivo helps you understand score-building habits like paying on time, lowering card balances, avoiding unnecessary applications, and tracking due dates.' },
-  { q: 'Is Credit Vivo only for disputes?', a: 'No. Credit Vivo is built around credit education, report organization, review workflows, habit tracking, and self-directed next steps.' },
+  { q: 'Is Credit Vivo only for disputes?', a: 'No. Credit Vivo also helps with credit education, report organization, tracking, and next-step planning.' },
   { q: 'Is Credit Vivo a law firm?', a: 'No. Credit Vivo is not a law firm and does not provide legal advice. Optional legal support may be available separately.' },
-  { q: 'How is Credit Vivo different from credit repair companies?', a: 'Credit Vivo is positioned as an educational software platform and self-directed tool. It does not act as a credit repair organization, law firm, or agency that performs services on your behalf.' },
+  { q: 'When does attorney review happen?', a: 'Attorney review may be available for eligible unresolved issues. It requires separate eligibility review and attorney engagement.' },
   { q: 'Can I dispute credit report inaccuracies myself?', a: 'Yes. You have the right to dispute inaccurate or incomplete information directly with credit bureaus and furnishers at no cost.' },
   { q: 'Can I cancel?', a: 'Yes. Credit Vivo provides clear membership terms and a clear cancellation process. If paid services are introduced later, required cancellation rights must be shown before purchase.' },
 ];
