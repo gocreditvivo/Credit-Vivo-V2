@@ -3692,6 +3692,113 @@ def build_desktop_bureau_field_matrix(data: dict) -> List[dict]:
     return rows
 
 
+def build_side_by_side_negative_rows(data: dict) -> List[List[object]]:
+    tradelines = data.get("tradelines", [])
+    tradeline_indexes_by_id = {}
+    for index, item in enumerate(tradelines):
+        tradeline_indexes_by_id.setdefault(item.get("id"), []).append(index)
+
+    bureau_order = ["Experian", "Equifax", "TransUnion"]
+    fields = [
+        ("account_name", "Creditor / Furnisher"),
+        ("account_number_masked", "Account Number"),
+        ("original_creditor", "Original Creditor"),
+        ("creditor_classification", "Creditor Classification / Industry"),
+        ("account_type", "Account Type"),
+        ("status", "Account Status"),
+        ("pay_status", "Payment Status"),
+        ("balance", "Balance"),
+        ("past_due", "Past Due"),
+        ("high_credit_or_original_amount", "High Balance"),
+        ("credit_limit", "Credit Limit"),
+        ("date_opened", "Date Opened / Assigned"),
+        ("date_reported", "Date Reported / Updated"),
+        ("date_closed", "Date Closed"),
+        ("date_last_activity", "Date of Last Activity"),
+        ("date_last_payment", "Date of Last Payment"),
+        ("date_of_first_delinquency", "Date of First Delinquency"),
+        ("estimated_removal_date", "Estimated Removal Date"),
+        ("remarks", "Remarks"),
+    ]
+
+    rows = [[
+        "Account Group",
+        "Field",
+        "Experian",
+        "Equifax",
+        "TransUnion",
+        "Mismatch/Missing?",
+        "Plain-English Review",
+    ]]
+    used_indexes = set()
+
+    def append_group(items: List[dict]) -> None:
+        if not items:
+            return
+        by_bureau = {}
+        for item in items:
+            bureau = item.get("bureau")
+            if bureau and bureau not in by_bureau:
+                by_bureau[bureau] = item
+
+        account_group = "; ".join(sorted({item.get("account_name", "") for item in items if item.get("account_name")})) or "Review Item"
+        for field, label in fields:
+            values = {}
+            for bureau in bureau_order:
+                item = by_bureau.get(bureau, {})
+                value = item.get(field, "")
+                if field == "status":
+                    value = item.get("status") or item.get("pay_status") or ""
+                if field == "account_name":
+                    value = item.get("account_name", "")
+                values[bureau] = value or ""
+
+            present_values = {_norm_compare(value) for value in values.values() if _norm_compare(value)}
+            present_bureaus = [bureau for bureau in bureau_order if values[bureau]]
+            missing_bureaus = [bureau for bureau in bureau_order if not values[bureau]]
+            mismatch_note = ""
+            if missing_bureaus and present_bureaus:
+                mismatch_note = "Missing from one or more bureaus"
+            if len(present_values) >= 2:
+                mismatch_note = "Mismatch across bureaus" if not mismatch_note else mismatch_note + "; mismatch across bureaus"
+
+            plain_review = ""
+            if mismatch_note:
+                plain_review = (
+                    f"Review original report/PDF. If this {label} field is blank, different, or unverifiable, "
+                    "dispute the specific field with bureau/furnisher evidence."
+                )
+
+            rows.append([
+                account_group,
+                label,
+                values["Experian"],
+                values["Equifax"],
+                values["TransUnion"],
+                mismatch_note,
+                plain_review,
+            ])
+
+    for group in data.get("cross_bureau_groups", []):
+        group_indexes = []
+        for item_id in group.get("tradeline_ids", []):
+            available = [index for index in tradeline_indexes_by_id.get(item_id, []) if index not in used_indexes]
+            if available:
+                group_indexes.append(available[0])
+        if not group_indexes:
+            continue
+        used_indexes.update(group_indexes)
+        append_group([tradelines[index] for index in group_indexes])
+
+    for index, item in enumerate(tradelines):
+        if index in used_indexes:
+            continue
+        used_indexes.add(index)
+        append_group([item])
+
+    return rows
+
+
 def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     if Workbook is None:
         return
@@ -3700,6 +3807,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     summary = wb.active
     summary.title = "Summary"
     bureau_comparison = wb.create_sheet("3 Bureau Comparison")
+    side_by_side_negative = wb.create_sheet("Side By Side Negative")
     desktop_dashboard = wb.create_sheet("Desktop Dashboard")
     desktop_workbox = wb.create_sheet("Desktop Staff Workbox")
     desktop_field_matrix = wb.create_sheet("Desktop Field Matrix")
@@ -3736,6 +3844,7 @@ def write_desktop_workbook(data: dict, out_dir: Path) -> None:
     ])
 
     _write_workbook_sheet(bureau_comparison, build_three_bureau_comparison_rows(data))
+    _write_workbook_sheet(side_by_side_negative, build_side_by_side_negative_rows(data))
 
     dashboard_sections = build_desktop_customer_dashboard(data)
     dashboard_summary = next((section for section in dashboard_sections if section.get("section") == "summary"), {})

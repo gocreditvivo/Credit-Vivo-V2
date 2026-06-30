@@ -327,6 +327,7 @@ def test_parse_sample_report(tmp_path):
     assert workbook.sheetnames == [
         "Summary",
         "3 Bureau Comparison",
+        "Side By Side Negative",
         "Desktop Dashboard",
         "Desktop Staff Workbox",
         "Desktop Field Matrix",
@@ -426,6 +427,25 @@ def test_parse_sample_report(tmp_path):
         comparison.cell(row=row, column=primary_balance_column).value
         for row in range(2, comparison.max_row + 1)
     )
+    side_by_side = workbook["Side By Side Negative"]
+    side_headers = [side_by_side.cell(row=1, column=column).value for column in range(1, side_by_side.max_column + 1)]
+    assert side_headers == [
+        "Account Group",
+        "Field",
+        "Experian",
+        "Equifax",
+        "TransUnion",
+        "Mismatch/Missing?",
+        "Plain-English Review",
+    ]
+    side_text = " ".join(
+        str(side_by_side.cell(row=row, column=column).value or "")
+        for row in range(2, side_by_side.max_row + 1)
+        for column in range(1, side_by_side.max_column + 1)
+    )
+    assert "MIDLAND CREDIT MANAGEMENT" in side_text
+    assert "Balance" in side_text
+    assert "Missing from one or more bureaus" in side_text or "Mismatch across bureaus" in side_text
     desktop_dashboard = workbook["Desktop Dashboard"]
     dashboard_text = " ".join(
         str(desktop_dashboard.cell(row=row, column=column).value or "")
