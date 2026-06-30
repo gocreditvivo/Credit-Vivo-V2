@@ -145,7 +145,7 @@ MAX_FILES = env_int("SCANNER_MAX_FILES", 3)
 MAX_FILE_MB = env_int("SCANNER_MAX_FILE_MB", 25)
 MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024
 RETAIN_UPLOADS = os.getenv("SCANNER_RETAIN_UPLOADS", "false").lower() == "true"
-WRITE_RAW_TEXT = os.getenv("SCANNER_WRITE_RAW_TEXT", "false").lower() == "true"
+WRITE_RAW_TEXT = os.getenv("SCANNER_WRITE_RAW_TEXT", "true").lower() == "true"
 ALLOWED_PDF_TYPES = {"application/pdf", "application/x-pdf", "application/octet-stream", "binary/octet-stream"}
 
 app = FastAPI(title="Credit Vivo Proprietary Scanner API", version="16.0")
@@ -266,6 +266,7 @@ async def parse_uploaded_reports(
 
     report_texts: Dict[str, dict] = {}
     saved_files = []
+    raw_text_files = []
 
     for index, file in enumerate(files, start=1):
         safe_name = Path(file.filename or f"report_{index}.pdf").name
@@ -278,7 +279,15 @@ async def parse_uploaded_reports(
             bureau = detect_bureau(safe_name, text)
             report_texts[safe_name] = {"text": text, "bureau": bureau}
             if WRITE_RAW_TEXT:
-                (out_dir / f"{safe_name}_raw_text.txt").write_text(text, encoding="utf-8", errors="ignore")
+                raw_text_name = f"{safe_name}_raw_text.txt"
+                (out_dir / raw_text_name).write_text(text, encoding="utf-8", errors="ignore")
+                raw_text_files.append({
+                    "filename": raw_text_name,
+                    "source_filename": safe_name,
+                    "bureau": bureau,
+                    "pages": pages,
+                    "chars": len(text),
+                })
             saved_files.append({
                 "filename": safe_name,
                 "bureau": bureau,
@@ -303,6 +312,7 @@ async def parse_uploaded_reports(
     result = {
         "job_id": job_id,
         "files": saved_files,
+        "raw_text_files": raw_text_files,
         "ai_second_pass": False,
         "paid_ai_used": False,
         "status": {
