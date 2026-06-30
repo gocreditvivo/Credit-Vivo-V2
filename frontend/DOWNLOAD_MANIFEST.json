@@ -1,0 +1,83 @@
+﻿{
+    "Source":  "code-server authenticated /vscode-remote-resource",
+    "RemoteRoot":  "/app/frontend",
+    "DownloadedCount":  9,
+    "MissingCount":  9,
+    "Downloaded":  [
+                       {
+                           "Path":  ".gitignore",
+                           "Bytes":  310
+                       },
+                       {
+                           "Path":  "craco.config.js",
+                           "Bytes":  4202
+                       },
+                       {
+                           "Path":  "jsconfig.json",
+                           "Bytes":  116
+                       },
+                       {
+                           "Path":  "package.json",
+                           "Bytes":  4630
+                       },
+                       {
+                           "Path":  "postcss.config.js",
+                           "Bytes":  82
+                       },
+                       {
+                           "Path":  "public/index.html",
+                           "Bytes":  10643
+                       },
+                       {
+                           "Path":  "README.md",
+                           "Bytes":  3359
+                       },
+                       {
+                           "Path":  "tailwind.config.js",
+                           "Bytes":  2644
+                       },
+                       {
+                           "Path":  "yarn.lock",
+                           "Bytes":  550742
+                       }
+                   ],
+    "Missing":  [
+                    {
+                        "Path":  "package-lock.json",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "public/favicon.ico",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "public/favicon.png",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "public/logo192.png",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "public/logo512.png",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "public/manifest.json",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "public/robots.txt",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "src/App.css?fcd7",
+                        "Status":  404
+                    },
+                    {
+                        "Path":  "src/index.css?e42b",
+                        "Status":  404
+                    }
+                ],
+    "Skipped":  "Secrets such as .env were intentionally not downloaded."
+}

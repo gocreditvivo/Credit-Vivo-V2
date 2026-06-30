@@ -1,0 +1,12 @@
+.env
+.env.*
+node_modules/
+build/
+dist/
+coverage/
+*.log
+*.zip
+__pycache__/
+*.pyc
+.vercel/
+.DS_Store

@@ -1,0 +1,8 @@
+.env
+.env.*
+node_modules
+build
+coverage
+*.log
+DOWNLOAD_MANIFEST.json
+REMOTE_SOURCE_DOWNLOAD_MANIFEST.json

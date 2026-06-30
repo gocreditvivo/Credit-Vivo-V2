@@ -1,0 +1,22 @@
+﻿{
+    "Source":  "Emergent chat + code-server authenticated reads",
+    "PreviewUrl":  "https://credit-boost-ai-2.preview.emergentagent.com/",
+    "Downloaded":  [
+                       {
+                           "Remote":  "/app/backend/server.py",
+                           "Local":  "backend/server.py",
+                           "Bytes":  11875
+                       },
+                       {
+                           "Remote":  "/app/backend/requirements.txt",
+                           "Local":  "backend/requirements.txt",
+                           "Bytes":  487
+                       },
+                       {
+                           "Remote":  "/app/memory/PRD.md",
+                           "Local":  "memory/PRD.md",
+                           "Bytes":  4603
+                       }
+                   ],
+    "Skipped":  "Secrets, .env, node_modules, and /app/memory/test_credentials.md"
+}

@@ -1,0 +1,109 @@
+﻿{
+    "RemoteRoot":  "/app/frontend",
+    "Downloaded":  [
+                       {
+                           "Path":  "src/App.css",
+                           "Bytes":  62
+                       },
+                       {
+                           "Path":  "src/App.js",
+                           "Bytes":  1941
+                       },
+                       {
+                           "Path":  "src/components/MiniAnalyzer.jsx",
+                           "Bytes":  3907
+                       },
+                       {
+                           "Path":  "src/components/Navbar.jsx",
+                           "Bytes":  2919
+                       },
+                       {
+                           "Path":  "src/components/ui/accordion.jsx",
+                           "Bytes":  1615
+                       },
+                       {
+                           "Path":  "src/components/ui/badge.jsx",
+                           "Bytes":  990
+                       },
+                       {
+                           "Path":  "src/components/ui/button.jsx",
+                           "Bytes":  1662
+                       },
+                       {
+                           "Path":  "src/components/ui/card.jsx",
+                           "Bytes":  1440
+                       },
+                       {
+                           "Path":  "src/components/ui/input.jsx",
+                           "Bytes":  688
+                       },
+                       {
+                           "Path":  "src/components/ui/label.jsx",
+                           "Bytes":  525
+                       },
+                       {
+                           "Path":  "src/components/ui/progress.jsx",
+                           "Bytes":  653
+                       },
+                       {
+                           "Path":  "src/components/ui/select.jsx",
+                           "Bytes":  4769
+                       },
+                       {
+                           "Path":  "src/components/ui/sonner.jsx",
+                           "Bytes":  797
+                       },
+                       {
+                           "Path":  "src/components/ui/tabs.jsx",
+                           "Bytes":  1529
+                       },
+                       {
+                           "Path":  "src/components/ui/textarea.jsx",
+                           "Bytes":  585
+                       },
+                       {
+                           "Path":  "src/contexts/AuthContext.jsx",
+                           "Bytes":  1385
+                       },
+                       {
+                           "Path":  "src/index.css",
+                           "Bytes":  2137
+                       },
+                       {
+                           "Path":  "src/index.js",
+                           "Bytes":  555
+                       },
+                       {
+                           "Path":  "src/lib/api.js",
+                           "Bytes":  1160
+                       },
+                       {
+                           "Path":  "src/lib/utils.js",
+                           "Bytes":  137
+                       },
+                       {
+                           "Path":  "src/pages/Dashboard.jsx",
+                           "Bytes":  17001
+                       },
+                       {
+                           "Path":  "src/pages/Landing.jsx",
+                           "Bytes":  26092
+                       },
+                       {
+                           "Path":  "src/pages/Login.jsx",
+                           "Bytes":  3720
+                       },
+                       {
+                           "Path":  "src/pages/Phase2Pages.jsx",
+                           "Bytes":  26410
+                       },
+                       {
+                           "Path":  "src/pages/Register.jsx",
+                           "Bytes":  4978
+                       }
+                   ],
+    "Missing":  [
+
+                ],
+    "Note":  "Secrets such as .env were intentionally not downloaded."
+}
