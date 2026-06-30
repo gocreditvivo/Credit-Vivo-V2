@@ -44,3 +44,4 @@ scanner_backend/**/node-jiti/
 work/pytest-tmp/
 _backup_before_creditvivo_full_mvp/
 .vercel
+.env*
