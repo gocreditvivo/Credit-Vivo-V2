@@ -351,8 +351,22 @@ def test_parse_sample_report(tmp_path):
     ]
     comparison = workbook["3 Bureau Comparison"]
     headers = [comparison.cell(row=1, column=column).value for column in range(1, comparison.max_column + 1)]
-    assert headers[0] == "Account Name"
-    assert headers[1].startswith("Equifax ")
+    assert headers[:14] == [
+        "Account Name",
+        "Primary Bureau",
+        "Matched Bureaus",
+        "Missing Bureaus",
+        "Errors",
+        "Findings",
+        "Primary Account #",
+        "Primary Type",
+        "Primary Balance",
+        "Primary Past Due",
+        "Primary Status",
+        "Primary Opened",
+        "Primary Reported",
+        "Primary DOFD",
+    ]
     assert "Equifax Balance" in headers
     assert "Equifax Raw Evidence" in headers
     assert "Experian Balance" in headers
@@ -360,9 +374,7 @@ def test_parse_sample_report(tmp_path):
     assert "Experian Raw Evidence" in headers
     assert "Equifax Balance" in headers
     assert "TransUnion Balance" in headers
-    assert headers[-21:] == [
-        "Errors",
-        "Findings",
+    assert headers[-19:] == [
         "Dispute Targets",
         "Primary Dispute Method",
         "Secondary Dispute Methods",
@@ -383,6 +395,9 @@ def test_parse_sample_report(tmp_path):
         "Matched Bureaus",
         "Group ID",
     ]
+    primary_bureau_column = headers.index("Primary Bureau") + 1
+    primary_account_column = headers.index("Primary Account #") + 1
+    primary_balance_column = headers.index("Primary Balance") + 1
     errors_column = headers.index("Errors") + 1
     bureau_letter_column = headers.index("Bureau Dispute Draft") + 1
     furnisher_letter_column = headers.index("Furnisher Dispute Draft") + 1
@@ -399,6 +414,18 @@ def test_parse_sample_report(tmp_path):
     assert "Balance differs" in comparison_flags
     assert "Status differs" in comparison_flags
     assert "DOFD differs" in comparison_flags
+    assert any(
+        comparison.cell(row=row, column=primary_bureau_column).value
+        for row in range(2, comparison.max_row + 1)
+    )
+    assert any(
+        comparison.cell(row=row, column=primary_account_column).value
+        for row in range(2, comparison.max_row + 1)
+    )
+    assert any(
+        comparison.cell(row=row, column=primary_balance_column).value
+        for row in range(2, comparison.max_row + 1)
+    )
     desktop_dashboard = workbook["Desktop Dashboard"]
     dashboard_text = " ".join(
         str(desktop_dashboard.cell(row=row, column=column).value or "")

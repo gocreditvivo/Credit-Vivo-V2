@@ -3268,12 +3268,25 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
         if str(issue.get("issue_type", "")).startswith("cross_bureau"):
             cross_issue_ids.update(issue.get("related_tradeline_ids", []))
 
-    rows = [["Account Name"]]
+    rows = [[
+        "Account Name",
+        "Primary Bureau",
+        "Matched Bureaus",
+        "Missing Bureaus",
+        "Errors",
+        "Findings",
+        "Primary Account #",
+        "Primary Type",
+        "Primary Balance",
+        "Primary Past Due",
+        "Primary Status",
+        "Primary Opened",
+        "Primary Reported",
+        "Primary DOFD",
+    ]]
     for bureau in bureau_order:
         rows[0].extend([f"{bureau} {label}" for label, _field in per_bureau_fields])
     rows[0].extend([
-        "Errors",
-        "Findings",
         "Dispute Targets",
         "Primary Dispute Method",
         "Secondary Dispute Methods",
@@ -3363,7 +3376,27 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             "that the debt is owed."
         )
 
-        row = [account_name]
+        primary_item = next((by_bureau.get(bureau) for bureau in bureau_order if by_bureau.get(bureau)), items[0] if items else {})
+        primary_status = primary_item.get("status") or primary_item.get("pay_status") or ""
+        matched_bureaus = ", ".join(sorted(by_bureau.keys()))
+        missing_bureaus = ", ".join(missing)
+
+        row = [
+            account_name,
+            primary_item.get("bureau", ""),
+            matched_bureaus,
+            missing_bureaus,
+            error_text,
+            suggested_review,
+            primary_item.get("account_number_masked", "") or primary_item.get("account_number", ""),
+            primary_item.get("account_type", ""),
+            primary_item.get("balance", ""),
+            primary_item.get("past_due", ""),
+            primary_status,
+            primary_item.get("date_opened", ""),
+            primary_item.get("date_reported", ""),
+            primary_item.get("date_of_first_delinquency", ""),
+        ]
         for bureau in bureau_order:
             item = by_bureau.get(bureau, {})
             for _label, field in per_bureau_fields:
@@ -3374,8 +3407,6 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
                     value = clean_text(str(value))[:650]
                 row.append(value)
         row.extend([
-            error_text,
-            suggested_review,
             dispute_targets,
             methods["primary"],
             methods["secondary"],
@@ -3392,8 +3423,8 @@ def build_three_bureau_comparison_rows(data: dict) -> List[List[object]]:
             sop["approval"],
             sop["escalation"],
             "draft_not_sent_customer_approval_required",
-            ", ".join(missing),
-            ", ".join(sorted(by_bureau.keys())),
+            missing_bureaus,
+            matched_bureaus,
             group_id,
         ])
         return row
