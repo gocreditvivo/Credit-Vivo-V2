@@ -45,11 +45,11 @@ export function getDemoScanResult(): ScannerParseResult {
     review_items_count: 7,
     issues_count: 6,
     customer_message:
-      'Your Credit Check-In was reviewed. Items are organized for review before any action is sent.',
+      'Your score scan was reviewed. Point blockers are organized before any action is sent.',
     customer_summary: {
-      headline: 'Your Credit Check-In was reviewed.',
+      headline: 'Your score scan was reviewed.',
       message:
-        'Credit Vivo organized review items into clear categories. No letters or disputes are sent without your approval.',
+        'CreditVivo organized point blockers into clear categories. No letters or disputes are sent without your approval.',
       review_items: 7,
       possible_review_points: 6,
       categories: [
@@ -58,7 +58,7 @@ export function getDemoScanResult(): ScannerParseResult {
         'Balance differs across bureaus',
         'Status differs across bureaus',
       ],
-      next_step: 'Review findings in the dashboard.',
+      next_step: 'Review point blockers in the dashboard.',
     },
     review_items_preview: [
       {

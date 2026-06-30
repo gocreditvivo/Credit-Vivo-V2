@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Gauge } from 'lucide-react';
 
 export default function Login() {
   return (
     <main className="min-h-screen bg-white">
       <div className="grid min-h-screen lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="hidden bg-gradient-to-br from-navy-950 via-navy-900 to-emerald-950 p-10 text-white lg:flex lg:items-center">
+        <section className="hidden bg-gradient-to-br from-navy-950 via-navy-900 to-teal-950 p-10 text-white lg:flex lg:items-center">
           <div className="mx-auto max-w-md">
             <Link to="/" className="mb-12 inline-flex items-center gap-3">
               <img src="/logo.webp" alt="Credit Vivo" className="h-10 w-10 brightness-200" />
@@ -14,15 +14,28 @@ export default function Login() {
               </span>
             </Link>
 
-            <h1 className="text-5xl font-black tracking-tight">Welcome back.</h1>
+            <h1 className="text-5xl font-black tracking-tight">Your score board is waiting.</h1>
             <p className="mt-4 text-lg text-navy-200">
-              Review findings. Approve disputes. Track progress.
+              Review point blockers, approve actions, and track progress.
             </p>
 
-            <div className="mt-10 space-y-3">
+            <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.07] p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-emerald-200">Target path</p>
+                  <p className="mt-1 text-4xl font-black tracking-tight">720</p>
+                </div>
+                <Gauge size={44} className="text-emerald-300" />
+              </div>
+              <div className="mt-5 h-3 rounded-full bg-white/10">
+                <div className="h-3 w-[62%] rounded-full bg-gradient-to-r from-emerald-400 to-teal-300" />
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-3">
               {[
-                ['AI findings', '3 updates ready'],
-                ['Disputes', '2 responses pending'],
+                ['Point blockers', '3 updates ready'],
+                ['Boost actions', '2 ready to review'],
                 ['Progress', 'Next step ready'],
               ].map(([title, note]) => (
                 <div key={title} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.07] p-4">
@@ -52,7 +65,7 @@ export default function Login() {
 
             <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-emerald-700">Secure portal</p>
             <h2 className="text-3xl font-black tracking-tight text-navy-950">Sign in</h2>
-            <p className="mt-2 text-sm text-navy-500">Access your Credit Vivo dashboard.</p>
+            <p className="mt-2 text-sm text-navy-500">Access your score dashboard.</p>
 
             <div className="mt-7 space-y-4">
               <label className="block">
@@ -88,7 +101,7 @@ export default function Login() {
             <div className="mt-7 rounded-2xl bg-navy-50 p-4">
               <div className="flex items-start gap-2 text-xs text-navy-500">
                 <CheckCircle size={15} className="mt-0.5 flex-shrink-0 text-emerald-600" />
-                <p>No payment or credit pull is connected in this V2 preview.</p>
+                <p>Find what is costing you points. Take action. Track progress.</p>
               </div>
             </div>
           </div>

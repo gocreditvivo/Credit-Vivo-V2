@@ -4,10 +4,10 @@ import { ArrowRight, BookOpen, FileSearch, Landmark, Scale, ShieldCheck } from '
 const lessons = [
   { cat: 'Report Basics', title: 'What is on a credit report?', desc: 'Your report can show personal information, accounts, balances, payment history, collections, inquiries, and public-record style information when applicable.' },
   { cat: 'Report Basics', title: 'Why three reports can differ', desc: 'Equifax, Experian, and TransUnion may receive different updates from furnishers, so the same account can look different by bureau.' },
-  { cat: 'Report Basics', title: 'What affects your score?', desc: 'Payment history, balances, credit age, new applications, and account mix can all matter.' },
-  { cat: 'Report Basics', title: 'Why balances matter', desc: 'High credit card balances can affect your credit profile even when you pay every month.' },
-  { cat: 'Report Review', title: 'What is a report error?', desc: 'An error may be information that is wrong, incomplete, outdated, duplicated, mixed with another person, or not yours.' },
-  { cat: 'Report Review', title: 'What Credit Vivo checks', desc: 'The scanner compares account names, balances, status, dates, payment history, collections, and bureau-to-bureau differences.' },
+  { cat: 'Score Basics', title: 'What affects your score?', desc: 'Payment history, balances, credit age, new applications, and account mix can all matter.' },
+  { cat: 'Score Basics', title: 'Why balances matter', desc: 'High credit card balances can create point pressure even when you pay every month.' },
+  { cat: 'Point Blockers', title: 'What is a report error?', desc: 'An error may be information that is wrong, incomplete, outdated, duplicated, mixed with another person, or not yours.' },
+  { cat: 'Point Blockers', title: 'What CreditVivo checks', desc: 'CreditVivo compares account names, balances, status, dates, payment history, collections, and bureau-to-bureau differences.' },
   { cat: 'Disputes', title: 'When to dispute', desc: 'Dispute information when you believe it is inaccurate, incomplete, unverifiable, outdated, duplicated, or belongs to someone else.' },
   { cat: 'Disputes', title: 'What to include', desc: 'A stronger dispute names the exact account, exact field, why it appears wrong, and the proof you want reviewed.' },
   { cat: 'Disputes', title: 'Why not dispute everything at once?', desc: 'A step-by-step review can avoid weak, unsupported, or confusing disputes.' },
@@ -21,7 +21,8 @@ const lessons = [
 
 const catColors: Record<string, string> = {
   'Report Basics': 'text-sky-600',
-  'Report Review': 'text-mint-600',
+  'Score Basics': 'text-emerald-600',
+  'Point Blockers': 'text-mint-600',
   Disputes: 'text-indigo-600',
   Progress: 'text-navy-600',
   Collections: 'text-rose-600',
@@ -61,10 +62,10 @@ export default function Learning() {
             Learning
           </div>
           <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Learn how credit reports, disputes, and bureau responses work.
+            Learn what can affect your points.
           </h1>
           <p className="text-[15px] text-navy-500">
-            Simple lessons based on bureau education, consumer rights, and Credit Vivo scanner logic.
+            Simple lessons on score factors, three-bureau differences, disputes, and progress tracking.
           </p>
         </div>
       </section>
@@ -78,9 +79,9 @@ export default function Learning() {
                 <BookOpen size={18} />
                 <span className="text-[11px] font-bold uppercase tracking-wider">Bureau basics</span>
               </div>
-              <h2 className="text-xl font-bold text-navy-900 mb-3">The same account can look different on each bureau.</h2>
+              <h2 className="text-xl font-bold text-navy-900 mb-3">The same account can affect each bureau differently.</h2>
               <p className="text-sm text-navy-500 leading-relaxed">
-                Equifax, Experian, and TransUnion each maintain separate credit files. A lender, collector, or servicer may update one bureau differently than another. Credit Vivo helps compare the same account side by side so you can see the exact field that may need review.
+                Equifax, Experian, and TransUnion each maintain separate credit files. A lender, collector, or servicer may update one bureau differently than another. CreditVivo helps compare the same account side by side so you can see the exact field that may be a point blocker.
               </p>
             </div>
             <div className="grid gap-3">
@@ -159,10 +160,10 @@ export default function Learning() {
       {/* CTA */}
       <section className="py-14 bg-navy-900">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h2 className="text-xl font-bold text-white mb-3">Ready to put this into action?</h2>
-          <p className="text-sm text-navy-300 mb-5">Start your free Credit Check-In and get your personalized roadmap.</p>
-          <Link to="/join" className="btn-mint text-sm py-3 px-7">
-            Join Free <ArrowRight size={15} />
+          <h2 className="text-xl font-bold text-white mb-3">Ready to find your blockers?</h2>
+          <p className="text-sm text-navy-300 mb-5">Start your free score scan and build your action board.</p>
+          <Link to="/scan" className="btn-mint text-sm py-3 px-7">
+            Start Free Scan <ArrowRight size={15} />
           </Link>
         </div>
       </section>

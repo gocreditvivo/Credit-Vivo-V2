@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 const faqs = [
-  { q: 'What is Credit Vivo?', a: 'Credit Vivo helps you review your credit report, find possible errors, build dispute drafts, and track progress in one place.' },
-  { q: 'What does "Find errors. Build disputes. Track progress." mean?', a: 'It means Credit Vivo helps turn a confusing credit report into clear findings, possible next steps, and a simple progress tracker.' },
+  { q: 'What is CreditVivo?', a: 'CreditVivo helps you review your credit report, find possible point blockers, build dispute drafts, and track progress in one place.' },
+  { q: 'What does "Find what is costing you points" mean?', a: 'It means CreditVivo looks for report items that may be holding your credit profile back, then turns them into clear next steps.' },
   { q: 'Does Credit Vivo guarantee score increases?', a: 'No. Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes.' },
-  { q: 'What is a free scan?', a: 'It is your starting point. Upload a credit report and Credit Vivo shows possible errors in plain English.' },
+  { q: 'What is a free scan?', a: 'It is your starting point. Upload a credit report and CreditVivo shows possible point blockers in plain English.' },
   { q: 'Will Credit Vivo send disputes automatically?', a: 'No. Credit Vivo does not send disputes or letters automatically. Review data and next steps should be checked by you before anything is sent.' },
-  { q: 'What does the AI review do?', a: 'The AI review looks for possible report issues and organizes them into customer-friendly findings. Backend scanner details are not shown on customer pages.' },
+  { q: 'What does the AI review do?', a: 'The AI review looks for possible report issues and organizes them into customer-friendly score blockers and boost actions.' },
   { q: 'Why not dispute everything at once?', a: 'Disputing everything at once can be confusing, expensive, and unsupported. Credit Vivo helps you review and prioritize information before you decide what to do.' },
   { q: 'Online disputes or letters?', a: 'Consumers may dispute inaccurate information directly with bureaus or furnishers. Credit Vivo can help organize draft information, but you remain responsible for reviewing and deciding what to send.' },
   { q: 'What is collection validation?', a: 'Collection validation means a consumer asks selected collectors to confirm important details about a debt, such as the original creditor, balance, ownership, and authority to collect.' },
   { q: 'What does verified mean?', a: 'It means the bureau or reporting company said the item should remain. Credit Vivo helps organize information so you can decide whether follow-up makes sense.' },
   { q: 'Can accurate negative information be removed?', a: 'Accurate, current, and verifiable information may remain on a credit report. Credit Vivo focuses on organization, education, possible errors, and next steps.' },
-  { q: 'How does Credit Vivo help me build credit?', a: 'Credit Vivo helps you understand score-building habits like paying on time, lowering card balances, avoiding unnecessary applications, and tracking due dates.' },
+  { q: 'How does CreditVivo help me understand points?', a: 'CreditVivo helps you understand score-building habits like paying on time, lowering card balances, avoiding unnecessary applications, and tracking due dates.' },
   { q: 'Is Credit Vivo only for disputes?', a: 'No. Credit Vivo also helps with credit education, report organization, tracking, and next-step planning.' },
   { q: 'Is Credit Vivo a law firm?', a: 'No. Credit Vivo is not a law firm and does not provide legal advice. Optional legal support may be available separately.' },
   { q: 'When does attorney review happen?', a: 'Attorney review may be available for eligible unresolved issues. It requires separate eligibility review and attorney engagement.' },
@@ -34,10 +34,10 @@ export default function FAQ() {
             FAQ
           </div>
           <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Questions answered.
+            Credit questions, simple answers.
           </h1>
           <p className="text-[15px] text-navy-500">
-            Plain-English answers before you start.
+            Plain-English answers before you start your score scan.
           </p>
         </div>
       </section>

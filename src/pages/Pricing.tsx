@@ -7,29 +7,29 @@ const plans = [
     name: 'Free Scan',
     price: '$0',
     cadence: '',
-    description: 'Basic AI review.',
+    description: 'Score blocker preview.',
     cta: 'Start Free Scan',
     to: '/scan',
     featured: false,
-    features: ['Upload report', 'Possible error preview', 'Recommended next step'],
+    features: ['Upload report', 'Point blocker preview', 'Recommended boost action'],
   },
   {
     badge: 'Popular',
     name: 'Core',
     price: '$79',
     cadence: '/mo',
-    description: 'Bureau dispute support.',
+    description: 'AI findings and dispute builder.',
     cta: 'Choose Core',
     to: '/join',
     featured: true,
-    features: ['AI findings', 'Dispute builder', 'Progress tracker'],
+    features: ['AI point blockers', 'Dispute builder', 'Progress tracker'],
   },
   {
     badge: 'More support',
     name: 'Plus',
     price: '$119',
     cadence: '/mo',
-    description: 'Bureau + furnisher support.',
+    description: 'Bureau + furnisher action support.',
     cta: 'Choose Plus',
     to: '/join',
     featured: false,
@@ -46,10 +46,10 @@ export default function Pricing() {
             Plans
           </div>
           <h1 className="text-4xl font-black tracking-tight text-navy-950 sm:text-5xl">
-            Simple plans.
+            Plans for your score goals.
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base text-navy-500">
-            Start free. Upgrade when ready.
+            Start with a free score blocker scan. Add support when your file needs more help.
           </p>
         </div>
       </section>
@@ -99,15 +99,9 @@ export default function Pricing() {
           </div>
 
           <div className="mt-6 rounded-3xl border border-navy-100 bg-navy-50/60 p-6">
-            <h2 className="text-lg font-black text-navy-950">Attorney Review</h2>
+            <h2 className="text-lg font-black text-navy-950">Attorney Support</h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-navy-500">
-              Attorney review may be available for eligible unresolved issues. Attorney services, if available, require separate eligibility review and attorney engagement.
-            </p>
-          </div>
-
-          <div className="mt-6 rounded-2xl border border-amber-100 bg-amber-50 p-5">
-            <p className="text-xs leading-relaxed text-amber-900">
-              Credit Vivo does not guarantee score increases, removals, approvals, or specific outcomes. Accurate, current, and verifiable information generally cannot be removed.
+              For harder unresolved blockers, CreditVivo can help organize an attorney-ready packet for eligible review.
             </p>
           </div>
         </div>
@@ -115,9 +109,9 @@ export default function Pricing() {
 
       <section className="bg-navy-950 py-14">
         <div className="mx-auto max-w-2xl px-6 text-center">
-          <h2 className="text-3xl font-black tracking-tight text-white">Start with the free scan.</h2>
+          <h2 className="text-3xl font-black tracking-tight text-white">Start with the free score scan.</h2>
           <p className="mt-3 text-sm text-navy-300">
-            Find errors. Build disputes. Track progress.
+            Find what is costing you points. Take action. Track progress.
           </p>
           <Link to="/scan" className="btn-mint mt-7 px-6 py-3 text-sm">
             Start Free Scan

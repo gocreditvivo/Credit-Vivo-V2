@@ -3,31 +3,36 @@ import { AlertCircle, ArrowRight, CheckCircle, Clock, FileSearch, MailCheck, Rou
 import { getLastScanResult } from '../lib/scanStorage';
 
 const categoryNames = [
-  'Profile Cleanup',
-  'Collection Review',
-  'Bureau Match Review',
-  'Reporting Accuracy Review',
-  'Factual Review',
-  'Needs Admin Review',
+  'Identity cleanup',
+  'Collection blocker',
+  'Bureau mismatch',
+  'Status or date blocker',
+  'Proof needed',
+  'Attorney review candidate',
 ];
 
 function countCategory(label: string, result: ReturnType<typeof getLastScanResult>) {
   if (!result) return 0;
 
-  if (label === 'Needs Admin Review') {
+  if (label === 'Attorney review candidate') {
     return result.review_items_preview.filter((item) => item.needs_admin_review).length;
   }
 
   const fromIssues = (result.issues_preview || []).filter((issue) => {
     const combined = `${issue.customer_label} ${issue.suggested_round} ${issue.issue_type}`.toLowerCase();
-    return combined.includes(label.toLowerCase().replace(' review', ''));
+    if (label === 'Identity cleanup') return combined.includes('profile') || combined.includes('identity') || combined.includes('address');
+    if (label === 'Collection blocker') return combined.includes('collection');
+    if (label === 'Bureau mismatch') return combined.includes('bureau') || combined.includes('mismatch');
+    if (label === 'Status or date blocker') return combined.includes('status') || combined.includes('date');
+    if (label === 'Proof needed') return combined.includes('proof') || combined.includes('evidence') || combined.includes('factual');
+    return false;
   }).length;
 
   const fromItems = result.review_items_preview.filter((item) => {
     const combined = `${item.account_type || ''} ${item.status || ''} ${item.pay_status || ''} ${item.remarks || ''}`.toLowerCase();
 
-    if (label === 'Collection Review') return combined.includes('collection');
-    if (label === 'Reporting Accuracy Review') {
+    if (label === 'Collection blocker') return combined.includes('collection');
+    if (label === 'Status or date blocker') {
       return (
         combined.includes('charge') ||
         combined.includes('transferred') ||
@@ -52,10 +57,10 @@ export default function Findings() {
     return (
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">
-          Member Flow
+          AI Findings
         </p>
         <h1 className="text-xl font-bold text-navy-900 mb-6">
-          Your Findings are organized.
+          Your point blockers will show here.
         </h1>
 
         <div className="bg-white rounded-xl p-6 border border-navy-100/60 max-w-xl">
@@ -63,13 +68,13 @@ export default function Findings() {
             <FileSearch size={20} className="text-sky-600" />
           </div>
           <h2 className="text-sm font-bold text-navy-900 mb-2">
-            No Credit Check-In result yet
+            No score scan result yet
           </h2>
           <p className="text-xs text-navy-400 mb-5 leading-relaxed">
-            Start a Credit Check-In first, then your findings will appear here.
+            Start a free scan first, then your score blockers and boost actions will appear here.
           </p>
           <Link to="/scan" className="btn-primary text-xs py-2.5">
-            Start Credit Check-In
+            Start Free Scan
             <ArrowRight size={14} />
           </Link>
         </div>
@@ -78,8 +83,8 @@ export default function Findings() {
   }
 
   const stats = [
-    { val: String(result.review_items_count || 0), label: 'review items' },
-    { val: String(result.issues_count || result.issues_preview?.length || 0), label: 'review points' },
+    { val: String(result.review_items_count || 0), label: 'items scanned' },
+    { val: String(result.issues_count || result.issues_preview?.length || 0), label: 'point blockers' },
     { val: String(result.cross_bureau_groups?.length || 0), label: 'bureau matches' },
     { val: '0', label: 'hard pulls' },
   ];
@@ -107,8 +112,8 @@ export default function Findings() {
     },
   ];
   const trackingSteps: Array<[string, string, boolean]> = [
-    ['Drafted', 'Scanner created draft review items', true],
-    ['Customer review', 'Customer approval and authorization required', false],
+    ['Found', 'CreditVivo organized possible point blockers', true],
+    ['Review', 'Customer approval and authorization required', false],
     ['Mailed', 'Certified tracking number saved after mailing', false],
     ['Waiting', 'Response deadline and follow-up dates tracked', false],
     ['Escalation', 'MOV, CFPB/state, or attorney review if needed', false],
@@ -120,12 +125,12 @@ export default function Findings() {
         AI Findings
       </p>
       <h1 className="text-2xl font-black tracking-tight text-navy-950 mb-1">
-        Possible errors found.
+        Point blockers found.
       </h1>
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
         {result.customer_summary?.message ||
           result.customer_message ||
-          'Credit Vivo organized your review items. Nothing is sent without approval.'}
+          'CreditVivo organized your possible point blockers. Nothing is sent without approval.'}
       </p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
@@ -143,10 +148,10 @@ export default function Findings() {
       <div className="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-5">
         <div className="bg-white rounded-xl p-5 border border-navy-100/60">
           <h2 className="text-sm font-bold text-navy-900 mb-3">
-            Customer-friendly findings
+            Score blocker categories
           </h2>
           <p className="text-xs text-navy-400 mb-4">
-            We show simple categories and next steps. Technical scanner details stay internal.
+            We show simple categories first, then the action that may help you move forward.
           </p>
 
           <div className="space-y-2">
@@ -170,7 +175,7 @@ export default function Findings() {
         <div className="space-y-5">
           <div className="bg-white rounded-xl p-5 border border-navy-100/60">
             <h2 className="text-sm font-bold text-navy-900 mb-3">
-              Files reviewed
+              Reports reviewed
             </h2>
             <div className="space-y-2">
               {result.files.map((file) => (
@@ -205,7 +210,7 @@ export default function Findings() {
       {(result.issues_preview || []).length > 0 && (
         <div className="bg-white rounded-xl p-5 border border-navy-100/60 mt-5">
           <h2 className="text-sm font-bold text-navy-900 mb-3">
-            Review points
+            Point blocker details
           </h2>
           <div className="space-y-3">
             {(result.issues_preview || []).slice(0, 6).map((issue) => (
@@ -235,7 +240,7 @@ export default function Findings() {
             to="/disputes"
             className="inline-flex items-center gap-2 mt-5 text-xs font-semibold text-sky-700 hover:text-sky-800"
           >
-            Build disputes
+            Build boost actions
             <ArrowRight size={13} />
           </Link>
         </div>
@@ -245,7 +250,7 @@ export default function Findings() {
         <section className="bg-white rounded-xl p-5 border border-navy-100/60">
           <div className="flex items-center gap-2 mb-4">
             <Route size={16} className="text-sky-600" />
-            <h2 className="text-sm font-bold text-navy-900">Dispute scenarios</h2>
+            <h2 className="text-sm font-bold text-navy-900">Action scenarios</h2>
           </div>
           <div className="grid gap-3">
             {scenarioCards.map((scenario) => (
@@ -261,7 +266,7 @@ export default function Findings() {
         <section className="bg-white rounded-xl p-5 border border-navy-100/60">
           <div className="flex items-center gap-2 mb-4">
             <MailCheck size={16} className="text-sky-600" />
-            <h2 className="text-sm font-bold text-navy-900">Draft dispute letters</h2>
+            <h2 className="text-sm font-bold text-navy-900">Draft dispute actions</h2>
           </div>
           {letterQueue.length ? (
             <div className="space-y-3">
@@ -303,7 +308,7 @@ export default function Findings() {
       <section className="bg-white rounded-xl p-5 border border-navy-100/60 mt-5">
         <div className="flex items-center gap-2 mb-4">
           <Clock size={16} className="text-sky-600" />
-          <h2 className="text-sm font-bold text-navy-900">Customer tracking</h2>
+          <h2 className="text-sm font-bold text-navy-900">Progress tracking</h2>
         </div>
         <div className="grid md:grid-cols-5 gap-3">
           {trackingSteps.map(([title, detail, done]) => (

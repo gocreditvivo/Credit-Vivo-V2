@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const headerLinks = [
-  { to: '/join', label: 'Join Free', primary: true },
+  { to: '/scan', label: 'Start Free Scan', primary: true },
   { to: '/why', label: 'Why Credit Vivo' },
   { to: '/pricing', label: 'Pricing' },
   { to: '/faq', label: 'FAQ' },
@@ -43,7 +43,7 @@ function Nav() {
 
 function BottomButtons({ exclude }: { exclude?: string }) {
   const allLinks = [
-    { to: '/join', label: 'Join Free', primary: true },
+    { to: '/scan', label: 'Start Free Scan', primary: true },
     { to: '/why', label: 'Why Credit Vivo' },
     { to: '/pricing', label: 'Pricing' },
     { to: '/faq', label: 'FAQ' },
@@ -55,8 +55,8 @@ function BottomButtons({ exclude }: { exclude?: string }) {
   return (
     <section className="py-16 bg-navy-50/50">
       <div className="max-w-2xl mx-auto px-4 text-center">
-        <h3 className="text-lg font-bold text-navy-900 mb-2">Keep going with Credit Vivo</h3>
-        <p className="text-sm text-navy-500 mb-6">Choose the next page that helps you move forward.</p>
+        <h3 className="text-lg font-bold text-navy-900 mb-2">Keep building your score board</h3>
+        <p className="text-sm text-navy-500 mb-6">Choose the next step that helps you move forward.</p>
         <div className="flex flex-wrap justify-center gap-2">
           {filtered.map((l) => (
             <Link
@@ -86,7 +86,7 @@ function Footer() {
               </span>
             </Link>
             <p className="text-xs text-navy-400 leading-relaxed">
-              Find errors. Build disputes. Track progress.
+              Find what is costing you points. Take action. Track progress.
             </p>
           </div>
 

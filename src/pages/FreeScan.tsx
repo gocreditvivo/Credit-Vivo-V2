@@ -51,10 +51,9 @@ export default function FreeScan() {
       <p className="text-[11px] font-semibold uppercase tracking-widest text-sky-600 mb-1">
         Upload Reports
       </p>
-      <h1 className="text-2xl font-black tracking-tight text-navy-950 mb-2">Start Free Scan</h1>
+      <h1 className="text-2xl font-black tracking-tight text-navy-950 mb-2">Build your score board.</h1>
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
-        Upload your credit report. We find possible errors, build disputes, and track progress.
-        Nothing is sent without your approval.
+        Upload your credit report so CreditVivo can find possible point blockers and organize next actions.
       </p>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5">
@@ -130,11 +129,11 @@ export default function FreeScan() {
               {isReviewing ? (
                 <>
                   <Loader2 size={14} className="animate-spin" />
-                  Reviewing your Credit Check-In...
+                  Building your score board...
                 </>
               ) : (
                 <>
-                  Run AI Review
+                  Find Point Blockers
                   <ArrowRight size={14} />
                 </>
               )}
@@ -146,7 +145,7 @@ export default function FreeScan() {
               disabled={isReviewing}
               className="px-4 py-2.5 rounded-full border border-navy-100 text-xs font-semibold text-navy-600 hover:bg-navy-50 transition-colors"
             >
-              Load Demo Findings
+              Load Demo Score Board
             </button>
           </div>
         </div>
@@ -155,9 +154,9 @@ export default function FreeScan() {
           <h2 className="text-sm font-bold text-navy-900 mb-3">What happens next</h2>
           <div className="space-y-3">
             {[
-              'AI reviews the report behind the scenes.',
+              'AI turns the report into clear score blockers.',
               'You see clean findings in plain English.',
-              'Dispute drafts are prepared for review.',
+              'Boost actions and dispute drafts are organized.',
               'You approve before anything moves forward.',
               'Progress is tracked in your portal.',
             ].map((step, index) => (

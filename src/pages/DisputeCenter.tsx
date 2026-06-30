@@ -19,13 +19,13 @@ export default function DisputeCenter() {
       }))
     : [
         {
-          title: 'Bureau dispute',
-          body: 'For possible balance, status, date, duplicate, or bureau mismatch issues.',
+          title: 'Bureau action',
+          body: 'For possible balance, status, date, duplicate, or bureau mismatch point blockers.',
           items: ['Experian / Equifax / TransUnion', 'Customer review', 'Ready for approval'],
         },
         {
-          title: 'Furnisher dispute',
-          body: 'For creditor, collector, or debt buyer reporting questions.',
+          title: 'Furnisher action',
+          body: 'For creditor, collector, or debt buyer reporting questions that may affect your profile.',
           items: ['Account details', 'Evidence packet', 'Response tracking'],
         },
       ];
@@ -46,9 +46,9 @@ export default function DisputeCenter() {
       </p>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-navy-950">Approve disputes.</h1>
+          <h1 className="text-2xl font-black tracking-tight text-navy-950">Approve score actions.</h1>
           <p className="mt-1 max-w-2xl text-sm text-navy-400">
-            Review drafts, choose what moves forward, and track each step.
+            Review dispute drafts, choose what moves forward, and track each step.
           </p>
         </div>
         <span className="w-fit rounded-full bg-emerald-50 px-3 py-1.5 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-100">
@@ -61,9 +61,9 @@ export default function DisputeCenter() {
           <div className="flex items-start gap-3">
             <FileText size={18} className="mt-0.5 flex-shrink-0 text-sky-700" />
             <div>
-              <h2 className="text-sm font-bold text-navy-900">Demo dispute flow</h2>
+              <h2 className="text-sm font-bold text-navy-900">Demo score action flow</h2>
               <p className="mt-1 text-xs leading-relaxed text-navy-500">
-                Start a scan or load demo findings to populate this page with real review items.
+                Start a scan or load demo findings to populate this page with score actions.
               </p>
               <Link to="/scan" className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-sky-700">
                 Start Free Scan
@@ -94,7 +94,7 @@ export default function DisputeCenter() {
               type="button"
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-900/15 transition hover:bg-emerald-700"
             >
-              Approve dispute
+              Approve action
               <ArrowRight size={14} />
             </button>
           </article>
