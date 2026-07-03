@@ -453,6 +453,7 @@ export function AdminPage() {
                     </div>
                     <div className="flex flex-wrap gap-3">
                         <Link to="/dashboard"><Button variant="outline" className="rounded-full h-11">Test customer dashboard</Button></Link>
+                        <Link to="/market-ai"><Button variant="outline" className="rounded-full h-11">Open Market AI</Button></Link>
                         <Link to="/pricing"><Button variant="outline" className="rounded-full h-11">Test pricing</Button></Link>
                         <Link to="/"><Button className="rounded-full bg-[#047857] hover:bg-[#059669] text-white h-11">View front end</Button></Link>
                     </div>

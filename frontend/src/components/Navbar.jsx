@@ -32,6 +32,9 @@ export default function Navbar() {
                             <Link to="/admin" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-backend">
                                 Back End
                             </Link>
+                            <Link to="/market-ai" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-market-ai">
+                                Market AI
+                            </Link>
                             <Link to="/dashboard" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-dashboard">
                                 Dashboard
                             </Link>
