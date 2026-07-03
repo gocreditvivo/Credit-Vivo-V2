@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Sparkles } from "lucide-react";
 export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -20,7 +21,8 @@ export default function Login() {
         try {
             await login(email, password);
             toast.success("Welcome back!");
-            navigate("/dashboard");
+            const next = new URLSearchParams(location.search).get("next");
+            navigate(next && next.startsWith("/") ? next : "/dashboard");
         } catch (err) {
             toast.error(err.response?.data?.detail || "Login failed");
         } finally {

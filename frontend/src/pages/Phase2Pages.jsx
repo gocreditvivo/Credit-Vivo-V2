@@ -12,7 +12,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { FileText, UploadCloud, Trash2, Download, Send, Scale, Loader2, MessageCircle } from "lucide-react";
+import { Activity, Brain, CheckCircle2, Database, FileText, Rocket, Scale, Server, ShieldCheck, UploadCloud, Trash2, Download, Send, Loader2, MessageCircle } from "lucide-react";
 
 export function PricingCheckout() {
     const { user } = useAuth();
@@ -389,9 +389,13 @@ export function AdminPage() {
     const [stats, setStats] = useState(null);
     const [reqs, setReqs] = useState([]);
     const [users, setUsers] = useState([]);
+    const [adminError, setAdminError] = useState("");
 
     useEffect(() => {
-        api.get("/admin/stats").then(r => setStats(r.data)).catch(() => toast.error("Admin only"));
+        api.get("/admin/stats").then(r => setStats(r.data)).catch(() => {
+            setAdminError("Backend admin API is not connected for this preview yet.");
+            toast.error("Backend admin API not connected");
+        });
         api.get("/admin/attorney-requests").then(r => setReqs(r.data)).catch(() => {});
         api.get("/admin/users").then(r => setUsers(r.data)).catch(() => {});
     }, []);
@@ -401,12 +405,130 @@ export function AdminPage() {
         setReqs(reqs.map(r => r.id === id ? { ...r, status } : r));
     };
 
+    const readiness = [
+        { label: "Front end preview", status: "Ready", detail: "Vercel preview is live for owner review.", icon: <Activity className="h-5 w-5" /> },
+        { label: "Backend API", status: stats ? "Connected" : "Test mode", detail: stats ? "Admin API returned live stats." : "Preview can load without a live backend.", icon: <Server className="h-5 w-5" /> },
+        { label: "Database", status: stats ? "Connected" : "Needs env", detail: "MongoDB URL and DB name are required for production.", icon: <Database className="h-5 w-5" /> },
+        { label: "Scanner/parser", status: "Test mode", detail: "Upload flow exists; final scanner engine still needs production backend connection.", icon: <FileText className="h-5 w-5" /> },
+        { label: "AI skills/resources", status: "Drafted", detail: "Credit report analysis, dispute guidance, attorney review, and owner insights are listed for testing.", icon: <Brain className="h-5 w-5" /> },
+        { label: "Launch posture", status: "Not live", detail: "Use test mode until API keys, database, payments, and compliance review are complete.", icon: <Rocket className="h-5 w-5" /> },
+    ];
+
+    const aiSkills = [
+        "Credit report upload and plain-English AI findings",
+        "3-bureau issue spotting and dispute recommendation flow",
+        "Bureau dispute, furnisher dispute, debt validation, and escalation workflow",
+        "Attorney review queue for hard cases",
+        "Customer progress tracking and retention insights",
+        "Owner dashboard for users, revenue, issues, and launch readiness",
+    ];
+
+    const resources = [
+        "FCRA, FDCPA, bureau dispute outcomes, and consumer rights knowledge base",
+        "Metro 2 field logic for tradelines, collections, charge-offs, and date conflicts",
+        "Letter templates for bureaus, furnishers, validation, MOV, CFPB/state escalation",
+        "Production database, encrypted storage, email/SMS alerts, payment provider, and audit logs",
+    ];
+
+    const launchChecklist = [
+        "Connect production backend hosting",
+        "Connect MongoDB/database and storage",
+        "Connect scanner/parser engine to customer dashboard",
+        "Connect payment plans",
+        "Run compliance/legal review before public launch",
+        "Run full test: intake, upload, findings, letters, tracking, attorney review",
+    ];
+
     return (
         <div className="min-h-screen bg-[#FCFBF9]">
             <Navbar />
             <main className="pt-24 pb-20 max-w-7xl mx-auto px-6 md:px-10" data-testid="admin-page">
-                <h1 className="font-display text-3xl font-bold tracking-tight">Admin</h1>
-                {!stats ? <p className="mt-10 text-slate-500">Loading…</p> : (
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <Badge className="rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Owner test mode</Badge>
+                        <h1 className="font-display mt-4 text-3xl md:text-5xl font-bold tracking-tight">Credit Vivo Back End</h1>
+                        <p className="mt-3 text-slate-600 max-w-2xl">
+                            Test new features, AI skills, resources, database readiness, and launch tasks before customers use them.
+                        </p>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                        <Link to="/dashboard"><Button variant="outline" className="rounded-full h-11">Test customer dashboard</Button></Link>
+                        <Link to="/pricing"><Button variant="outline" className="rounded-full h-11">Test pricing</Button></Link>
+                        <Link to="/"><Button className="rounded-full bg-[#047857] hover:bg-[#059669] text-white h-11">View front end</Button></Link>
+                    </div>
+                </div>
+
+                {adminError && (
+                    <Card className="mt-8 rounded-2xl border-amber-200 bg-amber-50">
+                        <CardContent className="p-5 text-sm text-amber-900">
+                            <strong>Test mode note:</strong> {adminError} This is normal for a preview until production backend hosting, environment variables, and database are connected.
+                        </CardContent>
+                    </Card>
+                )}
+
+                <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {readiness.map(item => (
+                        <Card key={item.label} className="rounded-2xl border-slate-200">
+                            <CardContent className="p-5">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="h-10 w-10 rounded-xl bg-emerald-50 text-[#047857] grid place-items-center">{item.icon}</div>
+                                    <Badge variant="outline" className="rounded-full">{item.status}</Badge>
+                                </div>
+                                <h3 className="font-display text-lg font-bold mt-4">{item.label}</h3>
+                                <p className="mt-2 text-sm text-slate-600">{item.detail}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                <div className="mt-8 grid lg:grid-cols-2 gap-6">
+                    <Card className="rounded-3xl border-slate-200">
+                        <CardHeader>
+                            <CardTitle className="font-display flex items-center gap-2"><Brain className="h-5 w-5 text-[#047857]" /> AI skills to test</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {aiSkills.map(skill => (
+                                <div key={skill} className="flex gap-3 text-sm">
+                                    <CheckCircle2 className="h-5 w-5 text-[#047857] shrink-0" />
+                                    <span>{skill}</span>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+
+                    <Card className="rounded-3xl border-slate-200">
+                        <CardHeader>
+                            <CardTitle className="font-display flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-[#047857]" /> Resources needed</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {resources.map(resource => (
+                                <div key={resource} className="flex gap-3 text-sm">
+                                    <CheckCircle2 className="h-5 w-5 text-[#047857] shrink-0" />
+                                    <span>{resource}</span>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <Card className="mt-8 rounded-3xl border-slate-200">
+                    <CardHeader>
+                        <CardTitle className="font-display flex items-center gap-2"><Rocket className="h-5 w-5 text-[#047857]" /> Launch checklist</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid md:grid-cols-2 gap-3">
+                            {launchChecklist.map(item => (
+                                <div key={item} className="rounded-xl border border-slate-200 bg-white p-4 flex items-center gap-3">
+                                    <div className="h-5 w-5 rounded-full border border-slate-300" />
+                                    <span className="text-sm">{item}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <h2 className="font-display text-xl font-bold mt-12">Live backend data</h2>
+                {!stats ? <p className="mt-4 text-slate-500">No live backend stats loaded yet. Use this page in test mode until the backend API and database are connected.</p> : (
                     <>
                         <div className="mt-8 grid sm:grid-cols-3 lg:grid-cols-6 gap-4">
                             {[["Users", stats.users], ["Analyses", stats.analyses], ["Letters", stats.letters], ["Active subs", stats.active_subscriptions], ["Pending atty", stats.attorney_requests_pending], ["Revenue", `$${stats.revenue_usd}`]].map(([l, v]) => (

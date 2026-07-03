@@ -44,7 +44,7 @@ export default function Navbar() {
                             <Link to="/" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-frontend">
                                 Front End
                             </Link>
-                            <Link to="/login" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-backend-login">
+                            <Link to="/login?next=/admin" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-backend-login">
                                 Backend Login
                             </Link>
                             <Link to="/register" data-testid="nav-register">
