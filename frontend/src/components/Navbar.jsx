@@ -26,6 +26,12 @@ export default function Navbar() {
                 <div className="flex items-center gap-3">
                     {user ? (
                         <>
+                            <Link to="/" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-frontend">
+                                Front End
+                            </Link>
+                            <Link to="/admin" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-backend">
+                                Back End
+                            </Link>
                             <Link to="/dashboard" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-dashboard">
                                 Dashboard
                             </Link>
@@ -35,8 +41,11 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-login">
-                                Sign in
+                            <Link to="/" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-frontend">
+                                Front End
+                            </Link>
+                            <Link to="/login" className="text-sm font-medium text-slate-700 hover:text-slate-900" data-testid="nav-backend-login">
+                                Backend Login
                             </Link>
                             <Link to="/register" data-testid="nav-register">
                                 <Button className="rounded-full bg-[#047857] hover:bg-[#059669] text-white px-5">
