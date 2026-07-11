@@ -1,93 +1,86 @@
 const disclosures = [
   {
+    title: 'Results are not guaranteed',
+    body: 'Credit Vivo does not promise a specific score increase, loan approval, deletion, update, or outcome. Results vary by report data, bureau response, furnisher response, timing, customer documents, payment history, balances, and lender rules.',
+  },
+  {
+    title: 'Accurate information may remain',
+    body: 'Accurate, current, and verifiable negative information may remain on a credit report for the time allowed by law. Credit Vivo focuses on errors, inaccurate accounts, bad data, and customer-approved next steps.',
+  },
+  {
     title: 'Your free dispute rights',
     body: 'You have the right to dispute inaccurate or incomplete information directly with Experian, Equifax, TransUnion, furnishers, and consumer reporting agencies at no cost. Credit Vivo is not required for you to exercise those rights.',
   },
   {
-    title: 'Platform classification',
-    body: 'Credit Vivo is an educational software platform and self-directed tool. Credit Vivo is not a credit repair agency, credit repair organization, credit services organization, or law firm, and does not perform credit repair services on your behalf.',
+    title: 'Customer approval before action',
+    body: 'Credit Vivo may prepare scan results, dispute drafts, evidence checklists, letters, complaint packets, and escalation notes. Nothing is mailed, disputed, submitted, or escalated automatically without customer review and approval.',
   },
   {
-    title: 'No promise of deletion',
-    body: 'Credit Vivo may identify possible issues and organize next steps, but it cannot guarantee that any credit bureau or furnisher will delete, update, or change an account.',
+    title: 'Attorney support',
+    body: 'Attorney support may be available for eligible unresolved credit-reporting issues. Credit Vivo is not a law firm and does not provide legal advice. Attorney services, when available, require separate eligibility review and attorney engagement.',
   },
   {
-    title: 'Credit report permission',
-    body: 'Credit Vivo should only pull, import, or analyze a credit report after you give clear permission. A soft-pull check-in should not affect your credit score, but the provider, bureau, data collected, and any cost should be disclosed before use.',
+    title: 'Score tools and estimates',
+    body: 'Score goals, score paths, point estimates, simulations, and progress views are educational planning tools. Actual scores can differ by scoring model, bureau data, timing, lender criteria, new accounts, payments, balances, and credit activity.',
   },
   {
-    title: 'Accurate information',
-    body: 'Accurate, verifiable negative information may legally remain on a credit report for the allowed reporting period.',
+    title: 'Report upload and permission',
+    body: 'Credit Vivo should only access, import, or analyze credit report data after the customer gives permission. Customers should upload or connect only reports and documents they are authorized to share.',
   },
   {
-    title: 'Score expectations',
-    body: 'Any score simulator, estimated impact, or monthly progress view is educational only. Actual scores depend on the scoring model, bureau data, timing, new accounts, balances, payments, and lender criteria.',
+    title: 'Data and security',
+    body: 'Credit Vivo should protect customer documents, identity information, credit report data, consent records, approval history, audit logs, and account data with secure storage, access controls, and encryption where appropriate.',
   },
   {
-    title: 'Scanner-assisted review',
-    body: 'Scanner output may help organize data, find inconsistencies, and draft plain-English explanations. It is not a credit bureau decision, legal advice, or a substitute for customer review.',
+    title: 'Third-party costs',
+    body: 'Credit monitoring, report access, identity verification, postage, certified mail, printing, legal services, and third-party vendor costs may be separate unless the customer plan clearly says they are included.',
   },
   {
-    title: 'Customer approval before sending',
-    body: 'Draft dispute letters, bureau notices, furnisher notices, CFPB complaints, state complaints, and attorney escalation requests should not be sent automatically. Customers should review and approve what is sent.',
+    title: 'Federal consumer disclosure',
+    body: 'You have the right to dispute inaccurate information in your credit report by contacting the credit bureau directly. Neither you nor any credit repair company or credit repair organization has the right to have accurate, current, and verifiable information removed from your credit report.',
   },
   {
-    title: 'Attorney escalation',
-    body: 'Attorney backup is reserved for eligible cases and requires a separate compliant relationship. It should be used after ordinary dispute and escalation steps when appropriate.',
-  },
-  {
-    title: 'Mail and document costs',
-    body: 'Certified mail, postage, printing, identity verification, report access, credit monitoring, and third-party vendor costs may be separate unless your written plan says they are included.',
-  },
-  {
-    title: 'Virginia-first launch',
-    body: 'Before any paid launch, Credit Vivo should verify federal requirements and Virginia, Maryland, and DC business, credit services, bond or license, cancellation, advertising, and consumer protection rules.',
-  },
-  {
-    title: 'Paid-service contract rights',
-    body: 'Before paid credit-repair-style services are introduced, Credit Vivo should provide the required written agreement, legal-rights disclosure, total cost, timing, and cancellation form required by federal and state law.',
+    title: 'State launch review',
+    body: 'Before paid launch, Credit Vivo should verify federal requirements and Maryland, Virginia, and Washington DC business, credit services, bond, license, cancellation, advertising, and consumer protection rules.',
   },
 ];
 
 export default function Disclosure() {
   return (
     <>
-      <section className="py-16 bg-gradient-to-b from-sky-50/50 to-white">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 bg-sky-100 text-sky-700 text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5">
-            <span className="w-1.5 h-1.5 bg-sky-500 rounded-full" />
-            Disclosure
+      <section className="bg-gradient-to-b from-sky-50/50 to-white py-16">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1.5 text-[11px] font-semibold text-sky-700">
+            <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
+            Disclosures
           </div>
-          <h1 className="text-3xl sm:text-[38px] font-bold text-navy-900 leading-tight mb-4">
-            Consumer Disclosure
+          <h1 className="mb-4 text-3xl font-bold leading-tight text-navy-900 sm:text-[38px]">
+            Credit Vivo Disclosures
           </h1>
-          <p className="text-[15px] text-navy-500 max-w-xl mx-auto leading-relaxed">
-            Important service disclosures and consumer rights before using Credit Vivo.
+          <p className="mx-auto max-w-xl text-[15px] leading-relaxed text-navy-500">
+            The homepage stays simple. The important limits, rights, and approval rules live here.
           </p>
         </div>
       </section>
 
-      <section className="py-12 bg-white">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="bg-navy-50/50 rounded-xl p-6 border border-navy-100/60">
-            <p className="text-sm text-navy-500 leading-relaxed mb-6">
-              <strong className="text-navy-800">Important consumer notice:</strong> Credit
-              Vivo is not a credit bureau, lender, government agency, law firm, credit
-              repair organization, credit services organization, or credit score company.
+      <section className="bg-white py-12">
+        <div className="mx-auto max-w-3xl px-4">
+          <div className="rounded-xl border border-navy-100/60 bg-navy-50/50 p-6">
+            <p className="mb-6 text-sm leading-relaxed text-navy-500">
+              <strong className="text-navy-800">Important notice:</strong> Credit Vivo helps customers find score blockers, repair credit report errors, build dispute drafts, and track progress. Results are not guaranteed.
             </p>
 
             <div className="space-y-5">
               {disclosures.map((disclosure) => (
                 <div key={disclosure.title}>
-                  <h2 className="text-sm font-bold text-navy-900 mb-1">{disclosure.title}</h2>
-                  <p className="text-sm text-navy-500 leading-relaxed">{disclosure.body}</p>
+                  <h2 className="mb-1 text-sm font-bold text-navy-900">{disclosure.title}</h2>
+                  <p className="text-sm leading-relaxed text-navy-500">{disclosure.body}</p>
                 </div>
               ))}
             </div>
 
-            <p className="text-xs text-navy-400 leading-relaxed mt-6 pt-5 border-t border-navy-100">
-              Launch preview status: this preview does not send real disputes, mail letters,
-              contact furnishers, send SMS/email, process payments, or provide legal advice.
+            <p className="mt-6 border-t border-navy-100 pt-5 text-xs leading-relaxed text-navy-400">
+              Launch preview status: this preview does not send real disputes, mail letters, contact furnishers, process payments, or provide legal advice.
             </p>
           </div>
         </div>
