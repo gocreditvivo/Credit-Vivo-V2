@@ -38,7 +38,7 @@ function ScoreDashboard() {
           <div>
             <h2 className="text-3xl font-black tracking-tight">Know your score blockers.</h2>
             <p className="mt-2 text-sm leading-relaxed text-navy-200">
-              See what may be holding your score back, then follow the next best score action.
+              See what is hurting your score, then follow your next score boost action.
             </p>
             <div className="mt-4 grid grid-cols-3 gap-2">
               {['Score', 'Boost', 'Track'].map((label) => (
@@ -72,16 +72,16 @@ function ScoreDashboard() {
 
 export default function Home() {
   const lifestyleTiles = [
-    { title: 'Better auto terms', note: 'Prepare your score before the dealership.', icon: Car, tone: 'from-sky-500 to-teal-400' },
-    { title: 'Home goals', note: 'Know score blockers before applying.', icon: HomeIcon, tone: 'from-emerald-500 to-cyan-400' },
-    { title: 'Card approvals', note: 'Lower score risk before new credit.', icon: CreditCard, tone: 'from-indigo-500 to-sky-400' },
-    { title: 'Rental confidence', note: 'Review score-impacting surprises.', icon: Building2, tone: 'from-teal-500 to-emerald-400' },
+    { title: 'Better car loans', note: 'Get your score ready before the dealership.', icon: Car, tone: 'from-sky-500 to-teal-400' },
+    { title: 'Better mortgage readiness', note: 'Fix score blockers before applying for a home.', icon: HomeIcon, tone: 'from-emerald-500 to-cyan-400' },
+    { title: 'Better credit card options', note: 'Lower score problems before new credit.', icon: CreditCard, tone: 'from-indigo-500 to-sky-400' },
+    { title: 'Better apartment approval', note: 'Clean up credit problems before rental checks.', icon: Building2, tone: 'from-teal-500 to-emerald-400' },
   ];
 
   const actionCards = [
-    { title: 'Score blockers', desc: 'Collections, high balances, date issues, mixed details, or bureau mismatches that may affect your score.', icon: Gauge },
-    { title: 'Boost actions', desc: 'Prioritized score steps that show what to review, what to gather, and what to track first.', icon: TrendingUp },
-    { title: 'Attorney support', desc: 'Harder unresolved reporting issues can be organized for attorney review when appropriate.', icon: Scale },
+    { title: 'Repair credit report errors', desc: 'Find wrong balances, wrong dates, duplicate accounts, mixed details, and bureau mismatches.', icon: Gauge },
+    { title: 'Remove inaccurate negatives', desc: 'Build dispute drafts for inaccurate collections, charge-offs, and bad tradelines.', icon: TrendingUp },
+    { title: 'Attorney support', desc: 'Unresolved credit reporting problems can be organized for attorney support when they need more pressure.', icon: Scale },
   ];
 
   const learningTopics = [
@@ -98,17 +98,17 @@ export default function Home() {
           <div className="relative z-10">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/90 px-4 py-2 text-xs font-black text-emerald-700 shadow-sm shadow-navy-900/5">
               <Sparkles size={14} />
-              AI Score Boost + Attorney Support
+              AI Credit Boost + Attorney Support
             </div>
 
             <h1 className="max-w-3xl text-[42px] font-black leading-[0.98] tracking-tight text-navy-950 sm:text-[58px] lg:text-[70px]">
-              Find what's holding back your score.
+              Fix what’s hurting your score.
             </h1>
             <p className="mt-5 max-w-2xl text-xl font-black text-navy-800">
-              Set your score goal. Build your next best move.
+              Repair credit report errors. Remove inaccurate negative accounts. Challenge bad tradelines.
             </p>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-500">
-              CreditVivo turns your credit report into score factors, point blockers, boost actions, dispute drafts, and progress tracking.
+              Credit Vivo helps find credit report errors, negative accounts, bad tradelines, and score blockers — then builds your AI Credit Boost Plan so you can get ready for better loans and financing.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -122,7 +122,7 @@ export default function Home() {
             </div>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {['Free score scan', 'Score factors', 'Track score progress'].map((item) => (
+              {['Repair credit report errors', 'Remove inaccurate negatives', 'Challenge bad tradelines'].map((item) => (
                 <div key={item} className="flex items-center gap-2 rounded-2xl border border-navy-100 bg-white/90 px-4 py-3 shadow-sm">
                   <CheckCircle size={16} className="text-emerald-600" />
                   <span className="text-xs font-black text-navy-700">{item}</span>
@@ -139,11 +139,11 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-widest text-sky-700">Credit score goals</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Better scores can open better doors.</h2>
+              <p className="text-[11px] font-black uppercase tracking-widest text-sky-700">Better credit options</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Better credit. Better options.</h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-navy-500">
-              See the score factors and report issues that may matter before big life moves.
+              Build your score plan for better loans, better financing, and better approvals.
             </p>
           </div>
 
@@ -164,8 +164,8 @@ export default function Home() {
       <section className="bg-navy-50/60 py-14">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-8 max-w-2xl">
-            <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700">Score action plan</p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Score blockers become next steps.</h2>
+            <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700">AI Credit Boost Plan</p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Fix score blockers with a smarter plan.</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {actionCards.map(({ title, desc, icon: Icon }) => (
@@ -185,9 +185,9 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              ['1', 'Scan', 'Upload your report and see possible score blockers.'],
-              ['2', 'Boost', 'Approve dispute drafts or follow score boost actions.'],
-              ['3', 'Track', 'Watch score progress and know the next move.'],
+              ['1', 'Scan', 'Upload your report and find score blockers, negative accounts, and bad tradelines.'],
+              ['2', 'Repair', 'Build your AI Credit Boost Plan and challenge what needs to be fixed.'],
+              ['3', 'Track', 'Track progress toward better loans and financing.'],
             ].map(([num, title, desc]) => (
               <div key={title} className="rounded-3xl border border-navy-100 bg-white p-6 shadow-sm">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-950 text-sm font-black text-white">
@@ -205,18 +205,18 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <div>
             <p className="text-[11px] font-black uppercase tracking-widest text-emerald-300">Score dashboard preview</p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight">Your score action board.</h2>
+            <h2 className="mt-2 text-3xl font-black tracking-tight">Your score boost board.</h2>
             <p className="mt-3 text-sm leading-relaxed text-navy-300">
-              A simple view of score blockers, boost actions, disputes, and progress.
+              A simple view of score blockers, repair actions, disputes, and progress.
             </p>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/[0.07] p-5 shadow-2xl shadow-navy-950/30">
             <div className="grid gap-3 md:grid-cols-4">
               {[
                 ['720', 'score goal'],
-                ['+44', 'point path'],
+                ['+44', 'score goal path'],
                 ['3', 'score blockers'],
-                ['2', 'boost actions'],
+                ['2', 'repair actions'],
               ].map(([val, label]) => (
                 <div key={label} className="rounded-2xl bg-white p-4 text-center text-navy-950">
                   <p className="text-2xl font-black">{val}</p>
@@ -226,13 +226,43 @@ export default function Home() {
             </div>
             <div className="mt-4 rounded-2xl bg-white p-4 text-navy-950">
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-sm font-black">Score action plan</p>
+                <p className="text-sm font-black">AI Credit Boost Plan</p>
                 <span className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-black text-emerald-700">62% ready</span>
               </div>
               <div className="h-3 rounded-full bg-navy-100">
                 <div className="h-3 w-[62%] rounded-full bg-gradient-to-r from-emerald-500 to-teal-400" />
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-14">
+        <div className="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700">Attorney support</p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">
+              Attorney support when credit problems need more pressure.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-navy-500">
+              If credit reporting problems do not get fixed, Credit Vivo helps organize your reports, dispute history, bureau responses, evidence, and timeline for attorney support.
+            </p>
+            <p className="mt-3 text-xs font-bold text-navy-400">
+              Attorney support may be available for eligible unresolved credit-reporting issues.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              ['Build the file', 'Organize reports, responses, dates, and documents.'],
+              ['Review the problem', 'Flag unresolved credit reporting problems that need more pressure.'],
+              ['Support path', 'Prepare the file for eligible attorney support.'],
+            ].map(([title, desc]) => (
+              <div key={title} className="rounded-3xl border border-navy-100 bg-navy-50/60 p-5">
+                <Scale size={20} className="text-emerald-700" />
+                <p className="mt-4 text-sm font-black text-navy-900">{title}</p>
+                <p className="mt-2 text-xs leading-relaxed text-navy-500">{desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -268,7 +298,7 @@ export default function Home() {
           <div className="grid gap-5 md:grid-cols-3">
             {[
               ['Free Score Scan', '$0', 'Score blocker preview'],
-              ['Core', '$79/mo', 'AI score findings + dispute builder'],
+              ['Core', '$79/mo', 'AI Credit Boost Plan + dispute builder'],
               ['Plus', '$119/mo', 'Furnisher support + attorney-ready packet'],
             ].map(([name, price, detail]) => (
               <div key={name} className="rounded-3xl border border-navy-100 bg-white p-6 shadow-sm">
@@ -282,6 +312,9 @@ export default function Home() {
             See Plans
             <ArrowRight size={16} />
           </Link>
+          <p className="mt-6 text-xs font-bold text-navy-400">
+            Results are not guaranteed. See Disclosures.
+          </p>
         </div>
       </section>
     </>
