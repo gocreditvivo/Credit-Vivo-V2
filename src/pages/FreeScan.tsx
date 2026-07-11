@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle, ArrowRight, CheckCircle, FileText, Loader2, Upload } from 'lucide-react';
 import { parseCreditReports } from '../lib/scannerApi';
+import { parseCreditReportText } from '../lib/creditParser';
 import { getDemoScanResult, saveLastScanResult } from '../lib/scanStorage';
 
 export default function FreeScan() {
   const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
+  const [reportText, setReportText] = useState('');
   const [isReviewing, setIsReviewing] = useState(false);
   const [error, setError] = useState('');
 
@@ -16,24 +18,56 @@ export default function FreeScan() {
     return `${files.length} files selected`;
   }, [files]);
 
+  async function parseTextFiles(selectedFiles: File[]) {
+    const textFiles = selectedFiles.filter((file) => /\.txt$/i.test(file.name) || file.type.startsWith('text/'));
+    if (!textFiles.length) return '';
+    const chunks = await Promise.all(
+      textFiles.map(async (file) => {
+        const text = await file.text();
+        return `\n\n--- FILE: ${file.name} ---\n\n${text}`;
+      })
+    );
+    return chunks.join('\n');
+  }
+
   async function handleStartCheckIn() {
     setError('');
 
-    if (!files.length) {
-      setError('Please select at least one credit report PDF.');
+    const pastedText = reportText.trim();
+
+    if (!files.length && pastedText.length < 50) {
+      setError('Paste report text, upload a TXT report, or choose at least one credit report PDF.');
       return;
     }
 
     setIsReviewing(true);
 
     try {
-      const result = await parseCreditReports(files, false);
+      const textFromFiles = await parseTextFiles(files);
+      const combinedText = [pastedText, textFromFiles].filter(Boolean).join('\n\n');
+
+      if (combinedText.trim().length >= 50) {
+        const result = parseCreditReportText(
+          combinedText,
+          files.find((file) => /\.txt$/i.test(file.name))?.name || 'pasted-credit-report.txt'
+        );
+        saveLastScanResult(result);
+        navigate('/findings');
+        return;
+      }
+
+      const pdfFiles = files.filter((file) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name));
+      if (!pdfFiles.length) {
+        throw new Error('No readable report text found. Paste report text or upload a TXT file for the parser MVP.');
+      }
+
+      const result = await parseCreditReports(pdfFiles, false);
       saveLastScanResult(result);
       navigate('/findings');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Scanner request failed.';
       setError(
-        `${message} If you are reviewing the beta site, use "Load demo findings" to preview the customer flow.`
+        `${message} Parser MVP can read pasted text or TXT files now. PDF parsing uses the scanner backend until browser PDF extraction is added.`
       );
     } finally {
       setIsReviewing(false);
@@ -53,7 +87,7 @@ export default function FreeScan() {
       </p>
       <h1 className="text-2xl font-black tracking-tight text-navy-950 mb-2">Build your score board.</h1>
       <p className="text-sm text-navy-400 mb-6 max-w-2xl">
-        Upload your credit report so CreditVivo can find possible point blockers and organize next actions.
+        Paste or upload your report so CreditVivo can find score blockers, possible reporting issues, proof needed, and next actions.
       </p>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5">
@@ -63,19 +97,18 @@ export default function FreeScan() {
           </div>
 
           <h2 className="text-sm font-bold text-navy-900 mb-2">
-            Upload your report
+            Start your parser scan
           </h2>
           <p className="text-xs text-navy-400 mb-5 leading-relaxed">
-            Start with one PDF or add Experian, Equifax, and TransUnion reports together.
+            MVP reads pasted report text and TXT files now. PDF support still uses the scanner backend.
           </p>
 
           <div className="mb-5 rounded-lg border border-amber-100 bg-amber-50 p-3">
             <div className="flex gap-2 text-xs leading-relaxed text-amber-900">
               <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />
               <p>
-                Real credit reports contain sensitive personal data. Use your own report or a report
-                you have permission to test. Uploaded PDFs are not retained after parsing unless
-                retention is intentionally turned on.
+                Credit reports contain sensitive data. Use only your own report or a report
+                you have permission to test. Do not put real reports into the repo.
               </p>
             </div>
           </div>
@@ -83,7 +116,7 @@ export default function FreeScan() {
           <label className="block border border-dashed border-navy-200 rounded-xl p-5 bg-navy-50/40 cursor-pointer hover:bg-sky-50/40 transition-colors">
             <input
               type="file"
-              accept="application/pdf,.pdf"
+              accept="application/pdf,.pdf,text/plain,.txt"
               multiple
               className="hidden"
               onChange={(event) => {
@@ -98,7 +131,7 @@ export default function FreeScan() {
               </div>
               <div>
                 <p className="text-xs font-semibold text-navy-800">
-                  Choose PDF reports
+                  Choose TXT or PDF reports
                 </p>
                 <p className="text-[11px] text-navy-400">
                   Experian, Equifax, TransUnion, or multi-bureau reports
@@ -110,6 +143,21 @@ export default function FreeScan() {
           <div className="mt-4 flex items-center gap-2 text-xs text-navy-500">
             <CheckCircle size={14} className="text-mint-600" />
             <span>{selectedFileText}</span>
+          </div>
+
+          <div className="mt-5">
+            <label className="mb-2 block text-xs font-bold text-navy-800">
+              Paste report text for parser MVP
+            </label>
+            <textarea
+              value={reportText}
+              onChange={(event) => {
+                setReportText(event.target.value);
+                setError('');
+              }}
+              placeholder="Paste Equifax, Experian, or TransUnion report text here..."
+              className="min-h-[180px] w-full rounded-xl border border-navy-100 bg-navy-50/40 p-4 text-xs leading-relaxed text-navy-700 outline-none transition focus:border-sky-300 focus:bg-white"
+            />
           </div>
 
           {error && (
@@ -133,7 +181,7 @@ export default function FreeScan() {
                 </>
               ) : (
                 <>
-                  Find Point Blockers
+                  Find Score Blockers
                   <ArrowRight size={14} />
                 </>
               )}
@@ -154,11 +202,11 @@ export default function FreeScan() {
           <h2 className="text-sm font-bold text-navy-900 mb-3">What happens next</h2>
           <div className="space-y-3">
             {[
-              'AI turns the report into clear score blockers.',
-              'You see clean findings in plain English.',
-              'Boost actions and dispute drafts are organized.',
-              'You approve before anything moves forward.',
-              'Progress is tracked in your portal.',
+              'Parser turns the report into account cards.',
+              'Score Impact Engine ranks the biggest blockers.',
+              'FCRA / Metro 2 flags are shown as possible issues.',
+              'Proof needed and next action are organized.',
+              'Nothing is sent without customer approval.',
             ].map((step, index) => (
               <div key={step} className="flex gap-3">
                 <div className="w-6 h-6 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center text-[11px] font-bold flex-shrink-0">
