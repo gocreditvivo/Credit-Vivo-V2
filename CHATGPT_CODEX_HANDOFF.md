@@ -2,7 +2,7 @@
 
 ## Current Priority
 
-Sprint 1 + 2 verify, then Parser MVP planning/build.
+Sprint 1 + 2 verify, then start e-OSCAR-aware Parser MVP.
 
 ## Build Standard
 
@@ -18,9 +18,22 @@ Public voice:
 - Get ready for better loans and financing.
 - Attorney support when credit problems need more pressure.
 
+## Founder Approval
+
+Tim approved starting the parser path.
+
+Do not build direct e-OSCAR access. Build an e-OSCAR-aware dispute preparation engine.
+
+Plain-English rule:
+
+```text
+We cannot control e-OSCAR.
+We can prepare disputes to survive e-OSCAR.
+```
+
 ## Plain-English Parser Goal
 
-The parser reads a customer's uploaded credit report and turns it into simple Credit Vivo results.
+The parser reads a customer's uploaded or pasted credit report and turns it into simple Credit Vivo results.
 
 Customer uploads or pastes credit report text. Credit Vivo reads it, pulls out the key information, finds negative accounts and score blockers, flags possible FCRA / Metro 2 issues, and shows the customer a clean AI Credit Boost Plan.
 
@@ -34,6 +47,21 @@ docs/CV2_PARSER_BUILD_PLAN.md
 
 Codex must read that file before parser coding.
 
+## Real Report Samples Available Outside Repo
+
+Tim uploaded real samples for planning only:
+
+```text
+Equifax March 2026
+Equifax June 2026
+Experian March 2026
+Experian June 2026
+TransUnion March 2026
+TransUnion June 2026
+```
+
+Do not commit real customer reports or real personal data to repo. Use fake/anonymized test fixtures only.
+
 ## Compliance Planning Gate Before Build
 
 Before writing parser code, Codex must explain the build in plain English and confirm the parser plan covers:
@@ -44,6 +72,7 @@ FACTA
 CROA
 FDCPA
 Metro 2
+e-OSCAR-aware dispute preparation
 GLBA / data security
 MD / VA / DC state placeholders
 ```
@@ -58,6 +87,41 @@ Why it matters
 Which bureau/account is affected
 What proof may help
 Recommended next action
+```
+
+## Three-Bureau Requirement
+
+Each bureau reports differently.
+
+Codex must build translator modules for:
+
+```text
+Equifax parser
+Experian parser
+TransUnion parser
+CV2 standard account model
+```
+
+Normalize bureau-specific labels into one CV2 account object.
+
+## e-OSCAR-Aware Output Required
+
+The parser must produce enough detail for later dispute packet building:
+
+```text
+account identifier
+bureau reporting
+furnisher / collector name
+field disputed
+raw value by bureau
+normalized CV2 value
+source page / raw snippet reference
+confidence score
+possible issue reason
+evidence needed
+recommended next action
+bureau packet summary
+furnisher packet summary
 ```
 
 ## Timeline Rule
@@ -117,12 +181,14 @@ Codex should start with the smallest working parser slice:
 1. Inspect current `/scan`, `/findings`, `/dashboard`, and related files.
 2. Explain in plain English what it will build before coding.
 3. Add a parser service/helper that accepts sample text input.
-4. Parse sample report text into mock account cards.
-5. Add basic FCRA / Metro 2 issue flags.
-6. Display parsed results on the findings page.
-7. Keep customer wording clear and result-first.
-8. Run build/typecheck.
-9. Update this handoff.
+4. Add bureau format detector.
+5. Parse fake/anonymized Equifax, Experian, and TransUnion sample text into account cards.
+6. Normalize fields into CV2 standard account model.
+7. Add basic FCRA / Metro 2 / e-OSCAR-ready issue flags.
+8. Display parsed results on the findings page.
+9. Keep customer wording clear and result-first.
+10. Run build/typecheck.
+11. Update this handoff.
 
 ## Parser MVP Output Required
 
@@ -147,10 +213,11 @@ MVP outputs:
 - Account cards
 - AI Credit Boost Plan draft
 - Evidence checklist draft
+- e-OSCAR-ready dispute packet data object
 
 ## Do Not Build Yet
 
-Do not build full AI, paid submissions, real dispute mailing, real attorney routing, or full production storage until parser MVP works.
+Do not build full AI, paid submissions, real dispute mailing, real attorney routing, direct e-OSCAR access, or full production storage until parser MVP works.
 
 Do not use real customer reports in repo.
 
@@ -160,15 +227,17 @@ No dispute, letter, complaint, or attorney escalation is sent automatically. Par
 
 ## Latest Status
 
-Status: PARSER COMPLIANCE PLAN UPDATED — WAITING FOR FOUNDER APPROVAL BEFORE PARSER CODE
+Status: FOUNDER APPROVED PARSER START — CODEX SHOULD VERIFY BUILD, EXPLAIN PLAN, THEN BUILD SMALLEST PARSER SLICE
 
 Last ChatGPT update:
 
-- Created `docs/CV2_PARSER_BUILD_PLAN.md`.
-- Updated parser plan with FCRA, FACTA, CROA, FDCPA, Metro 2, GLBA/security, and MD/VA/DC placeholders.
-- Updated this handoff for the parser planning gate.
+- Updated `docs/CV2_PARSER_BUILD_PLAN.md` with three-bureau translator requirements.
+- Added e-OSCAR-aware dispute preparation criteria.
+- Added real uploaded report sample list as external planning references only.
+- Added evidence tracking requirement.
+- Confirmed no real customer reports or personal data should be committed to repo.
 - Parser is not finished yet.
-- Next build target is a simple working parser slice using sample/mock text first, after founder approval and Codex build verification.
+- Next build target is a simple working parser slice using fake/anonymized sample text.
 
 Latest ChatGPT commits:
 
@@ -177,6 +246,7 @@ Latest ChatGPT commits:
 - `f278e861cdcf37f9de50259cc6267a45b9e7a060` — Tightened footer disclosure and public voice.
 - `9a9c491e61476e5d62047fd7917294eadae19a39` — Added parser build plan.
 - `bb6f66f8fd74fe22f4c5d87844b509413c251fb6` — Added FCRA / FACTA / Metro 2 parser planning requirements.
+- `d247c7e54986e064fae2e33c2bc671afd5705a87` — Added three-bureau and e-OSCAR-ready parser criteria.
 
 ## Next Codex Response Required
 
