@@ -18,6 +18,32 @@ Public voice:
 - Get ready for better loans and financing.
 - Attorney support when credit problems need more pressure.
 
+## Timeline Rule
+
+Use the ChatGPT + Codex timeline for this build.
+
+- ChatGPT sets the business/product build estimate.
+- Codex sets the technical task estimate after reviewing repo files.
+- Codex updates ETA after every run based on actual files changed, build results, errors, and blockers.
+- If Codex finds blockers, the ETA must be updated immediately.
+
+Current working timeline:
+
+- Sprint 1 homepage/content conversion update: 1–2 days.
+- Sprint 2 disclosures system: 1–2 days.
+- Sprint 3 customer app shell: 1–2 weeks.
+- Sprint 4 backend engine foundation: 1–2 weeks.
+- Sprint 5 scanner MVP: 2–3 weeks.
+- Sprint 6 dispute builder/tracker: 1–2 weeks.
+- Sprint 7 attorney support layer: 1 week.
+- Sprint 8 Supabase/security: 1–2 weeks.
+- Sprint 9 monitoring/protection/marketplace pages: 1–2 weeks.
+- Sprint 10 launch QA: 1 week.
+
+Working MVP ETA: 6–10 weeks.
+Commercial-ready ETA: 10–16 weeks.
+Confidence: Medium until Codex completes repo review and build check.
+
 ## Codex Task Now
 
 Update homepage to approved result-first Credit Vivo voice.
@@ -39,7 +65,7 @@ Approved homepage hero:
 ```text
 Fix what’s hurting your score.
 
-Credit Vivo helps find credit report errors, negative accounts, bad tradelines, and score blockers — then builds your AI Credit Boost Plan so you can get ready for better loans and financing.
+Credit Vivo helps find credit report errors, negative accounts, bad tradlines, and score blockers — then builds your AI Credit Boost Plan so you can get ready for better loans and financing.
 ```
 
 Approved trust chips:
@@ -93,7 +119,8 @@ After every Codex run, update this file with:
 
 Next task ETA: 4–8 hours
 Sprint ETA remaining: 1–2 days
-Full CV2 ETA remaining: 6–10 weeks
+Full CV2 MVP ETA remaining: 6–10 weeks
+Commercial-ready ETA remaining: 10–16 weeks
 Confidence: Medium
 
 ## Latest Status
@@ -106,6 +133,7 @@ Last ChatGPT update:
 - Created `docs/CV2_MASTER_TASK_TRACKER.md`.
 - Added ETA/handoff tracking rules to `docs/CV2_MASTER_TASK_TRACKER.md`.
 - Created this `CHATGPT_CODEX_HANDOFF.md` file.
+- Added ChatGPT + Codex timeline rule for this build.
 
 ## Next Codex Response Required
 
@@ -121,6 +149,7 @@ Still incomplete:
 Next task:
 Next task ETA:
 Sprint ETA remaining:
-Full CV2 ETA remaining:
+Full CV2 MVP ETA remaining:
+Commercial-ready ETA remaining:
 Confidence:
 ```
