@@ -53,10 +53,10 @@ function BottomButtons({ exclude }: { exclude?: string }) {
   const filtered = allLinks.filter((l) => l.to !== exclude);
 
   return (
-    <section className="py-16 bg-navy-50/50">
-      <div className="max-w-2xl mx-auto px-4 text-center">
-        <h3 className="text-lg font-bold text-navy-900 mb-2">Keep building your score board</h3>
-        <p className="text-sm text-navy-500 mb-6">Choose the next step that helps you move forward.</p>
+    <section className="bg-navy-50/50 py-16">
+      <div className="mx-auto max-w-2xl px-4 text-center">
+        <h3 className="mb-2 text-lg font-bold text-navy-900">Keep building your score board</h3>
+        <p className="mb-6 text-sm text-navy-500">Choose the next step that helps you move forward.</p>
         <div className="flex flex-wrap justify-center gap-2">
           {filtered.map((l) => (
             <Link
@@ -75,72 +75,72 @@ function BottomButtons({ exclude }: { exclude?: string }) {
 
 function Footer() {
   return (
-    <footer className="bg-navy-950 text-navy-300 pt-14 pb-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10">
+    <footer className="bg-navy-950 pb-8 pt-14 text-navy-300">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 grid grid-cols-2 gap-8 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-3">
-              <img src="/logo.webp" alt="Credit Vivo" className="w-6 h-6 brightness-200" />
+            <Link to="/" className="mb-3 flex items-center gap-2">
+              <img src="/logo.webp" alt="Credit Vivo" className="h-6 w-6 brightness-200" />
               <span className="text-sm font-bold text-white">
                 Credit <span className="text-emerald-300">Vivo</span>
               </span>
             </Link>
-            <p className="text-xs text-navy-400 leading-relaxed">
-              Find what is costing you points. Take action. Track progress.
+            <p className="text-xs leading-relaxed text-navy-400">
+              Fix what’s hurting your score. Build your AI Credit Boost Plan.
             </p>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Product</h4>
+            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white">Product</h4>
             <div className="space-y-2">
-              <Link to="/join" className="block text-xs text-navy-400 hover:text-white transition-colors">Join Free</Link>
-              <Link to="/pricing" className="block text-xs text-navy-400 hover:text-white transition-colors">Pricing</Link>
-              <Link to="/learning" className="block text-xs text-navy-400 hover:text-white transition-colors">Learning</Link>
+              <Link to="/join" className="block text-xs text-navy-400 transition-colors hover:text-white">Join Free</Link>
+              <Link to="/pricing" className="block text-xs text-navy-400 transition-colors hover:text-white">Pricing</Link>
+              <Link to="/learning" className="block text-xs text-navy-400 transition-colors hover:text-white">Learning</Link>
             </div>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Company</h4>
+            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white">Company</h4>
             <div className="space-y-2">
-              <Link to="/why" className="block text-xs text-navy-400 hover:text-white transition-colors">Why Credit Vivo</Link>
-              <Link to="/faq" className="block text-xs text-navy-400 hover:text-white transition-colors">FAQ</Link>
-              <Link to="/reviews" className="block text-xs text-navy-400 hover:text-white transition-colors">Reviews</Link>
+              <Link to="/why" className="block text-xs text-navy-400 transition-colors hover:text-white">Why Credit Vivo</Link>
+              <Link to="/faq" className="block text-xs text-navy-400 transition-colors hover:text-white">FAQ</Link>
+              <Link to="/reviews" className="block text-xs text-navy-400 transition-colors hover:text-white">Reviews</Link>
             </div>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Members</h4>
+            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white">Members</h4>
             <div className="space-y-2">
-              <Link to="/login" className="block text-xs text-navy-400 hover:text-white transition-colors">Sign In</Link>
-              <Link to="/scan" className="block text-xs text-navy-400 hover:text-white transition-colors">Free Scan</Link>
-              <Link to="/findings" className="block text-xs text-navy-400 hover:text-white transition-colors">Findings</Link>
-              <Link to="/disputes" className="block text-xs text-navy-400 hover:text-white transition-colors">Dispute Center</Link>
+              <Link to="/login" className="block text-xs text-navy-400 transition-colors hover:text-white">Sign In</Link>
+              <Link to="/scan" className="block text-xs text-navy-400 transition-colors hover:text-white">Free Scan</Link>
+              <Link to="/findings" className="block text-xs text-navy-400 transition-colors hover:text-white">Findings</Link>
+              <Link to="/disputes" className="block text-xs text-navy-400 transition-colors hover:text-white">Dispute Center</Link>
             </div>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Legal</h4>
+            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white">Legal</h4>
             <div className="space-y-2">
-              <Link to="/compliance" className="block text-xs text-navy-400 hover:text-white transition-colors">Compliance</Link>
-              <Link to="/terms" className="block text-xs text-navy-400 hover:text-white transition-colors">Terms</Link>
-              <Link to="/privacy" className="block text-xs text-navy-400 hover:text-white transition-colors">Privacy</Link>
-              <Link to="/disclosure" className="block text-xs text-navy-400 hover:text-white transition-colors">Disclosure</Link>
+              <Link to="/compliance" className="block text-xs text-navy-400 transition-colors hover:text-white">Compliance</Link>
+              <Link to="/terms" className="block text-xs text-navy-400 transition-colors hover:text-white">Terms</Link>
+              <Link to="/privacy" className="block text-xs text-navy-400 transition-colors hover:text-white">Privacy</Link>
+              <Link to="/disclosure" className="block text-xs text-navy-400 transition-colors hover:text-white">Disclosures</Link>
             </div>
           </div>
         </div>
 
         <div className="border-t border-navy-800 pt-6">
-          <p className="text-[11px] text-navy-500 leading-relaxed max-w-4xl">
-            CreditVivo is not a law firm and does not provide legal advice. Results are not guaranteed. Accurate, current, and verifiable information generally cannot be removed. Attorney support, if available, requires separate eligibility review and attorney engagement.
+          <p className="max-w-4xl text-[11px] leading-relaxed text-navy-500">
+            Results are not guaranteed. See <Link to="/disclosure" className="text-navy-300 underline decoration-navy-600 underline-offset-2 hover:text-white">Disclosures</Link>. Credit Vivo is not a law firm and does not provide legal advice. Accurate, current, and verifiable information may remain on a credit report. Attorney support may be available for eligible unresolved credit-reporting issues.
           </p>
-          <div className="mt-4 space-y-3 text-[11px] text-navy-500 leading-relaxed max-w-4xl">
+          <div className="mt-4 space-y-3 text-[11px] leading-relaxed text-navy-500 max-w-4xl">
             <p>
-              <strong className="text-navy-300">Federal Consumer Disclosure (CROA):</strong>{' '}
-              You have the right to dispute inaccurate information in your credit report by contacting the credit bureau directly. However, neither you nor any credit repair company or credit repair organization has the right to have accurate, current, and verifiable information removed from your credit report. The credit bureau must remove accurate, negative information from your report only if it is over 7 years old. Bankruptcy information can be reported for 10 years.
+              <strong className="text-navy-300">Federal Consumer Disclosure:</strong>{' '}
+              You have the right to dispute inaccurate information in your credit report by contacting the credit bureau directly. Neither you nor any credit repair company or credit repair organization has the right to have accurate, current, and verifiable information removed from your credit report.
             </p>
             <p>
               <strong className="text-navy-300">Customer Approval:</strong>{' '}
-              Credit Vivo shows possible errors, draft next steps, and progress tracking. Nothing is mailed, disputed, or escalated automatically without customer review and approval.
+              Credit Vivo helps find score blockers, repair credit report errors, build dispute drafts, and track progress. Nothing is mailed, disputed, submitted, or escalated automatically without customer review and approval.
             </p>
           </div>
         </div>
