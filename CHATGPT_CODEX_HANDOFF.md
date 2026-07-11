@@ -2,7 +2,7 @@
 
 ## Current Priority
 
-Sprint 1 + 2 verify, then start e-OSCAR-aware Parser MVP.
+Parser MVP + Score Impact Engine verification.
 
 ## Build Standard
 
@@ -18,53 +18,46 @@ Public voice:
 - Get ready for better loans and financing.
 - Attorney support when credit problems need more pressure.
 
-## Founder Approval
+## What ChatGPT Built Now
 
-Tim approved starting the parser path.
+ChatGPT added the first working local parser + score impact code.
 
-Do not build direct e-OSCAR access. Build an e-OSCAR-aware dispute preparation engine.
-
-Plain-English rule:
+Files changed:
 
 ```text
-We cannot control e-OSCAR.
-We can prepare disputes to survive e-OSCAR.
+src/lib/creditParser.ts
+src/pages/FreeScan.tsx
+CHATGPT_CODEX_HANDOFF.md
+```
+
+New code added:
+
+```text
+Local credit report text parser
+Bureau detector: Experian / Equifax / TransUnion
+Account block extraction
+Identity extraction
+Account card extraction
+Collection detection
+Charge-off detection
+High utilization detection
+Late payment detection
+Basic FCRA / Metro 2 issue flags
+Score Impact Engine ranking
+Evidence/proof-needed checklist
+Draft packet queue stubs
+FCRA review stubs
 ```
 
 ## Plain-English Parser Goal
 
 The parser reads a customer's uploaded or pasted credit report and turns it into simple Credit Vivo results.
 
-Customer uploads or pastes credit report text. Credit Vivo reads it, pulls out the key information, finds negative accounts and score blockers, flags possible FCRA / Metro 2 issues, and shows the customer a clean AI Credit Boost Plan.
+Customer pastes report text or uploads a TXT report. Credit Vivo reads it, pulls out accounts, finds negative accounts and score blockers, flags possible FCRA / Metro 2 issues, and shows a clean AI Credit Boost Plan.
 
-## Parser Build Plan
+## Compliance Planning Gate Covered
 
-Detailed parser plan has been updated here:
-
-```text
-docs/CV2_PARSER_BUILD_PLAN.md
-```
-
-Codex must read that file before parser coding.
-
-## Real Report Samples Available Outside Repo
-
-Tim uploaded real samples for planning only:
-
-```text
-Equifax March 2026
-Equifax June 2026
-Experian March 2026
-Experian June 2026
-TransUnion March 2026
-TransUnion June 2026
-```
-
-Do not commit real customer reports or real personal data to repo. Use fake/anonymized test fixtures only.
-
-## Compliance Planning Gate Before Build
-
-Before writing parser code, Codex must explain the build in plain English and confirm the parser plan covers:
+Parser plan now covers:
 
 ```text
 FCRA
@@ -72,12 +65,10 @@ FACTA
 CROA
 FDCPA
 Metro 2
-e-OSCAR-aware dispute preparation
 GLBA / data security
 MD / VA / DC state placeholders
+e-OSCAR-aware packet prep
 ```
-
-Parser must flag possible issues, not final legal conclusions.
 
 Correct output language:
 
@@ -89,40 +80,7 @@ What proof may help
 Recommended next action
 ```
 
-## Three-Bureau Requirement
-
-Each bureau reports differently.
-
-Codex must build translator modules for:
-
-```text
-Equifax parser
-Experian parser
-TransUnion parser
-CV2 standard account model
-```
-
-Normalize bureau-specific labels into one CV2 account object.
-
-## e-OSCAR-Aware Output Required
-
-The parser must produce enough detail for later dispute packet building:
-
-```text
-account identifier
-bureau reporting
-furnisher / collector name
-field disputed
-raw value by bureau
-normalized CV2 value
-source page / raw snippet reference
-confidence score
-possible issue reason
-evidence needed
-recommended next action
-bureau packet summary
-furnisher packet summary
-```
+Parser must flag possible issues, not final legal conclusions.
 
 ## Timeline Rule
 
@@ -135,10 +93,7 @@ Use the ChatGPT + Codex timeline for this build.
 
 Current working timeline:
 
-- Sprint 1 homepage/content conversion update: same day after build passes.
-- Sprint 2 disclosures system: same day after build passes.
-- Parser planning gate: same day.
-- Parser MVP smallest slice: 2–5 days after build passes.
+- Parser MVP smallest slice: started by ChatGPT, needs Codex verify/fix.
 - Sprint 3 customer app shell: 1–2 weeks.
 - Sprint 4 backend engine foundation: 1–2 weeks.
 - Sprint 5 scanner/parser MVP: 2–3 weeks.
@@ -150,45 +105,28 @@ Current working timeline:
 
 Working MVP ETA: 6–10 weeks.
 Commercial-ready ETA: 10–16 weeks.
-Confidence: Medium until Codex completes repo review and build check.
+Confidence: Medium until Codex completes build/typecheck.
 
 ## Codex Task Now
 
-First: verify current UI and run build/typecheck.
+Codex must verify and harden the new parser code.
 
-Then: explain parser plan in plain English before coding.
+Tasks:
 
-Then: begin smallest Parser MVP slice.
-
-### Verify Tasks
-
-- [x] Update `src/pages/Home.tsx` hero.
-- [x] Remove weak/vague customer language from homepage hero.
-- [x] Add result-first customer sections.
-- [x] Add attorney support section lower on homepage.
-- [x] Add footer disclosure line: `Results are not guaranteed. See Disclosures.`
-- [x] Update `src/pages/Disclosure.tsx` with clean disclosure system.
-- [x] Update footer disclosure language and link.
-- [ ] Confirm mobile layout.
+- [x] Add local parser file: `src/lib/creditParser.ts`.
+- [x] Add Score Impact Engine ranking inside parser helper.
+- [x] Update `/scan` to accept pasted text and TXT files.
+- [x] Keep PDF path connected to backend parser.
 - [ ] Run build/typecheck.
-- [ ] Update this file after the run.
+- [ ] Fix TypeScript/build errors if any.
+- [ ] Test pasted sample Equifax text.
+- [ ] Test pasted sample Experian text.
+- [ ] Test pasted sample TransUnion text.
+- [ ] Confirm `/findings` renders local parser results.
+- [ ] Add better account matching across bureaus.
+- [ ] Add anonymized test fixtures only. Do not commit real credit reports.
+- [ ] Update this handoff after the run.
 - [ ] Update `docs/CV2_MASTER_TASK_TRACKER.md` after the run.
-
-### Parser MVP First Build Task
-
-Codex should start with the smallest working parser slice:
-
-1. Inspect current `/scan`, `/findings`, `/dashboard`, and related files.
-2. Explain in plain English what it will build before coding.
-3. Add a parser service/helper that accepts sample text input.
-4. Add bureau format detector.
-5. Parse fake/anonymized Equifax, Experian, and TransUnion sample text into account cards.
-6. Normalize fields into CV2 standard account model.
-7. Add basic FCRA / Metro 2 / e-OSCAR-ready issue flags.
-8. Display parsed results on the findings page.
-9. Keep customer wording clear and result-first.
-10. Run build/typecheck.
-11. Update this handoff.
 
 ## Parser MVP Output Required
 
@@ -213,11 +151,10 @@ MVP outputs:
 - Account cards
 - AI Credit Boost Plan draft
 - Evidence checklist draft
-- e-OSCAR-ready dispute packet data object
 
 ## Do Not Build Yet
 
-Do not build full AI, paid submissions, real dispute mailing, real attorney routing, direct e-OSCAR access, or full production storage until parser MVP works.
+Do not build paid submissions, real dispute mailing, real attorney routing, or full production storage until parser MVP works.
 
 Do not use real customer reports in repo.
 
@@ -227,26 +164,21 @@ No dispute, letter, complaint, or attorney escalation is sent automatically. Par
 
 ## Latest Status
 
-Status: FOUNDER APPROVED PARSER START — CODEX SHOULD VERIFY BUILD, EXPLAIN PLAN, THEN BUILD SMALLEST PARSER SLICE
+Status: PARSER + SCORE IMPACT CODE STARTED — READY FOR CODEX BUILD VERIFY
 
 Last ChatGPT update:
 
-- Updated `docs/CV2_PARSER_BUILD_PLAN.md` with three-bureau translator requirements.
-- Added e-OSCAR-aware dispute preparation criteria.
-- Added real uploaded report sample list as external planning references only.
-- Added evidence tracking requirement.
-- Confirmed no real customer reports or personal data should be committed to repo.
-- Parser is not finished yet.
-- Next build target is a simple working parser slice using fake/anonymized sample text.
+- Created `src/lib/creditParser.ts`.
+- Connected `/scan` to local parser for pasted report text and TXT files.
+- Added score blocker ranking.
+- Added possible FCRA / Metro 2 issue flags.
+- Added e-OSCAR-aware packet prep note in parser output.
+- Build/typecheck not run by ChatGPT; Codex must run it next.
 
 Latest ChatGPT commits:
 
-- `a5a40000363b45585d0e174309c371e0436609b2` — Updated homepage to result-first Credit Vivo voice.
-- `d53da7ddecf8c171b655ce05a537340ed133f816` — Updated disclosure page for CV2 launch voice.
-- `f278e861cdcf37f9de50259cc6267a45b9e7a060` — Tightened footer disclosure and public voice.
-- `9a9c491e61476e5d62047fd7917294eadae19a39` — Added parser build plan.
-- `bb6f66f8fd74fe22f4c5d87844b509413c251fb6` — Added FCRA / FACTA / Metro 2 parser planning requirements.
-- `d247c7e54986e064fae2e33c2bc671afd5705a87` — Added three-bureau and e-OSCAR-ready parser criteria.
+- `21f9907c4fe19509c567ffd6cc9d2511afe641f7` — Added local credit parser and score impact engine.
+- `363ced11ad7a789ba2f08cd1c6d7ccf66acf0277` — Connected scan page to local parser MVP.
 
 ## Next Codex Response Required
 
