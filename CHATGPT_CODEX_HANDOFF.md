@@ -2,7 +2,7 @@
 
 ## Current Priority
 
-Sprint 1 + 2 verify, then start Parser MVP planning/build.
+Sprint 1 + 2 verify, then Parser MVP planning/build.
 
 ## Build Standard
 
@@ -22,14 +22,42 @@ Public voice:
 
 The parser reads a customer's uploaded credit report and turns it into simple Credit Vivo results.
 
-Customer uploads a PDF or TXT credit report. Credit Vivo reads it, pulls out the key information, finds negative accounts and score blockers, and shows the customer a clean AI Credit Boost Plan.
+Customer uploads or pastes credit report text. Credit Vivo reads it, pulls out the key information, finds negative accounts and score blockers, flags possible FCRA / Metro 2 issues, and shows the customer a clean AI Credit Boost Plan.
 
 ## Parser Build Plan
 
-Detailed parser plan has been added here:
+Detailed parser plan has been updated here:
 
 ```text
 docs/CV2_PARSER_BUILD_PLAN.md
+```
+
+Codex must read that file before parser coding.
+
+## Compliance Planning Gate Before Build
+
+Before writing parser code, Codex must explain the build in plain English and confirm the parser plan covers:
+
+```text
+FCRA
+FACTA
+CROA
+FDCPA
+Metro 2
+GLBA / data security
+MD / VA / DC state placeholders
+```
+
+Parser must flag possible issues, not final legal conclusions.
+
+Correct output language:
+
+```text
+Possible issue found
+Why it matters
+Which bureau/account is affected
+What proof may help
+Recommended next action
 ```
 
 ## Timeline Rule
@@ -45,6 +73,8 @@ Current working timeline:
 
 - Sprint 1 homepage/content conversion update: same day after build passes.
 - Sprint 2 disclosures system: same day after build passes.
+- Parser planning gate: same day.
+- Parser MVP smallest slice: 2–5 days after build passes.
 - Sprint 3 customer app shell: 1–2 weeks.
 - Sprint 4 backend engine foundation: 1–2 weeks.
 - Sprint 5 scanner/parser MVP: 2–3 weeks.
@@ -62,7 +92,9 @@ Confidence: Medium until Codex completes repo review and build check.
 
 First: verify current UI and run build/typecheck.
 
-Then: begin Parser MVP.
+Then: explain parser plan in plain English before coding.
+
+Then: begin smallest Parser MVP slice.
 
 ### Verify Tasks
 
@@ -83,12 +115,14 @@ Then: begin Parser MVP.
 Codex should start with the smallest working parser slice:
 
 1. Inspect current `/scan`, `/findings`, `/dashboard`, and related files.
-2. Add a parser service/helper that accepts text input.
-3. Parse sample report text into mock account cards.
-4. Display parsed results on the findings page.
-5. Keep customer wording clear and result-first.
-6. Run build/typecheck.
-7. Update this handoff.
+2. Explain in plain English what it will build before coding.
+3. Add a parser service/helper that accepts sample text input.
+4. Parse sample report text into mock account cards.
+5. Add basic FCRA / Metro 2 issue flags.
+6. Display parsed results on the findings page.
+7. Keep customer wording clear and result-first.
+8. Run build/typecheck.
+9. Update this handoff.
 
 ## Parser MVP Output Required
 
@@ -109,12 +143,16 @@ MVP outputs:
 - Collection list
 - Charge-off list
 - Score blocker list
+- FCRA / Metro 2 issue flags
 - Account cards
 - AI Credit Boost Plan draft
+- Evidence checklist draft
 
 ## Do Not Build Yet
 
-Do not build full AI, full Metro 2 engine, paid submissions, real dispute mailing, or attorney routing until parser MVP works.
+Do not build full AI, paid submissions, real dispute mailing, real attorney routing, or full production storage until parser MVP works.
+
+Do not use real customer reports in repo.
 
 ## Approval Rule
 
@@ -122,14 +160,15 @@ No dispute, letter, complaint, or attorney escalation is sent automatically. Par
 
 ## Latest Status
 
-Status: PARSER MVP PLANNED — CODEX SHOULD VERIFY BUILD, THEN START PARSER SLICE
+Status: PARSER COMPLIANCE PLAN UPDATED — WAITING FOR FOUNDER APPROVAL BEFORE PARSER CODE
 
 Last ChatGPT update:
 
 - Created `docs/CV2_PARSER_BUILD_PLAN.md`.
-- Updated this handoff for Parser MVP.
+- Updated parser plan with FCRA, FACTA, CROA, FDCPA, Metro 2, GLBA/security, and MD/VA/DC placeholders.
+- Updated this handoff for the parser planning gate.
 - Parser is not finished yet.
-- Next build target is a simple working parser slice using sample/mock text first.
+- Next build target is a simple working parser slice using sample/mock text first, after founder approval and Codex build verification.
 
 Latest ChatGPT commits:
 
@@ -137,6 +176,7 @@ Latest ChatGPT commits:
 - `d53da7ddecf8c171b655ce05a537340ed133f816` — Updated disclosure page for CV2 launch voice.
 - `f278e861cdcf37f9de50259cc6267a45b9e7a060` — Tightened footer disclosure and public voice.
 - `9a9c491e61476e5d62047fd7917294eadae19a39` — Added parser build plan.
+- `bb6f66f8fd74fe22f4c5d87844b509413c251fb6` — Added FCRA / FACTA / Metro 2 parser planning requirements.
 
 ## Next Codex Response Required
 
