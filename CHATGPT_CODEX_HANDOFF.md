@@ -2,7 +2,7 @@
 
 ## Current Priority
 
-Parser MVP + Score Impact Engine hardening.
+3-bureau parser + field-by-field tradeline comparison + workbook error output.
 
 ## Build Standard
 
@@ -20,13 +20,14 @@ Public voice:
 
 ## What ChatGPT Built
 
-ChatGPT added the first working local parser + score impact code.
+ChatGPT added and hardened the local parser + score impact code.
 
 Files changed:
 
 ```text
 src/lib/creditParser.ts
 src/pages/FreeScan.tsx
+src/pages/Findings.tsx
 CHATGPT_CODEX_HANDOFF.md
 ```
 
@@ -48,11 +49,16 @@ Evidence/proof-needed checklist
 Draft packet queue stubs
 FCRA review stubs
 e-OSCAR-ready packet prep note
+3-bureau tradeline matching
+Field-by-field comparison across bureaus
+Workbook error rows
+CSV workbook download from Findings page
+Letter packet content includes field mismatch details
 ```
 
 ## Verification Status
 
-Vercel production deployment for commit `932cee2bc78bc2887790d2762b0aa84a740012dc` is `READY`.
+Earlier Vercel production deployment for commit `932cee2bc78bc2887790d2762b0aa84a740012dc` was `READY`.
 
 Verified routes returned HTTP 200:
 
@@ -64,16 +70,59 @@ Verified routes returned HTTP 200:
 Runtime error check:
 
 ```text
-No production error/fatal runtime logs found in the last 30 minutes.
+No production error/fatal runtime logs found in the last 30 minutes during prior check.
 ```
 
-Build logs endpoint was not accessible from ChatGPT due Vercel permission limitation, but deployment state is READY, so Vercel accepted the build.
+Latest 3-bureau comparison commits need Vercel build verification:
+
+```text
+1a8790f944b25da1bafd6538134e28cb4ae3d435
+b47ec3de0412b2f8be4f04cbbeca5ea1b7f2d5d1
+55b5a1a77dab5388399aeecb77a68d0e97874695
+```
 
 ## Plain-English Parser Goal
 
-The parser reads a customer's uploaded or pasted credit report and turns it into simple Credit Vivo results.
+The parser reads a customer's uploaded or pasted credit reports and turns them into simple Credit Vivo results.
 
-Customer pastes report text or uploads a TXT report. Credit Vivo reads it, pulls out accounts, finds negative accounts and score blockers, flags possible FCRA / Metro 2 issues, and shows a clean AI Credit Boost Plan.
+Customer pastes report text or uploads TXT reports. Credit Vivo reads each bureau separately, pulls out accounts, finds negative accounts and score blockers, compares tradelines across bureaus, flags possible FCRA / Metro 2 issues, lists field-by-field errors for the workbook, and shows a clean AI Credit Boost Plan.
+
+## 3-Bureau Comparison Requirement
+
+Credit Vivo must be able to load three reports and compare all tradelines field by field.
+
+Required comparison fields:
+
+```text
+account type
+status
+pay status
+balance
+past due amount
+high credit / original amount
+credit limit
+date opened
+date closed
+date reported
+last payment date
+DOFD / first delinquency date
+estimated removal date
+original creditor
+creditor classification
+remarks
+```
+
+Output must create:
+
+```text
+Matched tradeline group
+Bureaus reporting
+Field differences
+Possible error explanation
+Next action
+Workbook row
+Letter packet detail
+```
 
 ## Compliance Planning Gate Covered
 
@@ -113,7 +162,7 @@ Use the ChatGPT + Codex timeline for this build.
 
 Current working timeline:
 
-- Parser MVP smallest slice: built and deployed; needs browser/manual sample testing and hardening.
+- Parser MVP smallest slice: built and deployed; needs latest 3-bureau build verification.
 - Parser hardening: 1–3 days.
 - Sprint 3 customer app shell: 1–2 weeks.
 - Sprint 4 backend engine foundation: 1–2 weeks.
@@ -130,7 +179,7 @@ Confidence: Medium.
 
 ## Codex Task Now
 
-Codex must harden and manually test the parser with anonymized samples.
+Codex must verify and harden the 3-bureau comparison build.
 
 Tasks:
 
@@ -138,14 +187,21 @@ Tasks:
 - [x] Add Score Impact Engine ranking inside parser helper.
 - [x] Update `/scan` to accept pasted text and TXT files.
 - [x] Keep PDF path connected to backend parser.
-- [x] Vercel production deployment is READY.
-- [x] `/scan` returns HTTP 200.
-- [x] `/findings` returns HTTP 200.
-- [x] No production error/fatal runtime logs found in last 30 minutes.
-- [ ] Manually paste anonymized Equifax sample and confirm account cards render.
-- [ ] Manually paste anonymized Experian sample and confirm account cards render.
-- [ ] Manually paste anonymized TransUnion sample and confirm account cards render.
-- [ ] Improve account matching across bureaus.
+- [x] Add multi-report text parser: `parseCreditReportTexts`.
+- [x] Parse each TXT report separately instead of merging all into one blob.
+- [x] Match tradelines across bureaus.
+- [x] Compare tradeline fields across bureaus.
+- [x] Generate workbook error rows.
+- [x] Show workbook errors on `/findings`.
+- [x] Add CSV workbook download button.
+- [x] Add field mismatch details into draft letter packet content.
+- [ ] Verify latest Vercel build for commits above.
+- [ ] Run build/typecheck.
+- [ ] Fix TypeScript/build errors if any.
+- [ ] Manually paste/upload anonymized Equifax sample and confirm account cards render.
+- [ ] Manually paste/upload anonymized Experian sample and confirm account cards render.
+- [ ] Manually paste/upload anonymized TransUnion sample and confirm account cards render.
+- [ ] Confirm field-by-field workbook rows render and CSV downloads.
 - [ ] Add anonymized test fixtures only. Do not commit real credit reports.
 - [ ] Add browser/local unit test coverage if project test setup exists.
 - [ ] Update `docs/CV2_MASTER_TASK_TRACKER.md` after the hardening run.
@@ -171,8 +227,12 @@ MVP outputs:
 - Score blocker list
 - FCRA / Metro 2 issue flags
 - Account cards
+- 3-bureau tradeline groups
+- Field-by-field comparison errors
+- Workbook CSV rows
 - AI Credit Boost Plan draft
 - Evidence checklist draft
+- Letter packet draft details
 
 ## Do Not Build Yet
 
@@ -186,24 +246,25 @@ No dispute, letter, complaint, or attorney escalation is sent automatically. Par
 
 ## Latest Status
 
-Status: PARSER + SCORE IMPACT MVP DEPLOYED — NEEDS MANUAL SAMPLE TESTING + HARDENING
+Status: 3-BUREAU PARSER + WORKBOOK ERROR BUILD COMMITTED — NEEDS BUILD VERIFY
 
 Last ChatGPT update:
 
-- Created `src/lib/creditParser.ts`.
-- Connected `/scan` to local parser for pasted report text and TXT files.
-- Added score blocker ranking.
-- Added possible FCRA / Metro 2 issue flags.
-- Added e-OSCAR-aware packet prep note in parser output.
-- Confirmed Vercel deployment is READY for latest parser commit.
-- Confirmed `/scan` and `/findings` return HTTP 200.
-- Confirmed no production error/fatal runtime logs found in last 30 minutes.
+- Rebuilt `src/lib/creditParser.ts` for multi-report comparison.
+- Updated `/scan` to treat separate TXT reports separately.
+- Updated `/findings` to display workbook errors.
+- Added CSV workbook download from findings.
+- Added field mismatch details into letter packet content.
+- PDF upload still uses backend parser path; local browser PDF extraction is not built yet.
 
 Latest ChatGPT commits:
 
 - `21f9907c4fe19509c567ffd6cc9d2511afe641f7` — Added local credit parser and score impact engine.
 - `363ced11ad7a789ba2f08cd1c6d7ccf66acf0277` — Connected scan page to local parser MVP.
 - `932cee2bc78bc2887790d2762b0aa84a740012dc` — Updated handoff after parser and score engine code.
+- `1a8790f944b25da1bafd6538134e28cb4ae3d435` — Added multi-report tradeline comparison engine.
+- `b47ec3de0412b2f8be4f04cbbeca5ea1b7f2d5d1` — Parsed multiple report text files separately.
+- `55b5a1a77dab5388399aeecb77a68d0e97874695` — Showed field comparison errors and workbook CSV export.
 
 ## Next Codex Response Required
 
