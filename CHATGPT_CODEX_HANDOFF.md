@@ -2,7 +2,7 @@
 
 ## Current Priority
 
-Sprint 1 verify + Sprint 2 disclosures system.
+Sprint 1 + 2 verify, then start Parser MVP planning/build.
 
 ## Build Standard
 
@@ -17,6 +17,20 @@ Public voice:
 - Build your AI Credit Boost Plan.
 - Get ready for better loans and financing.
 - Attorney support when credit problems need more pressure.
+
+## Plain-English Parser Goal
+
+The parser reads a customer's uploaded credit report and turns it into simple Credit Vivo results.
+
+Customer uploads a PDF or TXT credit report. Credit Vivo reads it, pulls out the key information, finds negative accounts and score blockers, and shows the customer a clean AI Credit Boost Plan.
+
+## Parser Build Plan
+
+Detailed parser plan has been added here:
+
+```text
+docs/CV2_PARSER_BUILD_PLAN.md
+```
 
 ## Timeline Rule
 
@@ -33,7 +47,7 @@ Current working timeline:
 - Sprint 2 disclosures system: same day after build passes.
 - Sprint 3 customer app shell: 1–2 weeks.
 - Sprint 4 backend engine foundation: 1–2 weeks.
-- Sprint 5 scanner MVP: 2–3 weeks.
+- Sprint 5 scanner/parser MVP: 2–3 weeks.
 - Sprint 6 dispute builder/tracker: 1–2 weeks.
 - Sprint 7 attorney support layer: 1 week.
 - Sprint 8 Supabase/security: 1–2 weeks.
@@ -46,9 +60,11 @@ Confidence: Medium until Codex completes repo review and build check.
 
 ## Codex Task Now
 
-Verify current UI and run build/typecheck.
+First: verify current UI and run build/typecheck.
 
-Tasks:
+Then: begin Parser MVP.
+
+### Verify Tasks
 
 - [x] Update `src/pages/Home.tsx` hero.
 - [x] Remove weak/vague customer language from homepage hero.
@@ -62,98 +78,65 @@ Tasks:
 - [ ] Update this file after the run.
 - [ ] Update `docs/CV2_MASTER_TASK_TRACKER.md` after the run.
 
-Approved homepage hero now applied:
+### Parser MVP First Build Task
+
+Codex should start with the smallest working parser slice:
+
+1. Inspect current `/scan`, `/findings`, `/dashboard`, and related files.
+2. Add a parser service/helper that accepts text input.
+3. Parse sample report text into mock account cards.
+4. Display parsed results on the findings page.
+5. Keep customer wording clear and result-first.
+6. Run build/typecheck.
+7. Update this handoff.
+
+## Parser MVP Output Required
+
+The customer should see:
 
 ```text
-Fix what’s hurting your score.
-
-Credit Vivo helps find credit report errors, negative accounts, bad tradelines, and score blockers — then builds your AI Credit Boost Plan so you can get ready for better loans and financing.
+What is hurting my score?
+What needs to be fixed?
+What proof may be needed?
+What action comes next?
 ```
 
-Approved trust chips now applied:
+MVP outputs:
 
-```text
-Repair credit report errors
-Remove inaccurate negatives
-Challenge bad tradelines
-```
+- Customer identity block
+- Account list
+- Negative account list
+- Collection list
+- Charge-off list
+- Score blocker list
+- Account cards
+- AI Credit Boost Plan draft
 
-Attorney section now applied:
+## Do Not Build Yet
 
-```text
-Attorney support when credit problems need more pressure.
+Do not build full AI, full Metro 2 engine, paid submissions, real dispute mailing, or attorney routing until parser MVP works.
 
-If credit reporting problems do not get fixed, Credit Vivo helps organize your reports, dispute history, bureau responses, evidence, and timeline for attorney support.
+## Approval Rule
 
-Attorney support may be available for eligible unresolved credit-reporting issues.
-```
-
-Disclosure system now applied:
-
-```text
-Results are not guaranteed.
-Accurate, current, and verifiable information may remain.
-Customer approval required before action.
-Attorney support may be available for eligible unresolved credit-reporting issues.
-Credit Vivo is not a law firm and does not provide legal advice.
-```
-
-## Do Not Use On Homepage
-
-Do not use weak/vague words on the homepage:
-
-- possible reporting issue
-- work toward
-- credit position
-- may be blocking
-- opportunity readiness
-- possible score direction
-
-Those belong only in disclosures, terms, approval screens, or internal compliance notes.
-
-## Handoff Tracking Rule
-
-After every Codex run, update this file with:
-
-1. Task completed.
-2. Files changed.
-3. Tests/build/typecheck run.
-4. Errors.
-5. Blockers.
-6. What is still incomplete.
-7. Next recommended task.
-8. Next task ETA.
-9. Sprint ETA remaining.
-10. Full CV2 ETA remaining.
-11. Confidence level.
-
-## Current ETA
-
-Next task ETA: 1–2 hours for Codex build/typecheck verification.
-Sprint 1 + 2 ETA remaining: same day if build passes; 1 day if fixes are needed.
-Full CV2 MVP ETA remaining: 6–10 weeks.
-Commercial-ready ETA remaining: 10–16 weeks.
-Confidence: Medium.
+No dispute, letter, complaint, or attorney escalation is sent automatically. Parser output is a draft/customer review result only.
 
 ## Latest Status
 
-Status: HOMEPAGE + DISCLOSURE SYSTEM UPDATED BY CHATGPT — READY FOR CODEX VERIFY
+Status: PARSER MVP PLANNED — CODEX SHOULD VERIFY BUILD, THEN START PARSER SLICE
 
 Last ChatGPT update:
 
-- Fixed typo from `bad tradlines` to `bad tradelines`.
-- Updated `src/pages/Home.tsx` with result-first founder voice.
-- Added attorney support homepage section.
-- Added short disclosure line near pricing section.
-- Updated `src/pages/Disclosure.tsx` into centralized disclosure page.
-- Updated footer with clean public voice and disclosure link.
-- Build/typecheck not run by ChatGPT; Codex must run it next.
+- Created `docs/CV2_PARSER_BUILD_PLAN.md`.
+- Updated this handoff for Parser MVP.
+- Parser is not finished yet.
+- Next build target is a simple working parser slice using sample/mock text first.
 
 Latest ChatGPT commits:
 
 - `a5a40000363b45585d0e174309c371e0436609b2` — Updated homepage to result-first Credit Vivo voice.
 - `d53da7ddecf8c171b655ce05a537340ed133f816` — Updated disclosure page for CV2 launch voice.
 - `f278e861cdcf37f9de50259cc6267a45b9e7a060` — Tightened footer disclosure and public voice.
+- `9a9c491e61476e5d62047fd7917294eadae19a39` — Added parser build plan.
 
 ## Next Codex Response Required
 
