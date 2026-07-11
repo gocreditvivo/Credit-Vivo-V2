@@ -23,25 +23,25 @@ function ScoreDashboard() {
   return (
     <div className="score-dashboard-card relative mx-auto w-full max-w-[560px] overflow-hidden rounded-[2rem] border border-white/80 bg-white p-5 shadow-2xl shadow-navy-900/14">
       <div className="absolute right-6 top-5 rounded-full bg-emerald-50 px-3 py-1.5 text-[11px] font-black text-emerald-700 ring-1 ring-emerald-100">
-        AI plan ready
+        Score plan ready
       </div>
       <div className="rounded-[1.5rem] bg-gradient-to-br from-navy-950 via-navy-900 to-teal-950 p-5 text-white">
         <p className="text-xs font-bold uppercase tracking-widest text-emerald-200">Score dashboard</p>
         <div className="mt-5 grid gap-5 sm:grid-cols-[170px_1fr] sm:items-center">
           <div className="score-ring">
             <div className="score-ring-inner">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-navy-400">Target</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-navy-400">Goal score</span>
               <strong>720</strong>
               <span className="text-xs font-bold text-emerald-600">+44 point path</span>
             </div>
           </div>
           <div>
-            <h2 className="text-3xl font-black tracking-tight">Find point blockers.</h2>
+            <h2 className="text-3xl font-black tracking-tight">Know your score blockers.</h2>
             <p className="mt-2 text-sm leading-relaxed text-navy-200">
-              See what may be holding your credit profile back, then take the next best action.
+              See what may be holding your score back, then follow the next best score action.
             </p>
             <div className="mt-4 grid grid-cols-3 gap-2">
-              {['Find', 'Act', 'Track'].map((label) => (
+              {['Score', 'Boost', 'Track'].map((label) => (
                 <div key={label} className="rounded-2xl border border-white/10 bg-white/10 p-3 text-center">
                   <p className="text-xs font-black text-white">{label}</p>
                 </div>
@@ -72,16 +72,16 @@ function ScoreDashboard() {
 
 export default function Home() {
   const lifestyleTiles = [
-    { title: 'Better auto terms', note: 'Prepare before the dealership.', icon: Car, tone: 'from-sky-500 to-teal-400' },
-    { title: 'Home goals', note: 'Know blockers before applying.', icon: HomeIcon, tone: 'from-emerald-500 to-cyan-400' },
-    { title: 'Card approvals', note: 'Lower risk before new credit.', icon: CreditCard, tone: 'from-indigo-500 to-sky-400' },
-    { title: 'Rental confidence', note: 'Clean up report surprises.', icon: Building2, tone: 'from-teal-500 to-emerald-400' },
+    { title: 'Better auto terms', note: 'Prepare your score before the dealership.', icon: Car, tone: 'from-sky-500 to-teal-400' },
+    { title: 'Home goals', note: 'Know score blockers before applying.', icon: HomeIcon, tone: 'from-emerald-500 to-cyan-400' },
+    { title: 'Card approvals', note: 'Lower score risk before new credit.', icon: CreditCard, tone: 'from-indigo-500 to-sky-400' },
+    { title: 'Rental confidence', note: 'Review score-impacting surprises.', icon: Building2, tone: 'from-teal-500 to-emerald-400' },
   ];
 
   const actionCards = [
-    { title: 'Score blockers', desc: 'Collections, high balances, date issues, mixed details, or bureau mismatches.', icon: Gauge },
-    { title: 'Boost actions', desc: 'Prioritized steps that show what to review, what to gather, and what to track.', icon: TrendingUp },
-    { title: 'Attorney support', desc: 'Harder unresolved issues can be organized for attorney review when appropriate.', icon: Scale },
+    { title: 'Score blockers', desc: 'Collections, high balances, date issues, mixed details, or bureau mismatches that may affect your score.', icon: Gauge },
+    { title: 'Boost actions', desc: 'Prioritized score steps that show what to review, what to gather, and what to track first.', icon: TrendingUp },
+    { title: 'Attorney support', desc: 'Harder unresolved reporting issues can be organized for attorney review when appropriate.', icon: Scale },
   ];
 
   const learningTopics = [
@@ -98,22 +98,22 @@ export default function Home() {
           <div className="relative z-10">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/90 px-4 py-2 text-xs font-black text-emerald-700 shadow-sm shadow-navy-900/5">
               <Sparkles size={14} />
-              AI Credit Boost + Attorney Support
+              AI Score Boost + Attorney Support
             </div>
 
             <h1 className="max-w-3xl text-[42px] font-black leading-[0.98] tracking-tight text-navy-950 sm:text-[58px] lg:text-[70px]">
-              Find what's costing you points.
+              Find what's holding back your score.
             </h1>
             <p className="mt-5 max-w-2xl text-xl font-black text-navy-800">
-              Take action. Track progress.
+              Set your score goal. Build your next best move.
             </p>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-navy-500">
-              CreditVivo turns your credit report into clear point blockers, boost actions, dispute drafts, and progress tracking.
+              CreditVivo turns your credit report into score factors, point blockers, boost actions, dispute drafts, and progress tracking.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/scan" className="btn-primary rounded-full px-6 py-3 text-sm">
-                Start Free Scan
+                Start Free Score Scan
                 <ArrowRight size={16} />
               </Link>
               <Link to="/pricing" className="btn-outline rounded-full px-6 py-3 text-sm">
@@ -122,7 +122,7 @@ export default function Home() {
             </div>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {['Free score-goal scan', 'Plain-English actions', 'Track every step'].map((item) => (
+              {['Free score scan', 'Score factors', 'Track score progress'].map((item) => (
                 <div key={item} className="flex items-center gap-2 rounded-2xl border border-navy-100 bg-white/90 px-4 py-3 shadow-sm">
                   <CheckCircle size={16} className="text-emerald-600" />
                   <span className="text-xs font-black text-navy-700">{item}</span>
@@ -139,11 +139,11 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-widest text-sky-700">Credit goals</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">More points can open better doors.</h2>
+              <p className="text-[11px] font-black uppercase tracking-widest text-sky-700">Credit score goals</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Better scores can open better doors.</h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-navy-500">
-              Better credit clarity can matter before big life moves.
+              See the score factors and report issues that may matter before big life moves.
             </p>
           </div>
 
@@ -164,8 +164,8 @@ export default function Home() {
       <section className="bg-navy-50/60 py-14">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-8 max-w-2xl">
-            <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700">Action plan</p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Point blockers become next steps.</h2>
+            <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700">Score action plan</p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Score blockers become next steps.</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {actionCards.map(({ title, desc, icon: Icon }) => (
@@ -186,8 +186,8 @@ export default function Home() {
           <div className="grid gap-5 md:grid-cols-3">
             {[
               ['1', 'Scan', 'Upload your report and see possible score blockers.'],
-              ['2', 'Act', 'Approve dispute drafts or follow boost actions.'],
-              ['3', 'Track', 'Watch progress and know the next move.'],
+              ['2', 'Boost', 'Approve dispute drafts or follow score boost actions.'],
+              ['3', 'Track', 'Watch score progress and know the next move.'],
             ].map(([num, title, desc]) => (
               <div key={title} className="rounded-3xl border border-navy-100 bg-white p-6 shadow-sm">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-950 text-sm font-black text-white">
@@ -204,19 +204,19 @@ export default function Home() {
       <section className="bg-gradient-to-br from-navy-950 via-navy-900 to-teal-950 py-14 text-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <div>
-            <p className="text-[11px] font-black uppercase tracking-widest text-emerald-300">Dashboard preview</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-emerald-300">Score dashboard preview</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight">Your score action board.</h2>
             <p className="mt-3 text-sm leading-relaxed text-navy-300">
-              A simple view of blockers, actions, disputes, and progress.
+              A simple view of score blockers, boost actions, disputes, and progress.
             </p>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/[0.07] p-5 shadow-2xl shadow-navy-950/30">
             <div className="grid gap-3 md:grid-cols-4">
               {[
+                ['720', 'score goal'],
                 ['+44', 'point path'],
-                ['3', 'blockers'],
-                ['2', 'actions ready'],
-                ['Free', 'scan'],
+                ['3', 'score blockers'],
+                ['2', 'boost actions'],
               ].map(([val, label]) => (
                 <div key={label} className="rounded-2xl bg-white p-4 text-center text-navy-950">
                   <p className="text-2xl font-black">{val}</p>
@@ -242,7 +242,7 @@ export default function Home() {
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
               <p className="text-[11px] font-black uppercase tracking-widest text-sky-700">Learning</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Credit basics that affect points.</h2>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Credit basics that affect your score.</h2>
             </div>
             <Link to="/learning" className="hidden text-sm font-black text-emerald-700 sm:inline-flex">
               View lessons
@@ -263,12 +263,12 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-8 max-w-2xl">
             <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700">Plans</p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Start free. Add support when needed.</h2>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-navy-950">Start with your score. Add support when needed.</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              ['Free Scan', '$0', 'Point blocker preview'],
-              ['Core', '$79/mo', 'AI findings + dispute builder'],
+              ['Free Score Scan', '$0', 'Score blocker preview'],
+              ['Core', '$79/mo', 'AI score findings + dispute builder'],
               ['Plus', '$119/mo', 'Furnisher support + attorney-ready packet'],
             ].map(([name, price, detail]) => (
               <div key={name} className="rounded-3xl border border-navy-100 bg-white p-6 shadow-sm">
