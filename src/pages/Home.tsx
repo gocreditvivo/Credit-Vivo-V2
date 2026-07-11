@@ -122,7 +122,7 @@ export default function Home() {
             </div>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {['No hard pull to start', 'Plain-English actions', 'Track every step'].map((item) => (
+              {['Free score-goal scan', 'Plain-English actions', 'Track every step'].map((item) => (
                 <div key={item} className="flex items-center gap-2 rounded-2xl border border-navy-100 bg-white/90 px-4 py-3 shadow-sm">
                   <CheckCircle size={16} className="text-emerald-600" />
                   <span className="text-xs font-black text-navy-700">{item}</span>
@@ -216,7 +216,7 @@ export default function Home() {
                 ['+44', 'point path'],
                 ['3', 'blockers'],
                 ['2', 'actions ready'],
-                ['0', 'hard pulls'],
+                ['Free', 'scan'],
               ].map(([val, label]) => (
                 <div key={label} className="rounded-2xl bg-white p-4 text-center text-navy-950">
                   <p className="text-2xl font-black">{val}</p>
