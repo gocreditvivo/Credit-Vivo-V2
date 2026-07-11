@@ -2,7 +2,7 @@
 
 ## Current Priority
 
-Sprint 1 — Public Site Voice and Conversion
+Sprint 1 verify + Sprint 2 disclosures system.
 
 ## Build Standard
 
@@ -29,8 +29,8 @@ Use the ChatGPT + Codex timeline for this build.
 
 Current working timeline:
 
-- Sprint 1 homepage/content conversion update: 1–2 days.
-- Sprint 2 disclosures system: 1–2 days.
+- Sprint 1 homepage/content conversion update: same day after build passes.
+- Sprint 2 disclosures system: same day after build passes.
 - Sprint 3 customer app shell: 1–2 weeks.
 - Sprint 4 backend engine foundation: 1–2 weeks.
 - Sprint 5 scanner MVP: 2–3 weeks.
@@ -46,7 +46,7 @@ Confidence: Medium until Codex completes repo review and build check.
 
 ## Codex Task Now
 
-Verify Sprint 1 homepage update and run build/typecheck.
+Verify current UI and run build/typecheck.
 
 Tasks:
 
@@ -55,6 +55,8 @@ Tasks:
 - [x] Add result-first customer sections.
 - [x] Add attorney support section lower on homepage.
 - [x] Add footer disclosure line: `Results are not guaranteed. See Disclosures.`
+- [x] Update `src/pages/Disclosure.tsx` with clean disclosure system.
+- [x] Update footer disclosure language and link.
 - [ ] Confirm mobile layout.
 - [ ] Run build/typecheck.
 - [ ] Update this file after the run.
@@ -84,6 +86,16 @@ Attorney support when credit problems need more pressure.
 If credit reporting problems do not get fixed, Credit Vivo helps organize your reports, dispute history, bureau responses, evidence, and timeline for attorney support.
 
 Attorney support may be available for eligible unresolved credit-reporting issues.
+```
+
+Disclosure system now applied:
+
+```text
+Results are not guaranteed.
+Accurate, current, and verifiable information may remain.
+Customer approval required before action.
+Attorney support may be available for eligible unresolved credit-reporting issues.
+Credit Vivo is not a law firm and does not provide legal advice.
 ```
 
 ## Do Not Use On Homepage
@@ -118,14 +130,14 @@ After every Codex run, update this file with:
 ## Current ETA
 
 Next task ETA: 1–2 hours for Codex build/typecheck verification.
-Sprint ETA remaining: same day if build passes; 1 day if fixes are needed.
+Sprint 1 + 2 ETA remaining: same day if build passes; 1 day if fixes are needed.
 Full CV2 MVP ETA remaining: 6–10 weeks.
 Commercial-ready ETA remaining: 10–16 weeks.
 Confidence: Medium.
 
 ## Latest Status
 
-Status: HOMEPAGE UPDATED BY CHATGPT — READY FOR CODEX VERIFY
+Status: HOMEPAGE + DISCLOSURE SYSTEM UPDATED BY CHATGPT — READY FOR CODEX VERIFY
 
 Last ChatGPT update:
 
@@ -133,11 +145,15 @@ Last ChatGPT update:
 - Updated `src/pages/Home.tsx` with result-first founder voice.
 - Added attorney support homepage section.
 - Added short disclosure line near pricing section.
+- Updated `src/pages/Disclosure.tsx` into centralized disclosure page.
+- Updated footer with clean public voice and disclosure link.
 - Build/typecheck not run by ChatGPT; Codex must run it next.
 
 Latest ChatGPT commits:
 
 - `a5a40000363b45585d0e174309c371e0436609b2` — Updated homepage to result-first Credit Vivo voice.
+- `d53da7ddecf8c171b655ce05a537340ed133f816` — Updated disclosure page for CV2 launch voice.
+- `f278e861cdcf37f9de50259cc6267a45b9e7a060` — Tightened footer disclosure and public voice.
 
 ## Next Codex Response Required
 
