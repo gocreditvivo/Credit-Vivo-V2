@@ -38,9 +38,65 @@ Credit Vivo is complete when it has:
 
 ---
 
+## Handoff Tracking Rule
+
+Codex must use this file as the master tracker and `CHATGPT_CODEX_HANDOFF.md` as the daily/run handoff.
+
+After every Codex run, update both files:
+
+1. What was completed.
+2. Files changed.
+3. Build/typecheck/test result.
+4. Errors.
+5. Blockers.
+6. What remains incomplete.
+7. Next recommended task.
+8. Estimated time to complete the next task.
+9. Estimated time to complete the current sprint.
+10. Estimated time to complete full CV2 launch readiness.
+
+Status values:
+
+- TODO
+- IN PROGRESS
+- BLOCKED
+- READY FOR REVIEW
+- DONE
+
+ETA format:
+
+```text
+Next task ETA: __ hours/days
+Sprint ETA remaining: __ days
+Full CV2 ETA remaining: __ weeks/months
+Confidence: Low / Medium / High
+```
+
+---
+
+## Current Completion Estimate
+
+This is a planning estimate only. Codex must update after every run based on actual codebase status.
+
+- Sprint 1: 1–2 days
+- Sprint 2: 1–2 days
+- Sprint 3: 3–5 days
+- Sprint 4: 4–7 days
+- Sprint 5: 7–14 days
+- Sprint 6: 5–10 days
+- Sprint 7: 3–7 days
+- Sprint 8: 5–10 days
+- Sprint 9: 5–10 days
+- Sprint 10: 3–7 days
+
+Full CV2 MVP launch readiness estimate: 6–10 weeks if Codex can work continuously and blockers are handled fast.
+
+---
+
 ## Sprint 1 — Public Site Voice and Conversion
 
 Status: TODO
+ETA remaining: 1–2 days
 
 Tasks:
 
@@ -73,6 +129,7 @@ Challenge bad tradelines
 ## Sprint 2 — Disclosure System
 
 Status: TODO
+ETA remaining: 1–2 days
 
 Tasks:
 
@@ -95,6 +152,7 @@ Public homepage stays bold. Legal limits live in disclosures and approval flows.
 ## Sprint 3 — Customer App Shell
 
 Status: TODO
+ETA remaining: 3–5 days
 
 Tasks:
 
@@ -114,6 +172,7 @@ Tasks:
 ## Sprint 4 — Backend Engine Foundation
 
 Status: TODO
+ETA remaining: 4–7 days
 
 Create/update backend modules:
 
@@ -148,6 +207,7 @@ Create/update backend modules:
 ## Sprint 5 — Scanner MVP
 
 Status: TODO
+ETA remaining: 7–14 days
 
 Flow:
 
@@ -176,6 +236,7 @@ Tasks:
 ## Sprint 6 — Dispute Builder and Tracker
 
 Status: TODO
+ETA remaining: 5–10 days
 
 Tasks:
 
@@ -196,6 +257,7 @@ No automatic sending without approval.
 ## Sprint 7 — Attorney Support Layer
 
 Status: TODO
+ETA remaining: 3–7 days
 
 Tasks:
 
@@ -225,6 +287,7 @@ Attorney support may be available for eligible unresolved credit-reporting issue
 ## Sprint 8 — Supabase and Security
 
 Status: TODO
+ETA remaining: 5–10 days
 
 Tasks:
 
@@ -249,6 +312,7 @@ Tasks:
 ## Sprint 9 — Monitoring, Protection, Marketplace
 
 Status: TODO
+ETA remaining: 5–10 days
 
 Tasks:
 
@@ -269,6 +333,7 @@ Tasks:
 ## Sprint 10 — Launch QA
 
 Status: TODO
+ETA remaining: 3–7 days
 
 Tasks:
 
@@ -300,3 +365,24 @@ After every run, update `CHATGPT_CODEX_HANDOFF.md` with:
 5. Blockers.
 6. What is still incomplete.
 7. Next recommended task.
+8. Next task ETA.
+9. Sprint ETA remaining.
+10. Full CV2 ETA remaining.
+11. Confidence level.
+
+---
+
+## Latest Handoff Summary
+
+Current priority: Sprint 1.
+
+Next task:
+
+```text
+Update homepage to approved result-first Credit Vivo voice, add attorney support lower on homepage, add footer disclosure line, then run build/typecheck.
+```
+
+Next task ETA: 4–8 hours
+Sprint ETA remaining: 1–2 days
+Full CV2 ETA remaining: 6–10 weeks
+Confidence: Medium
